@@ -15,7 +15,7 @@ Always read this file first at the start of any session.
 | **Phase 3** | Contact Page & Server Form Submission | **DONE** | Zod validation, anti-spam honeypot, Firebase Admin RTDB saving, optional Resend behind env var, ?service= preselect, map embed, desktop & mobile browser tested |
 | **Phase 4** | Privacy Page | **DONE** | Australian Privacy Principles (APPs) draft compliant with Privacy Act 1988 (Cth), marked `TODO(client-review)`, typed Metadata and OpenGraph |
 | **Phase 5** | Firebase Integration & Admin Panel | **DONE** | Realtime Database integration with fallback, seed script executed, admin auth with signed session cookies for 3 staff, enquiries inbox, content editors (services, settings, home), `firebase.rules.json`, `ADMIN_GUIDE.md`, desktop & mobile browser tested |
-| **Phase 6** | SEO (Metadata, sitemap, robots, JSON-LD, OG) | **NOT STARTED** | `sitemap.ts`, `robots.ts`, `LocalBusiness` JSON-LD schema, OG metadata |
+| **Phase 6** | SEO (Metadata, sitemap, robots, JSON-LD, OG) | **DONE** | Dynamic `sitemap.ts`, `robots.ts` disallowing admin/api, Schema.org `LocalBusiness` / `MedicalBusiness` JSON-LD in RootLayout, OpenGraph and Twitter cards on all pages |
 | **Phase 7** | Performance & Accessibility Pass | **NOT STARTED** | Image optimization, bundle check, dynamic imports, Lighthouse ≥ 90 audit |
 | **Phase 8** | Final Documentation & Client Handoff | **NOT STARTED** | `README.md`, client `TODO.md`, owner checklist |
 
@@ -71,12 +71,12 @@ Always read this file first at the start of any session.
 - [x] Browser visual test (desktop 1440px & mobile 375px).
 - [x] Commit to git branch `feature/phase-5-firebase-admin`.
 
-
 ### Phase 6: SEO
-- [ ] Page-specific metadata and Open Graph tags.
-- [ ] `src/app/sitemap.ts` and `src/app/robots.ts`.
-- [ ] `LocalBusiness` JSON-LD schema with exact company details.
-- [ ] Commit to git branch `feature/phase-6-seo`.
+- [x] Page-specific metadata and Open Graph tags across all pages.
+- [x] Dynamic `src/app/sitemap.ts` and `src/app/robots.ts`.
+- [x] `LocalBusiness` / `MedicalBusiness` JSON-LD schema with verified company details.
+- [x] Commit to git branch `feature/phase-6-seo`.
+`.
 
 ### Phase 7: Performance & Accessibility Pass
 - [ ] Check image sizing, compression, and WebP/AVIF formats.
