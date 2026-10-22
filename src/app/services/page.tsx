@@ -12,11 +12,11 @@ import {
   ShieldCheck,
   Phone,
   Mail,
-  Layers,
 } from "lucide-react";
 import { servicesData, lifecycleSteps, siteSettings } from "@/lib/content";
 
 export const metadata: Metadata = {
+
   title: "Services & Capabilities | Biomedical Engineering",
   description:
     "Explore AusinX's four engineering pillars: Service & Maintenance, Installation & Commissioning (Radiotherapy & CT/MRI), Parts & Logistics, and Precision Calibration.",

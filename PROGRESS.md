@@ -10,7 +10,7 @@ Always read this file first at the start of any session.
 | Phase | Description | Status | Commit / Notes |
 |---|---|---|---|
 | **Step 0** | Sync State & Secrets Setup | **DONE** | `.gitignore` secured, `.env.local` created safely, `.env.example` added, git initialized |
-| **Phase 1** | Services Overview & 4 Detail Pages | **PARTLY DONE** | `/services` and `/services/[slug]` exist; need verification, contrast check, and link validation |
+| **Phase 1** | Services Overview & 4 Detail Pages | **DONE** | Verified `/services` and 4 detail pages, validated metadata, fixed Next.js 16 cacheComponents config, tested build |
 | **Phase 2** | About Page | **PARTLY DONE** | `/about` exists with Section 7.1 copy; needs verification and polish |
 | **Phase 3** | Contact Page & Server Form Submission | **PARTLY DONE** | Frontend form exists; needs Zod validation, honeypot verification, server-side Firebase Admin storage, optional Resend, and browser test |
 | **Phase 4** | Privacy Page | **PARTLY DONE** | `/privacy` exists with Australian Privacy Principles draft; tagged `TODO(client-review)` |
@@ -32,10 +32,12 @@ Always read this file first at the start of any session.
 - [x] Analyzed brief, spreadsheet responses, and project structure.
 
 ### Phase 1: Services Overview & 4 Detail Pages
-- [ ] Verify `/services` overview lists all 4 pillars accurately.
-- [ ] Verify 4 detail pages: `/services/service-maintenance`, `/services/installation-commissioning`, `/services/parts-logistics`, `/services/calibration`.
-- [ ] Verify no broken links, valid `tel:` and `mailto:`, no fabricated claims, proper `TODO(client-review)` marks.
-- [ ] Commit to git branch `feature/phase-1-services`.
+- [x] Verify `/services` overview lists all 4 pillars accurately.
+- [x] Verify 4 detail pages: `/services/service-maintenance`, `/services/installation-commissioning`, `/services/parts-logistics`, `/services/calibration`.
+- [x] Verify no broken links, valid `tel:` and `mailto:`, no fabricated claims, proper `TODO(client-review)` marks.
+- [x] Verified Turbopack / Next.js 16 cacheComponents compatibility.
+- [x] Commit to git branch `feature/phase-1-services`.
+
 
 ### Phase 2: About Page
 - [ ] Verify `/about` incorporates verbatim copy from Section 7.1.

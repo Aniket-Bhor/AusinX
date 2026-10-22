@@ -11,7 +11,6 @@ import {
   Mail,
   ShieldCheck,
   Clock,
-  Layers,
   Wrench,
   Cpu,
   Package,
@@ -20,6 +19,7 @@ import {
 import { getServiceBySlug, servicesData, siteSettings } from "@/lib/content";
 
 const iconMap = {
+
   "service-maintenance": Wrench,
   "installation-commissioning": Cpu,
   "parts-logistics": Package,
