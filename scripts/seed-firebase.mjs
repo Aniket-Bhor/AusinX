@@ -164,7 +164,7 @@ const seedData = {
             "Fast, responsive support that minimises downtime and keeps your systems running, so you can treat more patients.",
         },
       ],
-      image: "/images/placeholders/service-maintenance.jpg",
+      image: "/images/placeholders/service-maintenance.webp",
       imageAlt:
         "TODO(client-review): Biomedical engineer performing preventive maintenance testing on diagnostic equipment",
       metaTitle: "Biomedical Service & Maintenance Support | AusinX Solutions",
@@ -198,7 +198,7 @@ const seedData = {
             "Support at both ends of the lifecycle, from the first plan to safe, compliant retirement of equipment.",
         },
       ],
-      image: "/images/placeholders/installation-commissioning.jpg",
+      image: "/images/placeholders/installation-commissioning.webp",
       imageAlt:
         "TODO(client-review): Biomedical engineering team commissioning a large medical imaging gantry",
       metaTitle:
@@ -228,7 +228,7 @@ const seedData = {
             "Reliable sourcing and supply of equipment and parts delivered when and where your healthcare team needs them.",
         },
       ],
-      image: "/images/placeholders/parts-logistics.jpg",
+      image: "/images/placeholders/parts-logistics.webp",
       imageAlt:
         "TODO(client-review): Medical parts storage and inventory logistics technician",
       metaTitle:
@@ -258,7 +258,7 @@ const seedData = {
             "Precise, documented calibration that supports the accuracy and safety of your equipment.",
         },
       ],
-      image: "/images/placeholders/calibration.jpg",
+      image: "/images/placeholders/calibration.webp",
       imageAlt:
         "TODO(client-review): Calibration specialist verifying biomedical electronics circuit with precision multimeter",
       metaTitle:
