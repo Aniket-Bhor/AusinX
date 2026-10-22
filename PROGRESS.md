@@ -13,7 +13,7 @@ Always read this file first at the start of any session.
 | **Phase 1** | Services Overview & 4 Detail Pages | **DONE** | Verified `/services` and 4 detail pages, validated metadata, fixed Next.js 16 cacheComponents config, tested build |
 | **Phase 2** | About Page | **DONE** | Updated `/about` with verbatim Section 7.1 copy, 5-stage lifecycle integration, direct contact actions, and OpenGraph metadata |
 | **Phase 3** | Contact Page & Server Form Submission | **DONE** | Zod validation, anti-spam honeypot, Firebase Admin RTDB saving, optional Resend behind env var, ?service= preselect, map embed, desktop & mobile browser tested |
-| **Phase 4** | Privacy Page | **PARTLY DONE** | `/privacy` exists with Australian Privacy Principles draft; tagged `TODO(client-review)` |
+| **Phase 4** | Privacy Page | **DONE** | Australian Privacy Principles (APPs) draft compliant with Privacy Act 1988 (Cth), marked `TODO(client-review)`, typed Metadata and OpenGraph |
 | **Phase 5** | Firebase Integration & Admin Panel | **NOT STARTED** | RTDB content layer + JSON fallback, Firebase Auth `/admin` for 3 staff, content editors, enquiries inbox, seed script, `firebase.rules.json`, `ADMIN_GUIDE.md` |
 | **Phase 6** | SEO (Metadata, sitemap, robots, JSON-LD, OG) | **NOT STARTED** | `sitemap.ts`, `robots.ts`, `LocalBusiness` JSON-LD schema, OG metadata |
 | **Phase 7** | Performance & Accessibility Pass | **NOT STARTED** | Image optimization, bundle check, dynamic imports, Lighthouse ≥ 90 audit |
@@ -54,11 +54,11 @@ Always read this file first at the start of any session.
 - [x] Browser visual test (desktop 1440px & mobile 375px).
 - [x] Commit to git branch `feature/phase-3-contact`.
 
-
 ### Phase 4: Privacy Page
-- [ ] Verify `/privacy` adheres to Australian Privacy Principles (APPs).
-- [ ] Clearly marked as draft for client review.
-- [ ] Commit to git branch `feature/phase-4-privacy`.
+- [x] Verify `/privacy` adheres to Australian Privacy Principles (APPs).
+- [x] Clearly marked as draft for client review.
+- [x] Commit to git branch `feature/phase-4-privacy`.
+
 
 ### Phase 5: Firebase Integration & Admin Panel
 - [ ] Implement Firebase RTDB content layer with fallback to `lib/content.ts`.

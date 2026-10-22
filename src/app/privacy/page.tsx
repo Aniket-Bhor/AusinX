@@ -1,11 +1,20 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, AlertTriangle } from "lucide-react";
+import type { Metadata } from "next";
+import { AlertTriangle } from "lucide-react";
 
-export const metadata = {
-  title: "Privacy Policy | AusinX Solutions Pty Ltd",
-  description: "Privacy policy draft compliant with the Australian Privacy Principles (APPs).",
+export const metadata: Metadata = {
+  title: "Privacy Policy | Australian Privacy Principles Draft",
+  description:
+    "Privacy policy draft compliant with the Privacy Act 1988 (Cth) and Australian Privacy Principles (APPs) for AusinX Solutions Pty Ltd.",
+  openGraph: {
+    title: "Privacy Policy | AusinX Solutions Pty Ltd",
+    description:
+      "Privacy policy draft compliant with the Privacy Act 1988 (Cth) and Australian Privacy Principles (APPs).",
+    url: "https://www.ausinx.com.au/privacy",
+  },
 };
+
 
 export default function PrivacyPage() {
   return (
