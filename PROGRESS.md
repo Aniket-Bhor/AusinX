@@ -12,7 +12,7 @@ Always read this file first at the start of any session.
 | **Step 0** | Sync State & Secrets Setup | **DONE** | `.gitignore` secured, `.env.local` created safely, `.env.example` added, git initialized |
 | **Phase 1** | Services Overview & 4 Detail Pages | **DONE** | Verified `/services` and 4 detail pages, validated metadata, fixed Next.js 16 cacheComponents config, tested build |
 | **Phase 2** | About Page | **DONE** | Updated `/about` with verbatim Section 7.1 copy, 5-stage lifecycle integration, direct contact actions, and OpenGraph metadata |
-| **Phase 3** | Contact Page & Server Form Submission | **PARTLY DONE** | Frontend form exists; needs Zod validation, honeypot verification, server-side Firebase Admin storage, optional Resend, and browser test |
+| **Phase 3** | Contact Page & Server Form Submission | **DONE** | Zod validation, anti-spam honeypot, Firebase Admin RTDB saving, optional Resend behind env var, ?service= preselect, map embed, desktop & mobile browser tested |
 | **Phase 4** | Privacy Page | **PARTLY DONE** | `/privacy` exists with Australian Privacy Principles draft; tagged `TODO(client-review)` |
 | **Phase 5** | Firebase Integration & Admin Panel | **NOT STARTED** | RTDB content layer + JSON fallback, Firebase Auth `/admin` for 3 staff, content editors, enquiries inbox, seed script, `firebase.rules.json`, `ADMIN_GUIDE.md` |
 | **Phase 6** | SEO (Metadata, sitemap, robots, JSON-LD, OG) | **NOT STARTED** | `sitemap.ts`, `robots.ts`, `LocalBusiness` JSON-LD schema, OG metadata |
@@ -44,16 +44,16 @@ Always read this file first at the start of any session.
 - [x] Ensure mobile and desktop layouts are clean.
 - [x] Commit to git branch `feature/phase-2-about`.
 
-
 ### Phase 3: Contact Page & Form Submission
-- [ ] Verify contact details (470 St Kilda Rd, Melbourne; 3 phone numbers; `support@ausinx.com.au`; 9am-5pm).
-- [ ] Embed Google Maps for address.
-- [ ] Support `?service=` URL parameter preselection.
-- [ ] Contact form server action or API route using Zod and honeypot.
-- [ ] Server-side storage into Firebase Realtime Database under `/enquiries`.
-- [ ] Optional email sending via Resend behind env vars (silent skip if no key).
-- [ ] Browser visual test (desktop 1440px & mobile 375px).
-- [ ] Commit to git branch `feature/phase-3-contact`.
+- [x] Verify contact details (470 St Kilda Rd, Melbourne; 3 phone numbers; `support@ausinx.com.au`; 9am-5pm).
+- [x] Embed Google Maps for address.
+- [x] Support `?service=` URL parameter preselection.
+- [x] Contact form server action or API route using Zod and honeypot.
+- [x] Server-side storage into Firebase Realtime Database under `/enquiries`.
+- [x] Optional email sending via Resend behind env vars (silent skip if no key).
+- [x] Browser visual test (desktop 1440px & mobile 375px).
+- [x] Commit to git branch `feature/phase-3-contact`.
+
 
 ### Phase 4: Privacy Page
 - [ ] Verify `/privacy` adheres to Australian Privacy Principles (APPs).
