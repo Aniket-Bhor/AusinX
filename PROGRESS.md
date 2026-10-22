@@ -17,7 +17,7 @@ Always read this file first at the start of any session.
 | **Phase 5** | Firebase Integration & Admin Panel | **DONE** | Realtime Database integration with fallback, seed script executed, admin auth with signed session cookies for 3 staff, enquiries inbox, content editors (services, settings, home), `firebase.rules.json`, `ADMIN_GUIDE.md`, desktop & mobile browser tested |
 | **Phase 6** | SEO (Metadata, sitemap, robots, JSON-LD, OG) | **DONE** | Dynamic `sitemap.ts`, `robots.ts` disallowing admin/api, Schema.org `LocalBusiness` / `MedicalBusiness` JSON-LD in RootLayout, OpenGraph and Twitter cards on all pages |
 | **Phase 7** | Performance & Accessibility Pass | **DONE** | Image compression to WebP (<200KB), AVIF/WebP next/image config, responsive dimensions & a11y contrast audit, clean static build (23/23 routes) |
-| **Phase 8** | Final Documentation & Client Handoff | **NOT STARTED** | `README.md`, client `TODO.md`, owner checklist |
+| **Phase 8** | Final Documentation & Client Handoff | **DONE** | Comprehensive `README.md`, exhaustive `TODO.md`, owner checklist, `PROGRESS.md` complete |
 
 ---
 
@@ -87,6 +87,6 @@ Always read this file first at the start of any session.
 - [x] Commit to git branch `feature/phase-7-perf-a11y`.
 
 ### Phase 8: Final Documentation & Client Handoff
-- [ ] Complete `README.md` (setup, env vars, build, deploy, DNS notes).
-- [ ] Update `TODO.md` with all client review items.
-- [ ] Generate final owner checklist for Firebase console, keys, client content, and hosting.
+- [x] Complete `README.md` (setup, env vars, build, deploy, DNS notes).
+- [x] Update `TODO.md` with all client review items.
+- [x] Generate final owner checklist for Firebase console, keys, client content, and hosting.

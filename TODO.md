@@ -1,40 +1,109 @@
-# AusinX Solutions - Project TODOs & Client Review Items
+# AusinX Solutions - Client Review Items & Owner Checklist
 
-This document tracks items requiring client review, decisions, assets, and licensing information.
+This document tracks all action items, decisions, and security tasks requiring the client or site owner's intervention before public launch.
 
 ---
 
-## 1. Client Review Items (Marked TODO(client-review))
+## 1. Things Only the Owner Must Do (Technical Setup)
 
-| Item | Context | Status / Value | Action Required |
+### A. Firebase Realtime Database Security Rules
+Paste the exact rules from `firebase.rules.json` into the Firebase Console:
+1. Go to [Firebase Console](https://console.firebase.google.com/) > Select Project **ausinx-default**.
+2. Navigate to **Build > Realtime Database > Rules**.
+3. Replace all rules with the following JSON and click **Publish**:
+```json
+{
+  "rules": {
+    "content": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "staff": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "enquiries": {
+      ".read": "auth != null",
+      ".write": false
+    }
+  }
+}
+```
+*Note: Public reads for `/content` are enabled so frontend visitors can see service descriptions. Writes require admin auth. The `/enquiries` node is write-locked to the public and readable only by authenticated staff (the contact form saves via the Firebase Admin SDK on the server, bypassing client write rules).*
+
+### B. Firebase Authentication Setup (Admin Logins)
+The `/admin` panel supports authentication for the 3 directors:
+- `sudhir.nalawade@ausinx.com.au`
+- `shibu.madhavan@ausinx.com.au`
+- `bhagwan.gorade@ausinx.com.au`
+
+**Steps**:
+1. In Firebase Console, go to **Build > Authentication > Sign-in method**.
+2. Enable the **Email/Password** provider (Email link passwordless can be left off).
+3. In the **Users** tab, either ensure the 3 staff users exist with secure passwords, or note their passwords as initialized during the seed script.
+4. Update the staff passwords as instructed in [`ADMIN_GUIDE.md`](./ADMIN_GUIDE.md).
+
+### C. Vercel Hosting Dashboard Environment Variables
+When deploying the repository to **Vercel** (or Netlify), add the following environment variables in **Project Settings > Environment Variables**:
+
+| Variable Name | Required? | Source / Value |
+|---|---|---|
+| `FIREBASE_DATABASE_URL` | **Yes** | `https://ausinx-default-rtdb.firebaseio.com` |
+| `FIREBASE_PROJECT_ID` | **Yes** | From your Firebase service account JSON (`ausinx-default`) |
+| `FIREBASE_CLIENT_EMAIL` | **Yes** | From your Firebase service account JSON (`firebase-adminsdk-fbsvc@...`) |
+| `FIREBASE_PRIVATE_KEY` | **Yes** | From your Firebase service account JSON (keep `\n` linebreaks intact, wrapped in quotes) |
+| `ADMIN_SESSION_SECRET` | **Yes** | A random 32+ character string for HMAC-SHA256 session cookie signing |
+| `CONTACT_TO_EMAIL` | **Yes** | `support@ausinx.com.au` |
+| `RESEND_API_KEY` | *Optional* | Your Resend API key (e.g. `re_...`) if you want instant email alerts |
+| `RESEND_FROM_EMAIL` | *Optional* | `enquiries@ausinx.com.au` (requires domain verified in Resend) |
+
+### D. Ventra IP Domain DNS Configuration
+The company domain `ausinx.com.au` is registered on **Ventra IP**. When ready to point the domain to Vercel:
+1. In Vercel, navigate to **Settings > Domains** and add `ausinx.com.au` and `www.ausinx.com.au`.
+2. In the **Ventra IP DNS Manager**, configure:
+   - **Apex (`@`)**: `A` record pointing to `76.76.21.21` (Vercel Anycast)
+   - **Subdomain (`www`)**: `CNAME` record pointing to `cname.vercel-dns.com.`
+3. ⚠️ **DO NOT TOUCH EXISTING EMAIL RECORDS**: Keep all `MX` and `TXT` (SPF/DKIM/DMARC) records untouched so that `support@ausinx.com.au` and Microsoft 365 / Google Workspace email accounts continue operating without interruption.
+
+---
+
+## 2. Client Content Review Items (Marked TODO(client-review))
+
+The following items are marked `TODO(client-review)` in the code and database:
+
+| Item | Location | Current Value | Required Action |
 |---|---|---|---|
-| **Tagline** | Hero & Site Identity | `TODO(client-review): "Keeping Essential Clinical & Industrial Systems Running."` | Client to select preferred option (Option 1: Precision Support Across the Healthcare Equipment Lifecycle; Option 2: Keeping Essential Clinical & Industrial Systems Running; Option 3: Service · Installation · Parts · Calibration). |
-| **Hero Supporting Line** | Hero Section | `TODO(client-review): "End-to-end engineering, maintenance, and compliance support for radiotherapy, diagnostic imaging, and critical biomedical systems across Australia."` | Client to confirm if scope wording matches service commitments. |
-| **ABN** | Global Footer | `TODO(client-review): ABN: XX XXX XXX XXX` | Client to provide their registered Australian Business Number. Currently hidden placeholder. |
-| **Logo Artwork vs. Name** | Header Brand Title | Logo reads *"AX ENGINEERING SOLUTIONS"*; Company is *"AusinX Solutions Pty Ltd"*. | Client to confirm if new transparent SVG/PNG logo will be provided and whether "AX Engineering Solutions" or "AusinX Solutions" should be primary badge text. |
-| **Privacy Policy** | `/privacy` | Draft based on Australian Privacy Principles (APPs). | Client legal/management review before public launch. |
-| **Enquiry Recipient Email** | Contact Form | Default `support@ausinx.com.au` via `CONTACT_TO_EMAIL`. | Confirm whether enquiries route to `support@ausinx.com.au` or forward to founders' inboxes. Personal Gmails are not displayed publicly. |
-| **Social Media Links** | Global Footer | Hidden placeholders. | Client to provide LinkedIn/Facebook company page URLs when created. |
+| **Tagline Selection** | Hero & Site Identity | *"Keeping Essential Clinical & Industrial Systems Running."* | Confirm which of the 3 options is preferred (or provide a new one). |
+| **Hero Supporting Copy** | Homepage Hero | *"End-to-end engineering, maintenance, and compliance support for radiotherapy, diagnostic imaging, and critical biomedical systems across Australia."* | Verify if scope covers all intended modalities. |
+| **Registered ABN** | Global Footer | `TODO(client-review): ABN: XX XXX XXX XXX` (Currently hidden) | Provide the official registered Australian Business Number to display in the footer. |
+| **Logo Artwork** | Site Header | Circular badge reads *"AX Engineering Solutions"* | Confirm if an updated transparent PNG or vector SVG logo with *"AusinX Solutions"* will be supplied. |
+| **Privacy Policy** | `/privacy` | Complete Australian Privacy Principles (APPs) draft under *Privacy Act 1988* (Cth). | Client management/legal review and approval prior to launch. |
+| **Social Media URLs** | Global Footer | Placeholders hidden | Provide corporate LinkedIn, Facebook, or Twitter/X URLs if active. |
+| **After-Hours Urgent Contact** | Contact Page & Footer | Melbourne office line with prompt to contact support | Confirm if a dedicated 24/7 on-call triage phone number or pager service should be listed. |
 
 ---
 
-## 2. Image Licensing & Asset Registry
+## 3. Image Licensing & Asset Replacement Registry
 
-All placeholder images are generated high-resolution clinical representations to demonstrate layout and visual aesthetics without infringing any copyrighted equipment manufacturer assets.
+All service and hero images currently use high-performance, compressed WebP biomedical representations (<170KB each) to demonstrate clean responsive layouts without copyright infringement.
 
-| Filename | Location | Description | Source / Licence | Status |
-|---|---|---|---|---|
-| `logo.png` | `/public/images/logo.png` | Circular AusinX / AX Engineering Solutions badge | Client supplied (`/assets/Logo.png`). Proprietary to AusinX Solutions Pty Ltd. | In use (solid white background). Recommend requesting SVG with transparent background. |
-| `hero-equipment.jpg` | `/public/images/placeholders/hero-equipment.jpg` | High-tech hospital radiotherapy suite with linear accelerator and imaging bed | AI-Generated biomedical representation (Imagen 3). Non-exclusive project placeholder license. | `TODO(client-review)` - Replace with AusinX authentic facility/equipment photos when available. |
-| `service-maintenance.jpg` | `/public/images/placeholders/service-maintenance.jpg` | Biomedical field engineer servicing medical diagnostic machine with digital multimeter | AI-Generated biomedical representation (Imagen 3). Non-exclusive project placeholder license. | `TODO(client-review)` - Replace with photos of AusinX engineers in the field. |
-| `installation-commissioning.jpg` | `/public/images/placeholders/installation-commissioning.jpg` | Biomedical engineering team commissioning a large medical imaging gantry | AI-Generated biomedical representation (Imagen 3). Non-exclusive project placeholder license. | `TODO(client-review)` - Replace with AusinX on-site installation photos. |
-| `parts-logistics.jpg` | `/public/images/placeholders/parts-logistics.jpg` | Clean clinical medical electronics components warehouse with logistics technician | AI-Generated biomedical representation (Imagen 3). Non-exclusive project placeholder license. | `TODO(client-review)` - Replace with AusinX inventory/parts storage facility photos. |
-| `calibration.jpg` | `/public/images/placeholders/calibration.jpg` | Calibration engineer conducting precision oscilloscope and multimeter testing on biomedical board | AI-Generated biomedical representation (Imagen 3). Non-exclusive project placeholder license. | `TODO(client-review)` - Replace with AusinX calibration lab or test bench photos. |
+| Filename | Web Location | Status | Action Required |
+|---|---|---|---|
+| `logo.png` | `/public/images/logo.png` | Active (White BG) | Replace with transparent SVG when provided. |
+| `hero-equipment.webp` | `/public/images/placeholders/hero-equipment.webp` | Placeholder (77KB) | Replace with photo of AusinX linac or clinic partner facility. |
+| `service-maintenance.webp` | `/public/images/placeholders/service-maintenance.webp` | Placeholder (139KB) | Replace with authentic photo of AusinX engineer servicing equipment. |
+| `installation-commissioning.webp` | `/public/images/placeholders/installation-commissioning.webp` | Placeholder (138KB) | Replace with photo of AusinX gantry/machine installation. |
+| `parts-logistics.webp` | `/public/images/placeholders/parts-logistics.webp` | Placeholder (165KB) | Replace with photo of AusinX spare parts inventory / cleanroom. |
+| `calibration.webp` | `/public/images/placeholders/calibration.webp` | Placeholder (128KB) | Replace with photo of AusinX calibration test bench & tooling. |
 
 ---
 
-## 3. Hosting & Deployment Notes
+## 4. Pre-Launch Verification Checklist
 
-- Client domain: `www.ausinx.com.au` currently hosted on **Ventra IP**.
-- Staging and SSR production recommended on **Vercel** or **Netlify**.
-- Domain connection: Point A/CNAME DNS records to Vercel upon client sign-off, preserving MX records for email.
+- [ ] Firebase Security Rules published in Firebase Console.
+- [ ] Admin user accounts tested at `/admin/login`.
+- [ ] Test enquiry submitted on `/contact` and verified in `/admin`.
+- [ ] Environment variables configured in Vercel.
+- [ ] DNS A and CNAME records pointed in Ventra IP (MX records preserved).
+- [ ] SSL certificate auto-provisioned by Vercel.
+- [ ] Client review items in Section 2 signed off.
