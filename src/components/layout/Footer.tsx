@@ -34,8 +34,10 @@ export default function Footer() {
                   alt="AusinX Solutions"
                   width={48}
                   height={48}
-                  className="object-contain w-full h-full"
+                  style={{ width: "auto", height: "auto" }}
+                  className="object-contain max-h-full max-w-full"
                 />
+
               </div>
               <div>
                 <span className="text-xl font-bold tracking-tight text-white block font-heading">

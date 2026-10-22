@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/placeholders/hero-equipment.jpg",
+        url: "/images/placeholders/hero-equipment.webp",
         width: 1200,
         height: 630,
         alt: "AusinX Biomedical Engineering Solutions",
@@ -56,8 +56,9 @@ export const metadata: Metadata = {
     title: "AusinX Solutions | Biomedical & Industrial Equipment Solutions",
     description:
       "Precision healthcare and industrial equipment lifecycle solutions: Service · Installation · Parts · Calibration.",
-    images: ["/images/placeholders/hero-equipment.jpg"],
+    images: ["/images/placeholders/hero-equipment.webp"],
   },
+
   robots: {
     index: true,
     follow: true,

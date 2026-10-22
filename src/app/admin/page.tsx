@@ -294,8 +294,10 @@ export default function AdminDashboardPage() {
                 alt="AusinX Solutions"
                 width={32}
                 height={32}
-                className="object-contain"
+                style={{ width: "auto", height: "auto" }}
+                className="object-contain max-h-full max-w-full"
               />
+
             </div>
             <div>
               <span className="font-extrabold text-sm sm:text-base tracking-tight font-heading block">

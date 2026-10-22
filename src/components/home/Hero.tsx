@@ -95,13 +95,14 @@ export default function Hero() {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700/80 bg-slate-900 group">
               <div className="aspect-[4/3] relative">
                 <Image
-                  src="/images/placeholders/hero-equipment.jpg"
+                  src="/images/placeholders/hero-equipment.webp"
                   alt="TODO(client-review): Radiotherapy medical linear accelerator and CT suite"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                 />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1A2A3A] via-transparent to-transparent opacity-80" />
               </div>
 

@@ -46,8 +46,10 @@ export default function AdminLoginPage() {
             alt="AusinX Solutions"
             width={56}
             height={56}
-            className="object-contain"
+            style={{ width: "auto", height: "auto" }}
+            className="object-contain max-h-full max-w-full"
           />
+
         </div>
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">

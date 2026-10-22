@@ -74,10 +74,11 @@ export default function ServicesPage() {
                 >
                   {/* Service Visual */}
                   <div
-                    className={`lg:col-span-5 relative min-h-[300px] lg:min-h-full bg-slate-100 ${
+                    className={`lg:col-span-5 relative min-h-[320px] lg:min-h-[420px] w-full bg-slate-100 ${
                       isEven ? "lg:order-last" : ""
                     }`}
                   >
+
                     <Image
                       src={service.image}
                       alt={service.imageAlt}

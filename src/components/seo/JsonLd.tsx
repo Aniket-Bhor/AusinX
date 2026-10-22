@@ -11,7 +11,8 @@ export default function JsonLd() {
     legalName: "AusinX Solutions Pty Ltd",
     url: "https://www.ausinx.com.au",
     logo: "https://www.ausinx.com.au/images/logo.png",
-    image: "https://www.ausinx.com.au/images/placeholders/hero-equipment.jpg",
+    image: "https://www.ausinx.com.au/images/placeholders/hero-equipment.webp",
+
     description:
       "Proudly Australian-owned and operated engineering company providing full lifecycle services for medical equipment, healthcare products and industrial electronics: service, maintenance, installation, commissioning, parts supply, and calibration.",
     telephone: siteSettings.phones[0]?.display || "0421 081 256",

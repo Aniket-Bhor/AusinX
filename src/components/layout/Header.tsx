@@ -135,9 +135,11 @@ export default function Header() {
                 alt="AusinX Solutions Logo"
                 width={48}
                 height={48}
-                className="object-contain w-full h-full"
+                style={{ width: "auto", height: "auto" }}
+                className="object-contain max-h-full max-w-full"
                 priority
               />
+
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-tight text-white group-hover:text-amber-300 transition-colors leading-tight font-heading">

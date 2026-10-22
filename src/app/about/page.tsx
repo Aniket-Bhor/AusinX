@@ -54,12 +54,13 @@ export default function AboutPage() {
           <div className="lg:col-span-5 relative">
             <div className="rounded-2xl overflow-hidden shadow-xl border border-slate-200 aspect-[4/3] relative bg-slate-100">
               <Image
-                src="/images/placeholders/hero-equipment.jpg"
+                src="/images/placeholders/hero-equipment.webp"
                 alt="TODO(client-review): AusinX healthcare technology support"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 40vw"
               />
+
               <div className="absolute inset-0 bg-gradient-to-t from-[#1A2A3A]/80 via-transparent to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-white/95 backdrop-blur-sm text-[#1A2A3A] shadow-md border border-slate-100">
                 <p className="text-xs font-bold uppercase tracking-wider text-[#1A2A3A]">
