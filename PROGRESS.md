@@ -11,7 +11,7 @@ Always read this file first at the start of any session.
 |---|---|---|---|
 | **Step 0** | Sync State & Secrets Setup | **DONE** | `.gitignore` secured, `.env.local` created safely, `.env.example` added, git initialized |
 | **Phase 1** | Services Overview & 4 Detail Pages | **DONE** | Verified `/services` and 4 detail pages, validated metadata, fixed Next.js 16 cacheComponents config, tested build |
-| **Phase 2** | About Page | **PARTLY DONE** | `/about` exists with Section 7.1 copy; needs verification and polish |
+| **Phase 2** | About Page | **DONE** | Updated `/about` with verbatim Section 7.1 copy, 5-stage lifecycle integration, direct contact actions, and OpenGraph metadata |
 | **Phase 3** | Contact Page & Server Form Submission | **PARTLY DONE** | Frontend form exists; needs Zod validation, honeypot verification, server-side Firebase Admin storage, optional Resend, and browser test |
 | **Phase 4** | Privacy Page | **PARTLY DONE** | `/privacy` exists with Australian Privacy Principles draft; tagged `TODO(client-review)` |
 | **Phase 5** | Firebase Integration & Admin Panel | **NOT STARTED** | RTDB content layer + JSON fallback, Firebase Auth `/admin` for 3 staff, content editors, enquiries inbox, seed script, `firebase.rules.json`, `ADMIN_GUIDE.md` |
@@ -38,12 +38,12 @@ Always read this file first at the start of any session.
 - [x] Verified Turbopack / Next.js 16 cacheComponents compatibility.
 - [x] Commit to git branch `feature/phase-1-services`.
 
-
 ### Phase 2: About Page
-- [ ] Verify `/about` incorporates verbatim copy from Section 7.1.
-- [ ] Check lifecycle highlights and why healthcare teams choose AusinX.
-- [ ] Ensure mobile and desktop layouts are clean.
-- [ ] Commit to git branch `feature/phase-2-about`.
+- [x] Verify `/about` incorporates verbatim copy from Section 7.1.
+- [x] Check lifecycle highlights and why healthcare teams choose AusinX.
+- [x] Ensure mobile and desktop layouts are clean.
+- [x] Commit to git branch `feature/phase-2-about`.
+
 
 ### Phase 3: Contact Page & Form Submission
 - [ ] Verify contact details (470 St Kilda Rd, Melbourne; 3 phone numbers; `support@ausinx.com.au`; 9am-5pm).

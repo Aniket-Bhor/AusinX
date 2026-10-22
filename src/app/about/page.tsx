@@ -1,12 +1,20 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, CheckCircle2, ShieldCheck, Activity } from "lucide-react";
-import { aboutCopy } from "@/lib/content";
+import type { Metadata } from "next";
+import { ArrowRight, CheckCircle2, ShieldCheck, Phone, Mail } from "lucide-react";
+import { aboutCopy, lifecycleSteps, siteSettings } from "@/lib/content";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "About Us | Australian Biomedical Engineering Solutions",
-  description: "Learn about AusinX Solutions Pty Ltd, proudly Australian-owned and operated, providing full lifecycle engineering solutions for medical equipment.",
+  description:
+    "Learn about AusinX Solutions Pty Ltd, proudly Australian-owned and operated, providing full lifecycle engineering solutions for medical equipment, healthcare products, and industrial electronics.",
+  openGraph: {
+    title: "About Us | AusinX Solutions Pty Ltd",
+    description:
+      "Proudly Australian-owned and operated engineering company supporting healthcare organisations across the entire equipment lifecycle.",
+    url: "https://www.ausinx.com.au/about",
+  },
 };
 
 export default function AboutPage() {
@@ -65,6 +73,40 @@ export default function AboutPage() {
           </div>
         </div>
 
+        {/* Equipment Lifecycle Approach */}
+        <div className="mb-20">
+          <div className="max-w-3xl mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 inline-block mb-3">
+              Lifecycle Integration
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A2A3A] font-heading">
+              Our End-to-End Equipment Lifecycle Approach
+            </h2>
+            <p className="mt-2 text-slate-600 text-sm">
+              We manage the technical detail across every stage so clinical staff can stay focused on patient care.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {lifecycleSteps.map((step) => (
+              <div
+                key={step.step}
+                className="p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200 space-y-2 hover:border-[#1A2A3A]/30 transition-colors"
+              >
+                <span className="text-xs font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">
+                  Phase {step.step}
+                </span>
+                <h3 className="text-base font-bold text-[#1A2A3A] font-heading pt-1">
+                  {step.title}
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Why Healthcare Teams Choose AusinX */}
         <div className="p-8 sm:p-12 rounded-3xl bg-[#F1F5F9] border border-slate-200 mb-16">
           <div className="max-w-3xl mb-10">
@@ -104,15 +146,25 @@ export default function AboutPage() {
               Speak with our engineers about service agreements, commissioning, or parts supply.
             </p>
           </div>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shrink-0"
-          >
-            <span>Contact Us Today</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors"
+            >
+              <span>Contact Us Today</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <a
+              href="tel:0421081256"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-white/10 text-white font-semibold text-sm hover:bg-white/15 transition-colors border border-white/20"
+            >
+              <Phone className="w-4 h-4 text-amber-400" />
+              <span>0421 081 256</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
