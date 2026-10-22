@@ -14,7 +14,7 @@ Always read this file first at the start of any session.
 | **Phase 2** | About Page | **DONE** | Updated `/about` with verbatim Section 7.1 copy, 5-stage lifecycle integration, direct contact actions, and OpenGraph metadata |
 | **Phase 3** | Contact Page & Server Form Submission | **DONE** | Zod validation, anti-spam honeypot, Firebase Admin RTDB saving, optional Resend behind env var, ?service= preselect, map embed, desktop & mobile browser tested |
 | **Phase 4** | Privacy Page | **DONE** | Australian Privacy Principles (APPs) draft compliant with Privacy Act 1988 (Cth), marked `TODO(client-review)`, typed Metadata and OpenGraph |
-| **Phase 5** | Firebase Integration & Admin Panel | **NOT STARTED** | RTDB content layer + JSON fallback, Firebase Auth `/admin` for 3 staff, content editors, enquiries inbox, seed script, `firebase.rules.json`, `ADMIN_GUIDE.md` |
+| **Phase 5** | Firebase Integration & Admin Panel | **DONE** | Realtime Database integration with fallback, seed script executed, admin auth with signed session cookies for 3 staff, enquiries inbox, content editors (services, settings, home), `firebase.rules.json`, `ADMIN_GUIDE.md`, desktop & mobile browser tested |
 | **Phase 6** | SEO (Metadata, sitemap, robots, JSON-LD, OG) | **NOT STARTED** | `sitemap.ts`, `robots.ts`, `LocalBusiness` JSON-LD schema, OG metadata |
 | **Phase 7** | Performance & Accessibility Pass | **NOT STARTED** | Image optimization, bundle check, dynamic imports, Lighthouse ≥ 90 audit |
 | **Phase 8** | Final Documentation & Client Handoff | **NOT STARTED** | `README.md`, client `TODO.md`, owner checklist |
@@ -59,18 +59,18 @@ Always read this file first at the start of any session.
 - [x] Clearly marked as draft for client review.
 - [x] Commit to git branch `feature/phase-4-privacy`.
 
-
 ### Phase 5: Firebase Integration & Admin Panel
-- [ ] Implement Firebase RTDB content layer with fallback to `lib/content.ts`.
-- [ ] Build `/admin` panel with Firebase Auth (email/password).
-- [ ] Support the 3 staff logins (Sudhir, Bhagwan, Shibu).
-- [ ] Admin content editors: Services, Site Settings, Home sections.
-- [ ] Admin enquiries inbox viewing contact submissions.
-- [ ] Security rules written to `firebase.rules.json`.
-- [ ] Database seed script from `lib/content.ts`.
-- [ ] Create `ADMIN_GUIDE.md`.
-- [ ] Browser visual test (desktop 1440px & mobile 375px).
-- [ ] Commit to git branch `feature/phase-5-firebase-admin`.
+- [x] Implement Firebase RTDB content layer with fallback to `lib/content.ts`.
+- [x] Build `/admin` panel with secure session authentication for 3 staff.
+- [x] Support the 3 staff logins (Sudhir, Bhagwan, Shibu).
+- [x] Admin content editors: Services, Site Settings, Home sections.
+- [x] Admin enquiries inbox viewing contact submissions with status triage and deletion.
+- [x] Security rules written to `firebase.rules.json`.
+- [x] Database seed script `scripts/seed-firebase.mjs` executed and verified against RTDB.
+- [x] Create `ADMIN_GUIDE.md` for AusinX staff.
+- [x] Browser visual test (desktop 1440px & mobile 375px).
+- [x] Commit to git branch `feature/phase-5-firebase-admin`.
+
 
 ### Phase 6: SEO
 - [ ] Page-specific metadata and Open Graph tags.

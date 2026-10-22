@@ -236,23 +236,88 @@ export const servicesData: ServiceDetail[] = [
   },
 ];
 
-// Single content getter functions for easy Sanity integration later
+const RTDB_BASE =
+  process.env.FIREBASE_DATABASE_URL ||
+  "https://ausinx-default-rtdb.firebaseio.com";
+
 export async function getSiteSettings(): Promise<SiteSettings> {
+  "use cache";
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/siteSettings.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.companyName) return data as SiteSettings;
+    }
+  } catch {
+    // Graceful fallback to static JSON
+  }
   return siteSettings;
 }
 
 export async function getAboutCopy() {
+  "use cache";
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/about.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.intro && data.whyChooseUs) return data;
+    }
+  } catch {
+    // Fallback
+  }
   return aboutCopy;
 }
 
 export async function getServices(): Promise<ServiceDetail[]> {
+  "use cache";
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/services.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return data as ServiceDetail[];
+      }
+      if (data && typeof data === "object") {
+        return Object.values(data) as ServiceDetail[];
+      }
+    }
+  } catch {
+    // Fallback
+  }
   return servicesData;
 }
 
 export async function getServiceBySlug(slug: string): Promise<ServiceDetail | undefined> {
-  return servicesData.find((s) => s.slug === slug);
+  "use cache";
+  const services = await getServices();
+  return services.find((s) => s.slug === slug) || servicesData.find((s) => s.slug === slug);
 }
 
 export async function getLifecycleSteps(): Promise<LifecycleStep[]> {
+  "use cache";
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/lifecycle.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return data as LifecycleStep[];
+      }
+      if (data && typeof data === "object") {
+        return Object.values(data) as LifecycleStep[];
+      }
+    }
+  } catch {
+    // Fallback
+  }
   return lifecycleSteps;
 }
+
+

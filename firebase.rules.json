@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "content": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "services": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "siteSettings": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "about": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "lifecycle": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "enquiries": {
+      ".read": "auth != null",
+      ".write": false
+    }
+  }
+}
