@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { signSession, isAllowedStaffEmail, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/admin-auth";
 
 const STAFF_DIRECTORY: Record<string, { name: string; role: string }> = {
-  "asunix@admin": {
+  "asuinx@admin": {
     name: "AusinX Administrator",
     role: "System Administrator",
   },
   "ausinx@admin": {
+    name: "AusinX Administrator",
+    role: "System Administrator",
+  },
+  "asunix@admin": {
     name: "AusinX Administrator",
     role: "System Administrator",
   },
@@ -53,9 +57,11 @@ const STAFF_DIRECTORY: Record<string, { name: string; role: string }> = {
 };
 
 const VALID_PASSWORDS = [
-  "Ausnix@2026",
   "Ausinx@2026",
-  "Asunix@2026",
+  "Asuinx@2026",
+  "Ausnix@2026",
+  "ausinx@2026",
+  "asuinx@2026",
   process.env.ADMIN_PASSWORD,
   "AusinX#Admin2026!",
   "AusinX2024!",

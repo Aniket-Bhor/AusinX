@@ -145,11 +145,10 @@ npm run start
 The portal allows directors to manage incoming enquiries and make live updates to site text without code redeployment.
 
 - **URL**: `/admin/login`
-- **Authorized Directors**:
-  - `sudhir.nalawade@ausinx.com.au`
-  - `shibu.madhavan@ausinx.com.au`
-  - `bhagwan.gorade@ausinx.com.au`
-- **Password**: Set during database seeding or in Firebase Auth (refer to `ADMIN_GUIDE.md`).
+- **Primary Admin Login**:
+  - **Login ID**: `Asuinx@admin`
+  - **Password**: `Ausinx@2026`
+- **Director Accounts**: `sudhirnalawade2003@gmail.com`, `shibu.madhavan1977@gmail.com`, `bhagawangorade@gmail.com`
 - **Features**:
   - **Enquiries Inbox**: Real-time listing of customer submissions with contact info, requested service, urgency, and timestamp. Mark as `contacted`, `in-progress`, `resolved`, or delete spam.
   - **Services Editor**: Edit tagline, description, features list, and deliverables for each of the 4 service pillars.
