@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
       if (!res.ok || !data.success) {
         setError(data.error || "Login failed. Please check your credentials.");
       } else {
-        router.push("/admin");
+        window.location.href = "/admin";
       }
     } catch {
       setError("Network error connecting to login service.");

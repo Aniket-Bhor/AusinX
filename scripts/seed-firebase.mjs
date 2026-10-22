@@ -313,9 +313,18 @@ async function seedDatabase() {
       active: true,
       updatedAt: new Date().toISOString(),
     });
-    console.log(`  ✓ Registered staff member: ${staff.name} (${staff.email})`);
-  }
-
+  // 4. Register dynamic admin user under /user
+  console.log("--> Recording admin credentials under /user...");
+  await db.ref("user/ausinx_admin").set({
+    id: "ausinx@admin",
+    username: "ausinx@admin",
+    password: "ausinx@2026",
+    name: "AusinX Administrator",
+    role: "Administrator",
+    active: true,
+    updatedAt: new Date().toISOString(),
+  });
+  console.log("  ✓ Registered admin login in /user: ausinx@admin");
 
   console.log("\n=======================================================");
   console.log("🎉 Firebase Database and Auth Seed Complete!");

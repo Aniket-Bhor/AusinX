@@ -20,6 +20,10 @@
       ".read": true,
       ".write": "auth != null"
     },
+    "user": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
     "enquiries": {
       ".read": "auth != null",
       ".write": false

@@ -8,12 +8,13 @@ Welcome to the **AusinX Solutions Admin Portal** (`/admin`). This guide explains
 
 1. Open your web browser and navigate to:  
    **`https://www.ausinx.com.au/admin/login`** (or `http://localhost:3000/admin/login` when testing locally).
-2. Enter your admin ID or email:
-   - **Primary Admin ID:** `Asuinx@admin`
-   - **Director accounts:** `sudhirnalawade2003@gmail.com`, `shibu.madhavan1977@gmail.com`, `bhagawangorade@gmail.com`
+2. Enter your Admin ID:
+   **`ausinx@admin`**
 3. Enter your password:  
-   **`Ausinx@2026`** *(alternative: `AusinX#Admin2026!`)*
+   **`ausinx@2026`**
 4. Click **Sign In to Admin Panel**.
+
+*(Note: Admin accounts are managed dynamically in the Firebase Realtime Database under the `/user` node).*
 
 ---
 

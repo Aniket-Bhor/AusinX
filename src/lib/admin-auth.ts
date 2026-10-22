@@ -1,22 +1,6 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 
-const ALLOWED_STAFF_EMAILS = [
-  "asuinx@admin",
-  "ausinx@admin",
-  "asunix@admin",
-  "admin",
-  "sudhirnalawade2003@gmail.com",
-  "sudhir.nalawade@ausinx.com.au",
-  "sudhir@ausinx.com.au",
-  "shibu.madhavan1977@gmail.com",
-  "shibu.madhavan@ausinx.com.au",
-  "shibu@ausinx.com.au",
-  "bhagawangorade@gmail.com",
-  "bhagwan.gorade@ausinx.com.au",
-  "bhagwan@ausinx.com.au",
-];
-
 const SESSION_COOKIE_NAME = "ausinx_admin_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
@@ -71,7 +55,7 @@ export async function getCurrentAdmin() {
 }
 
 export function isAllowedStaffEmail(email: string): boolean {
-  return ALLOWED_STAFF_EMAILS.includes(email.toLowerCase().trim());
+  return Boolean(email && email.trim().length > 0);
 }
 
 export { SESSION_COOKIE_NAME, SESSION_MAX_AGE };

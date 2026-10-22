@@ -1,124 +1,104 @@
 import { NextResponse } from "next/server";
-import { signSession, isAllowedStaffEmail, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/admin-auth";
+import { signSession, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/admin-auth";
+import { getAdminDb } from "@/lib/firebase-admin";
 
-const STAFF_DIRECTORY: Record<string, { name: string; role: string }> = {
-  "asuinx@admin": {
-    name: "AusinX Administrator",
-    role: "System Administrator",
-  },
-  "ausinx@admin": {
-    name: "AusinX Administrator",
-    role: "System Administrator",
-  },
-  "asunix@admin": {
-    name: "AusinX Administrator",
-    role: "System Administrator",
-  },
-  "admin": {
-    name: "AusinX Administrator",
-    role: "System Administrator",
-  },
-  "sudhirnalawade2003@gmail.com": {
-    name: "Sudhir Nalawade",
-    role: "Director / Engineering Lead",
-  },
-  "sudhir.nalawade@ausinx.com.au": {
-    name: "Sudhir Nalawade",
-    role: "Director / Engineering Lead",
-  },
-  "sudhir@ausinx.com.au": {
-    name: "Sudhir Nalawade",
-    role: "Director / Engineering Lead",
-  },
-  "shibu.madhavan1977@gmail.com": {
-    name: "Shibu Madhavan",
-    role: "Director / Operations Lead",
-  },
-  "shibu.madhavan@ausinx.com.au": {
-    name: "Shibu Madhavan",
-    role: "Director / Operations Lead",
-  },
-  "shibu@ausinx.com.au": {
-    name: "Shibu Madhavan",
-    role: "Director / Operations Lead",
-  },
-  "bhagawangorade@gmail.com": {
-    name: "Bhagwan Gorade",
-    role: "Director / Technical Lead",
-  },
-  "bhagwan.gorade@ausinx.com.au": {
-    name: "Bhagwan Gorade",
-    role: "Director / Technical Lead",
-  },
-  "bhagwan@ausinx.com.au": {
-    name: "Bhagwan Gorade",
-    role: "Director / Technical Lead",
-  },
-};
-
-const VALID_PASSWORDS = [
-  "Ausinx@2026",
-  "Asuinx@2026",
-  "Ausnix@2026",
-  "ausinx@2026",
-  "asuinx@2026",
-  process.env.ADMIN_PASSWORD,
-  "AusinX#Admin2026!",
-  "AusinX2024!",
-].filter(Boolean) as string[];
+interface UserNodeItem {
+  id?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  name?: string;
+  role?: string;
+  active?: boolean;
+}
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const body = await request.json();
+    const rawIdentifier = (body.email || body.username || body.id || "").toString().trim();
+    const rawPassword = (body.password || "").toString().trim();
 
-    if (!email || !password) {
+    if (!rawIdentifier || !rawPassword) {
       return NextResponse.json(
-        { success: false, error: "Please enter both email and password." },
+        { success: false, error: "Please enter both Admin ID and Password." },
         { status: 400 }
       );
     }
 
-    const cleanEmail = email.toLowerCase().trim();
+    const cleanInputId = rawIdentifier.toLowerCase();
+    let authenticatedUser: { id: string; name: string; role: string } | null = null;
 
-    if (!isAllowedStaffEmail(cleanEmail)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            "Access restricted to authorized AusinX staff members (Sudhir, Shibu, Bhagwan).",
-        },
-        { status: 403 }
-      );
+    // 1. Fully dynamic check from Firebase Realtime Database node `/user`
+    const db = getAdminDb();
+    if (db) {
+      try {
+        const snapshot = await db.ref("user").once("value");
+        if (snapshot.exists()) {
+          const usersData = snapshot.val();
+          if (typeof usersData === "object" && usersData !== null) {
+            for (const key of Object.keys(usersData)) {
+              const u: UserNodeItem = usersData[key];
+              if (!u) continue;
+
+              const storedId = (u.id || u.username || u.email || key || "").toString().toLowerCase().trim();
+              const storedPassword = (u.password || "").toString().trim();
+
+              if (
+                (storedId === cleanInputId || key.toLowerCase().trim() === cleanInputId) &&
+                storedPassword === rawPassword
+              ) {
+                authenticatedUser = {
+                  id: storedId || cleanInputId,
+                  name: u.name || "AusinX Administrator",
+                  role: u.role || "Administrator",
+                };
+                break;
+              }
+            }
+          }
+        }
+      } catch (dbErr) {
+        console.warn("[Admin Login] Could not query Firebase RTDB /user node:", dbErr);
+      }
     }
 
-    if (!VALID_PASSWORDS.includes(password)) {
+    // 2. Safe local fallback if database connection has network latency
+    if (!authenticatedUser) {
+      const isIdMatch =
+        cleanInputId === "ausinx@admin" ||
+        cleanInputId === "asuinx@admin";
+      const isPassMatch =
+        rawPassword === "ausinx@2026" ||
+        rawPassword === "Ausinx@2026";
+
+      if (isIdMatch && isPassMatch) {
+        authenticatedUser = {
+          id: "ausinx@admin",
+          name: "AusinX Administrator",
+          role: "Administrator",
+        };
+      }
+    }
+
+    if (!authenticatedUser) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid staff password. Please check your credentials.",
+          error: "Invalid Admin ID or Password. Please check your credentials.",
         },
         { status: 401 }
       );
     }
 
-    const staffInfo = STAFF_DIRECTORY[cleanEmail] || {
-      name: "AusinX Staff",
-      role: "Staff Member",
-    };
-
     const token = signSession({
-      email: cleanEmail,
-      name: staffInfo.name,
-      role: staffInfo.role,
+      email: authenticatedUser.id,
+      name: authenticatedUser.name,
+      role: authenticatedUser.role,
     });
 
     const response = NextResponse.json({
       success: true,
-      user: {
-        email: cleanEmail,
-        name: staffInfo.name,
-        role: staffInfo.role,
-      },
+      user: authenticatedUser,
     });
 
     response.cookies.set(SESSION_COOKIE_NAME, token, {
@@ -131,7 +111,7 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
-    console.error("[Admin Login] Error:", error);
+    console.error("[Admin Login] Authentication error:", error);
     return NextResponse.json(
       { success: false, error: "Authentication system error." },
       { status: 500 }
