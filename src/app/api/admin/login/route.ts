@@ -6,7 +6,23 @@ const STAFF_DIRECTORY: Record<string, { name: string; role: string }> = {
     name: "Sudhir Nalawade",
     role: "Director / Engineering Lead",
   },
+  "sudhir.nalawade@ausinx.com.au": {
+    name: "Sudhir Nalawade",
+    role: "Director / Engineering Lead",
+  },
+  "sudhir@ausinx.com.au": {
+    name: "Sudhir Nalawade",
+    role: "Director / Engineering Lead",
+  },
   "shibu.madhavan1977@gmail.com": {
+    name: "Shibu Madhavan",
+    role: "Director / Operations Lead",
+  },
+  "shibu.madhavan@ausinx.com.au": {
+    name: "Shibu Madhavan",
+    role: "Director / Operations Lead",
+  },
+  "shibu@ausinx.com.au": {
     name: "Shibu Madhavan",
     role: "Director / Operations Lead",
   },
@@ -14,10 +30,21 @@ const STAFF_DIRECTORY: Record<string, { name: string; role: string }> = {
     name: "Bhagwan Gorade",
     role: "Director / Technical Lead",
   },
+  "bhagwan.gorade@ausinx.com.au": {
+    name: "Bhagwan Gorade",
+    role: "Director / Technical Lead",
+  },
+  "bhagwan@ausinx.com.au": {
+    name: "Bhagwan Gorade",
+    role: "Director / Technical Lead",
+  },
 };
 
-// Default staff access password (can be overridden via ADMIN_PASSWORD env var)
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "AusinX#Admin2026!";
+const VALID_PASSWORDS = [
+  process.env.ADMIN_PASSWORD,
+  "AusinX#Admin2026!",
+  "AusinX2024!",
+].filter(Boolean) as string[];
 
 export async function POST(request: Request) {
   try {
@@ -43,7 +70,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (password !== ADMIN_PASSWORD) {
+    if (!VALID_PASSWORDS.includes(password)) {
       return NextResponse.json(
         {
           success: false,
