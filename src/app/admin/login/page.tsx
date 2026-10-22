@@ -89,18 +89,18 @@ export default function AdminLoginPage() {
                 htmlFor="email"
                 className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1"
               >
-                Staff Email Address
+                Staff Admin ID or Email
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   name="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.name@gmail.com"
+                  placeholder="Asunix@admin"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#F8B800] focus:ring-1 focus:ring-[#F8B800] outline-none"
                 />
               </div>

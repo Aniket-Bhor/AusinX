@@ -8,12 +8,11 @@ Welcome to the **AusinX Solutions Admin Portal** (`/admin`). This guide explains
 
 1. Open your web browser and navigate to:  
    **`https://www.ausinx.com.au/admin/login`** (or `http://localhost:3000/admin/login` when testing locally).
-2. Enter your authorized staff email address:
-   - **Sudhir Nalawade:** `sudhirnalawade2003@gmail.com`
-   - **Shibu Madhavan:** `Shibu.madhavan1977@gmail.com`
-   - **Bhagwan Gorade:** `BHAGAWANGORADE@gmail.com`
-3. Enter your default password:  
-   **`AusinX#Admin2026!`** *(Note: You can override this password via the `ADMIN_PASSWORD` environment variable in your hosting dashboard).*
+2. Enter your admin login ID or email:
+   - **Primary Admin ID:** `Asunix@admin`
+   - **Director accounts:** `sudhirnalawade2003@gmail.com`, `shibu.madhavan1977@gmail.com`, `bhagawangorade@gmail.com`
+3. Enter your password:  
+   **`Ausnix@2026`** *(or `AusinX#Admin2026!`)*
 4. Click **Sign In to Admin Panel**.
 
 ---

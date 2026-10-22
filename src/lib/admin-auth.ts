@@ -2,6 +2,9 @@ import crypto from "crypto";
 import { cookies } from "next/headers";
 
 const ALLOWED_STAFF_EMAILS = [
+  "asunix@admin",
+  "ausinx@admin",
+  "admin",
   "sudhirnalawade2003@gmail.com",
   "sudhir.nalawade@ausinx.com.au",
   "sudhir@ausinx.com.au",
