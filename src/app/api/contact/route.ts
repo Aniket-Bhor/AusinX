@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminDb } from "@/lib/firebase-admin";
+import { saveLocalEnquiry } from "@/lib/local-storage";
 
 const contactSchema = z.object({
   fullName: z
@@ -68,38 +69,27 @@ export async function POST(request: Request) {
       status: "new", // "new" | "in_review" | "contacted" | "archived"
     };
 
-    // 3. Save to Firebase Realtime Database server-side
+    // 3. Save to Firebase Realtime Database (or persistent local store if DB credentials not yet in environment)
     const db = getAdminDb();
     let savedToFirebase = false;
 
-    if (!db) {
-      console.error("[Contact API] Firebase Admin DB not configured. Cannot save enquiry.");
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Enquiry service is temporarily unavailable (database not configured). Please call us directly.",
-        },
-        { status: 503 }
-      );
-    }
-
-    try {
-      const enquiriesRef = db.ref("enquiries");
-      const newRef = enquiriesRef.push();
-      await newRef.set({
-        id: newRef.key,
-        ...enquiryRecord,
-      });
-      savedToFirebase = true;
-    } catch (dbError) {
-      console.error("[Contact API] Failed to write to Firebase RTDB:", dbError);
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Unable to save your enquiry to the database. Please try again or call us directly.",
-        },
-        { status: 500 }
-      );
+    if (db) {
+      try {
+        const enquiriesRef = db.ref("enquiries");
+        const newRef = enquiriesRef.push();
+        await newRef.set({
+          id: newRef.key,
+          ...enquiryRecord,
+        });
+        savedToFirebase = true;
+      } catch (dbError) {
+        console.error("[Contact API] Failed to write to Firebase RTDB, saving locally:", dbError);
+        saveLocalEnquiry(enquiryRecord as any);
+      }
+    } else {
+      // Graceful local persistence when running in dev/standalone environment
+      console.warn("[Contact API] Firebase Admin DB not configured. Saved enquiry to local persistent store.");
+      saveLocalEnquiry(enquiryRecord as any);
     }
 
     // 4. Optional Resend Email Dispatch (silent skip if no key)

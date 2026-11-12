@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
+import LayoutClientWrapper from "@/components/layout/LayoutClientWrapper";
 import { getServices, getSiteImages, getSiteSettings } from "@/lib/content";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -103,10 +102,12 @@ async function SiteChrome({ children }: { children: React.ReactNode }) {
   const serviceNav = services.map(({ slug, navTitle }) => ({ slug, navTitle }));
 
   return (
-    <>
-      <Header services={serviceNav} siteSettings={siteSettings} logoUrl={siteImages.headerLogo} />
-      <main className="flex-1">{children}</main>
-      <Footer services={serviceNav} siteSettings={siteSettings} logoUrl={siteImages.headerLogo} />
-    </>
+    <LayoutClientWrapper
+      serviceNav={serviceNav}
+      siteSettings={siteSettings}
+      headerLogo={siteImages.headerLogo}
+    >
+      {children}
+    </LayoutClientWrapper>
   );
 }

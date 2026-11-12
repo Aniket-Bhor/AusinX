@@ -27,8 +27,16 @@ import {
   X,
   ImageIcon,
   RotateCcw,
+  Eye,
+  EyeOff,
+  ChevronDown,
 } from "lucide-react";
-import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
+import {
+  defaultHeroMetrics,
+  defaultSiteImages,
+  type HeroMetricsConfig,
+  type SiteImages,
+} from "@/lib/site-images";
 
 interface AdminUser {
   email: string;
@@ -65,6 +73,9 @@ export default function AdminDashboardPage() {
   // Enquiries state
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loadingEnquiries, setLoadingEnquiries] = useState(false);
+  const [enquiryFilter, setEnquiryFilter] = useState<
+    "all" | Enquiry["status"]
+  >("all");
 
   // Site Settings state
   const [settingsData, setSettingsData] = useState<any>(null);
@@ -75,10 +86,13 @@ export default function AdminDashboardPage() {
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
   const [savingServices, setSavingServices] = useState(false);
   const [uploadingServiceImage, setUploadingServiceImage] = useState(false);
+  const [showAdvancedService, setShowAdvancedService] = useState(false);
 
-  // Home / About / Lifecycle state
+  // Home / About / Lifecycle / Hero Stats state
   const [aboutData, setAboutData] = useState<any>(null);
   const [lifecycleData, setLifecycleData] = useState<any[]>([]);
+  const [heroMetricsData, setHeroMetricsData] =
+    useState<HeroMetricsConfig>(defaultHeroMetrics);
   const [savingHome, setSavingHome] = useState(false);
 
   // Website Images state
@@ -135,13 +149,14 @@ export default function AdminDashboardPage() {
   // Load Content from RTDB
   const loadContent = async () => {
     try {
-      const [resSettings, resServices, resAbout, resLifecycle, resImages] =
+      const [resSettings, resServices, resAbout, resLifecycle, resImages, resMetrics] =
         await Promise.all([
           fetch("/api/admin/content?section=siteSettings"),
           fetch("/api/admin/content?section=services"),
           fetch("/api/admin/content?section=about"),
           fetch("/api/admin/content?section=lifecycle"),
           fetch("/api/admin/content?section=siteImages"),
+          fetch("/api/admin/content?section=heroMetrics"),
         ]);
 
       const sData = await resSettings.json();
@@ -149,6 +164,7 @@ export default function AdminDashboardPage() {
       const aData = await resAbout.json();
       const lData = await resLifecycle.json();
       const iData = await resImages.json();
+      const mData = await resMetrics.json();
 
       if (sData.data) setSettingsData(sData.data);
       if (srvData.data) {
@@ -166,6 +182,12 @@ export default function AdminDashboardPage() {
       }
       if (iData.data && typeof iData.data === "object") {
         setSiteImagesData({ ...defaultSiteImages, ...iData.data });
+      }
+      if (mData.data && typeof mData.data === "object" && Array.isArray(mData.data.items)) {
+        setHeroMetricsData({
+          enabled: typeof mData.data.enabled === "boolean" ? mData.data.enabled : true,
+          items: mData.data.items,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -350,8 +372,13 @@ export default function AdminDashboardPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ section: "lifecycle", data: lifecycleData }),
         }),
+        fetch("/api/admin/content", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ section: "heroMetrics", data: heroMetricsData }),
+        }),
       ]);
-      showFeedback("success", "Home and lifecycle copy updated in Firebase RTDB.");
+      showFeedback("success", "Home, Hero Stats & Lifecycle saved to live site.");
     } catch {
       showFeedback("error", "Error saving home sections.");
     } finally {
@@ -492,65 +519,65 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("enquiries")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "enquiries"
-                ? "border-[#059669] text-[#059669]"
+                ? "border-[#059669] text-[#34D399]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Inbox className="w-4 h-4" />
-            <span>Enquiries Inbox</span>
+            <span>Enquiries</span>
             {enquiries.filter((e) => e.status === "new").length > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#059669] text-[#0F172A] text-[10px] font-black">
+              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#EF4444] text-white text-[10px] font-black">
                 {enquiries.filter((e) => e.status === "new").length}
               </span>
             )}
           </button>
 
           <button
+            onClick={() => setActiveTab("home")}
+            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
+              activeTab === "home"
+                ? "border-[#059669] text-[#34D399]"
+                : "border-transparent text-slate-400 hover:text-white"
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            <span>Home &amp; Stats</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab("services")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "services"
-                ? "border-[#059669] text-[#059669]"
+                ? "border-[#059669] text-[#34D399]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Wrench className="w-4 h-4" />
-            <span>Services Editor</span>
+            <span>Services</span>
           </button>
 
           <button
             onClick={() => setActiveTab("images")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "images"
-                ? "border-[#059669] text-[#059669]"
+                ? "border-[#059669] text-[#34D399]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <ImageIcon className="w-4 h-4" />
-            <span>Website Images</span>
+            <span>Images</span>
           </button>
 
           <button
             onClick={() => setActiveTab("settings")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "settings"
-                ? "border-[#059669] text-[#059669]"
+                ? "border-[#059669] text-[#34D399]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Settings className="w-4 h-4" />
-            <span>Site Settings</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("home")}
-            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-              activeTab === "home"
-                ? "border-[#059669] text-[#059669]"
-                : "border-transparent text-slate-400 hover:text-white"
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>Home & Lifecycle</span>
+            <span>Company Info</span>
           </button>
         </div>
       </header>
@@ -575,46 +602,177 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6">
+        {/* Quick Overview Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab("enquiries");
+              setEnquiryFilter("new");
+            }}
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+          >
+            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              New Enquiries
+            </div>
+            <div className="mt-1 flex items-baseline justify-between">
+              <span className="text-2xl font-extrabold text-[#EF4444]">
+                {enquiries.filter((e) => e.status === "new").length}
+              </span>
+              <span className="text-[11px] font-semibold text-slate-400">
+                of {enquiries.length} total
+              </span>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("home")}
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+          >
+            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Hero Stats Bar
+            </div>
+            <div className="mt-1 flex items-center justify-between">
+              <span
+                className={`text-sm font-extrabold px-2.5 py-0.5 rounded-full ${
+                  heroMetricsData.enabled
+                    ? "bg-emerald-100 text-emerald-800"
+                    : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                {heroMetricsData.enabled ? "Visible on Site" : "Hidden"}
+              </span>
+              <span className="text-[11px] font-semibold text-[#059669]">
+                Edit →
+              </span>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("services")}
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+          >
+            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Active Services
+            </div>
+            <div className="mt-1 flex items-baseline justify-between">
+              <span className="text-2xl font-extrabold text-[#0F172A]">
+                {servicesData.length}
+              </span>
+              <span className="text-[11px] font-semibold text-[#059669]">
+                Manage →
+              </span>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("images")}
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+          >
+            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Website Photos
+            </div>
+            <div className="mt-1 flex items-baseline justify-between">
+              <span className="text-2xl font-extrabold text-[#F59E0B]">9</span>
+              <span className="text-[11px] font-semibold text-[#059669]">
+                Upload →
+              </span>
+            </div>
+          </button>
+        </div>
+
         {/* TAB 1: ENQUIRIES INBOX */}
         {activeTab === "enquiries" && (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
-                  Website Enquiries Inbox
+                  Customer Enquiries
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
-                  Enquiries received through the online contact form stored in Firebase Realtime Database.
+                  Every contact form submission is saved here until you delete it.
                 </p>
               </div>
               <button
                 onClick={loadEnquiries}
                 disabled={loadingEnquiries}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm self-start"
               >
                 <RefreshCw
                   className={`w-3.5 h-3.5 ${
                     loadingEnquiries ? "animate-spin" : ""
                   }`}
                 />
-                <span>Refresh Inbox</span>
+                <span>Refresh</span>
               </button>
             </div>
 
-            {enquiries.length === 0 ? (
+            {enquiries.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    { id: "all", label: `All (${enquiries.length})` },
+                    {
+                      id: "new",
+                      label: `New (${enquiries.filter((e) => e.status === "new").length})`,
+                    },
+                    {
+                      id: "in_review",
+                      label: `In Review (${enquiries.filter((e) => e.status === "in_review").length})`,
+                    },
+                    {
+                      id: "contacted",
+                      label: `Contacted (${enquiries.filter((e) => e.status === "contacted").length})`,
+                    },
+                    {
+                      id: "archived",
+                      label: `Archived (${enquiries.filter((e) => e.status === "archived").length})`,
+                    },
+                  ] as const
+                ).map((pill) => (
+                  <button
+                    key={pill.id}
+                    type="button"
+                    onClick={() => setEnquiryFilter(pill.id)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                      enquiryFilter === pill.id
+                        ? "bg-[#0F172A] text-white"
+                        : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    {pill.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {enquiries.filter((e) =>
+              enquiryFilter === "all" ? true : e.status === enquiryFilter
+            ).length === 0 ? (
               <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-sm space-y-3">
                 <Inbox className="w-12 h-12 text-slate-300 mx-auto" />
                 <h3 className="text-lg font-bold text-[#0F172A]">
-                  No Enquiries Yet
+                  {enquiries.length === 0
+                    ? "No Enquiries Yet"
+                    : "No Enquiries in This Filter"}
                 </h3>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  When healthcare facilities submit service requests on the contact form, they will appear here in real time.
+                  {enquiries.length === 0
+                    ? "When healthcare facilities submit service requests on the contact form, they will appear here."
+                    : "Try switching the filter above to view other enquiries."}
                 </p>
               </div>
             ) : (
               <div className="space-y-4">
-                {enquiries.map((enq) => (
+                {enquiries
+                  .filter((e) =>
+                    enquiryFilter === "all" ? true : e.status === enquiryFilter
+                  )
+                  .map((enq) => (
                   <div
                     key={enq.id}
                     className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow space-y-4"
@@ -934,113 +1092,142 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Title</label>
-                  <input
-                    type="text"
-                    value={servicesData[selectedServiceIndex]?.metaTitle || ""}
-                    onChange={(e) => {
-                      const updated = [...servicesData];
-                      updated[selectedServiceIndex].metaTitle = e.target.value;
-                      setServicesData(updated);
-                    }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedService((prev) => !prev)}
+                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#0F172A] px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors"
+                >
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      showAdvancedService ? "rotate-180" : ""
+                    }`}
                   />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Description</label>
-                  <input
-                    type="text"
-                    value={servicesData[selectedServiceIndex]?.metaDescription || ""}
-                    onChange={(e) => {
-                      const updated = [...servicesData];
-                      updated[selectedServiceIndex].metaDescription = e.target.value;
-                      setServicesData(updated);
-                    }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
-                  />
-                </div>
+                  <span>
+                    {showAdvancedService
+                      ? "Hide Advanced SEO & Sub-Services"
+                      : `Advanced SEO & Sub-Services (${
+                          servicesData[selectedServiceIndex]?.subServices?.length || 0
+                        })`}
+                  </span>
+                </button>
               </div>
 
-              {/* Sub-services */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center justify-between gap-3">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    Sub-Services Breakdown
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updated = [...servicesData];
-                      updated[selectedServiceIndex].subServices = [
-                        ...(updated[selectedServiceIndex].subServices || []),
-                        { title: "", description: "" },
-                      ];
-                      setServicesData(updated);
-                    }}
-                    className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#059669] hover:text-[#047857]"
-                  >
-                    <Plus className="h-3.5 w-3.5" /> Add detail
-                  </button>
-                </div>
-                {servicesData[selectedServiceIndex]?.subServices?.map(
-                  (sub: any, subIdx: number) => (
-                    <div
-                      key={subIdx}
-                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3"
-                    >
-                      <div className="flex justify-end">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const updated = [...servicesData];
-                            updated[selectedServiceIndex].subServices = updated[
-                              selectedServiceIndex
-                            ].subServices.filter((_: any, index: number) => index !== subIdx);
-                            setServicesData(updated);
-                          }}
-                          aria-label="Remove sub-service"
-                          className="rounded-lg p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-600"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
+              {showAdvancedService && (
+                <div className="space-y-6 pt-2 border-t border-slate-100">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Search Title (SEO)
+                      </label>
                       <input
                         type="text"
-                        value={sub.title}
-                        placeholder="Sub-service title"
+                        value={servicesData[selectedServiceIndex]?.metaTitle || ""}
                         onChange={(e) => {
                           const updated = [...servicesData];
-                          updated[selectedServiceIndex].subServices[subIdx].title =
-                            e.target.value;
+                          updated[selectedServiceIndex].metaTitle = e.target.value;
                           setServicesData(updated);
                         }}
-                        className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold"
-                      />
-                      <textarea
-                        rows={2}
-                        value={sub.description}
-                        placeholder="Sub-service description"
-                        onChange={(e) => {
-                          const updated = [...servicesData];
-                          updated[selectedServiceIndex].subServices[
-                            subIdx
-                          ].description = e.target.value;
-                          setServicesData(updated);
-                        }}
-                        className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                       />
                     </div>
-                  )
-                )}
-              </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Search Description (SEO)
+                      </label>
+                      <input
+                        type="text"
+                        value={servicesData[selectedServiceIndex]?.metaDescription || ""}
+                        onChange={(e) => {
+                          const updated = [...servicesData];
+                          updated[selectedServiceIndex].metaDescription = e.target.value;
+                          setServicesData(updated);
+                        }}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Sub-services */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Sub-Services Breakdown
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...servicesData];
+                          updated[selectedServiceIndex].subServices = [
+                            ...(updated[selectedServiceIndex].subServices || []),
+                            { title: "", description: "" },
+                          ];
+                          setServicesData(updated);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#059669] hover:text-[#047857]"
+                      >
+                        <Plus className="h-3.5 w-3.5" /> Add detail
+                      </button>
+                    </div>
+                    {servicesData[selectedServiceIndex]?.subServices?.map(
+                      (sub: any, subIdx: number) => (
+                        <div
+                          key={subIdx}
+                          className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3"
+                        >
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = [...servicesData];
+                                updated[selectedServiceIndex].subServices = updated[
+                                  selectedServiceIndex
+                                ].subServices.filter((_: any, index: number) => index !== subIdx);
+                                setServicesData(updated);
+                              }}
+                              aria-label="Remove sub-service"
+                              className="rounded-lg p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={sub.title}
+                            placeholder="Sub-service title"
+                            onChange={(e) => {
+                              const updated = [...servicesData];
+                              updated[selectedServiceIndex].subServices[subIdx].title =
+                                e.target.value;
+                              setServicesData(updated);
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold"
+                          />
+                          <textarea
+                            rows={2}
+                            value={sub.description}
+                            placeholder="Sub-service description"
+                            onChange={(e) => {
+                              const updated = [...servicesData];
+                              updated[selectedServiceIndex].subServices[
+                                subIdx
+                              ].description = e.target.value;
+                              setServicesData(updated);
+                            }}
+                            className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="pt-4 border-t border-slate-100 flex justify-end">
                 <button
                   type="submit"
                   disabled={savingServices}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-white font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingServices ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1122,7 +1309,7 @@ export default function AdminDashboardPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Tagline (Marked TODO(client-review))
+                  Company Tagline
                 </label>
                 <input
                   type="text"
@@ -1227,7 +1414,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingSettings}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-white font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingSettings ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1241,26 +1428,211 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB 4: HOME & LIFECYCLE */}
+        {/* TAB 4: HOME, HERO STATS & LIFECYCLE */}
         {activeTab === "home" && aboutData && (
           <div className="space-y-6">
-            <div>
-              <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
-                Home & Lifecycle Sections
-              </h1>
-              <p className="text-xs text-slate-500 mt-1">
-                Edit the introductory story, Why Healthcare Teams Choose AusinX, and 5-stage lifecycle strip.
-              </p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
+                  Home Page &amp; Hero Stats
+                </h1>
+                <p className="text-xs text-slate-500 mt-1">
+                  Turn the Hero Stats Bar on or off, edit the numbers/labels, or update your About &amp; Lifecycle copy.
+                </p>
+              </div>
             </div>
 
             <form
               onSubmit={handleSaveHome}
-              className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6"
+              className="space-y-6"
             >
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Intro Story Paragraphs (Section 7.1)
-                </label>
+              {/* HERO STATS BAR (OPTIONAL & EDITABLE) */}
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                  <div>
+                    <h2 className="text-lg font-extrabold text-[#0F172A] font-heading">
+                      Hero Stats Bar (Optional)
+                    </h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      The 4-column metrics strip below the homepage hero banner (24/7, 99.8%, 15+ Yrs, 100%).
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setHeroMetricsData((prev) => ({
+                          ...prev,
+                          enabled: !prev.enabled,
+                        }))
+                      }
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors border ${
+                        heroMetricsData.enabled
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                          : "bg-slate-100 text-slate-600 border-slate-300"
+                      }`}
+                    >
+                      {heroMetricsData.enabled ? (
+                        <Eye className="w-4 h-4 text-[#059669]" />
+                      ) : (
+                        <EyeOff className="w-4 h-4 text-slate-500" />
+                      )}
+                      <span>
+                        {heroMetricsData.enabled ? "Shown on Site" : "Hidden on Site"}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setHeroMetricsData(defaultHeroMetrics)}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setHeroMetricsData((prev) => ({
+                          ...prev,
+                          items: [
+                            ...prev.items,
+                            {
+                              id: `stat-${Date.now()}`,
+                              stat: "New",
+                              label: "Metric Title",
+                              desc: "Short subtitle",
+                              color: "emerald",
+                              visible: true,
+                            },
+                          ],
+                        }))
+                      }
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white bg-[#0F172A] hover:bg-[#047857] transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Stat</span>
+                    </button>
+                  </div>
+                </div>
+
+                {!heroMetricsData.enabled && (
+                  <div className="rounded-2xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs font-medium text-amber-900">
+                    The Hero Stats Bar is currently hidden. Click <strong>Shown on Site</strong> above and save to display it again.
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {heroMetricsData.items.map((metric, idx) => (
+                    <div
+                      key={metric.id || idx}
+                      className={`p-4 rounded-2xl border space-y-2.5 transition-opacity ${
+                        metric.visible
+                          ? "bg-slate-50 border-slate-200"
+                          : "bg-slate-100/60 border-dashed border-slate-300 opacity-65"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = [...heroMetricsData.items];
+                            items[idx] = { ...items[idx], visible: !items[idx].visible };
+                            setHeroMetricsData({ ...heroMetricsData, items });
+                          }}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 hover:text-[#0F172A]"
+                        >
+                          {metric.visible ? (
+                            <Eye className="w-3.5 h-3.5 text-[#059669]" />
+                          ) : (
+                            <EyeOff className="w-3.5 h-3.5 text-slate-400" />
+                          )}
+                          <span>{metric.visible ? "Visible" : "Hidden"}</span>
+                        </button>
+
+                        <div className="flex items-center gap-1.5">
+                          <select
+                            value={metric.color}
+                            onChange={(e) => {
+                              const items = [...heroMetricsData.items];
+                              items[idx] = {
+                                ...items[idx],
+                                color: e.target.value as "red" | "emerald" | "amber",
+                              };
+                              setHeroMetricsData({ ...heroMetricsData, items });
+                            }}
+                            className="text-[11px] font-bold px-2 py-0.5 rounded-lg border border-slate-300 bg-white"
+                          >
+                            <option value="red">Red</option>
+                            <option value="emerald">Green</option>
+                            <option value="amber">Amber</option>
+                          </select>
+
+                          {heroMetricsData.items.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const items = heroMetricsData.items.filter(
+                                  (_, i) => i !== idx
+                                );
+                                setHeroMetricsData({ ...heroMetricsData, items });
+                              }}
+                              title="Remove stat"
+                              className="p-1 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <input
+                        type="text"
+                        value={metric.stat}
+                        placeholder="e.g. 24/7"
+                        onChange={(e) => {
+                          const items = [...heroMetricsData.items];
+                          items[idx] = { ...items[idx], stat: e.target.value };
+                          setHeroMetricsData({ ...heroMetricsData, items });
+                        }}
+                        className="w-full px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-base font-extrabold text-[#0F172A]"
+                      />
+
+                      <input
+                        type="text"
+                        value={metric.label}
+                        placeholder="Title"
+                        onChange={(e) => {
+                          const items = [...heroMetricsData.items];
+                          items[idx] = { ...items[idx], label: e.target.value };
+                          setHeroMetricsData({ ...heroMetricsData, items });
+                        }}
+                        className="w-full px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-xs font-semibold"
+                      />
+
+                      <input
+                        type="text"
+                        value={metric.desc}
+                        placeholder="Subtitle"
+                        onChange={(e) => {
+                          const items = [...heroMetricsData.items];
+                          items[idx] = { ...items[idx], desc: e.target.value };
+                          setHeroMetricsData({ ...heroMetricsData, items });
+                        }}
+                        className="w-full px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-[11px] text-slate-600"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    About Us Intro Paragraphs
+                  </label>
                 <div className="space-y-2">
                   {aboutData.intro?.map((p: string, idx: number) => (
                     <textarea
@@ -1351,19 +1723,20 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={savingHome}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
-                >
-                  {savingHome ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Save className="w-4 h-4" />
-                  )}
-                  <span>Save Home & Lifecycle Sections</span>
-                </button>
+                <div className="pt-4 border-t border-slate-100 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={savingHome}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-white font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                  >
+                    {savingHome ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Save className="w-4 h-4" />
+                    )}
+                    <span>Save Home &amp; Stats</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>

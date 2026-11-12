@@ -12,14 +12,26 @@ import {
   MessageSquare,
 } from "lucide-react";
 import type { SiteSettings } from "@/lib/content";
+import { defaultHeroMetrics, type HeroMetricsConfig } from "@/lib/site-images";
+
+const metricColorMap = {
+  red: "text-[#EF4444]",
+  emerald: "text-[#10B981]",
+  amber: "text-[#F59E0B]",
+};
 
 export default function HeroClient({
   siteSettings,
   heroImage = "/images/client/imaging-suite.jpeg",
+  heroMetrics = defaultHeroMetrics,
 }: {
   siteSettings: SiteSettings;
   heroImage?: string;
+  heroMetrics?: HeroMetricsConfig;
 }) {
+  const visibleMetrics = heroMetrics.enabled
+    ? (heroMetrics.items || []).filter((item) => item.visible !== false && item.stat?.trim())
+    : [];
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#020617] text-white pt-10 pb-20 sm:pt-14 sm:pb-28">
       {/* Glowing Background Radial Effects */}
@@ -112,30 +124,41 @@ export default function HeroClient({
 
         </div>
 
-        {/* Bottom High-Impact Metrics Ribbon (Red / Green / Amber Clinical Telemetry Trio) */}
-        <div className="mt-16 sm:mt-20 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { stat: "24/7", label: "Emergency Breakdown Callout", desc: "Melbourne & National", color: "text-[#EF4444]" },
-            { stat: "99.8%", label: "Clinical Equipment Uptime", desc: "Proactive Preventive Care", color: "text-[#10B981]" },
-            { stat: "15+ Yrs", label: "Specialist Engineering", desc: "Linac, CT & Biomedical", color: "text-[#F59E0B]" },
-            { stat: "100%", label: "Australian Owned", desc: "Local Leadership & Spares", color: "text-[#34D399]" },
-          ].map((metric) => (
-            <div
-              key={metric.label}
-              className="group p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/10"
-            >
-              <div className={`text-3xl sm:text-4xl font-extrabold font-heading tracking-tight group-hover:scale-105 transition-transform ${metric.color}`}>
-                {metric.stat}
+        {/* Bottom High-Impact Metrics Ribbon (Optional & Editable in Admin) */}
+        {visibleMetrics.length > 0 && (
+          <div
+            className={`mt-16 sm:mt-20 pt-8 border-t border-white/10 grid gap-6 text-center ${
+              visibleMetrics.length === 1
+                ? "grid-cols-1 max-w-sm mx-auto"
+                : visibleMetrics.length === 2
+                ? "grid-cols-2 max-w-2xl mx-auto"
+                : visibleMetrics.length === 3
+                ? "grid-cols-1 sm:grid-cols-3"
+                : "grid-cols-2 md:grid-cols-4"
+            }`}
+          >
+            {visibleMetrics.map((metric) => (
+              <div
+                key={metric.id || metric.label}
+                className="group p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/10"
+              >
+                <div
+                  className={`text-3xl sm:text-4xl font-extrabold font-heading tracking-tight group-hover:scale-105 transition-transform ${
+                    metricColorMap[metric.color] || "text-[#10B981]"
+                  }`}
+                >
+                  {metric.stat}
+                </div>
+                <div className="text-sm font-semibold text-white mt-1">
+                  {metric.label}
+                </div>
+                <div className="text-xs text-slate-400 mt-0.5">
+                  {metric.desc}
+                </div>
               </div>
-              <div className="text-sm font-semibold text-white mt-1">
-                {metric.label}
-              </div>
-              <div className="text-xs text-slate-400 mt-0.5">
-                {metric.desc}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
       </div>
     </section>

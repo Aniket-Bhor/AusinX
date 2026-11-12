@@ -24,6 +24,7 @@
 .DS_Store
 *.pem
 *.xlsx
+.data/
 
 # debug
 npm-debug.log*

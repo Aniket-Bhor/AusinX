@@ -1,8 +1,15 @@
 import { cacheTag } from "next/cache";
-import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
+import { getLocalContentSection } from "@/lib/local-content-storage";
+import {
+  defaultHeroMetrics,
+  defaultSiteImages,
+  type HeroMetricItem,
+  type HeroMetricsConfig,
+  type SiteImages,
+} from "@/lib/site-images";
 
-export type { SiteImages };
-export { defaultSiteImages };
+export type { HeroMetricItem, HeroMetricsConfig, SiteImages };
+export { defaultHeroMetrics, defaultSiteImages };
 
 export interface SubService {
   title: string;
@@ -249,6 +256,12 @@ const RTDB_BASE =
 export async function getSiteSettings(): Promise<SiteSettings> {
   "use cache";
   cacheTag("site-settings");
+
+  const local = getLocalContentSection("siteSettings") as SiteSettings | null;
+  if (local && typeof local === "object" && local.companyName) {
+    return local;
+  }
+
   try {
     const res = await fetch(`${RTDB_BASE}/content/siteSettings.json`, {
       signal: AbortSignal.timeout(2500),
@@ -266,6 +279,12 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 export async function getAboutCopy(): Promise<typeof aboutCopy> {
   "use cache";
   cacheTag("about-copy");
+
+  const local = getLocalContentSection("about") as typeof aboutCopy | null;
+  if (local && typeof local === "object" && local.intro && local.whyChooseUs) {
+    return local;
+  }
+
   try {
     const res = await fetch(`${RTDB_BASE}/content/about.json`, {
       signal: AbortSignal.timeout(2500),
@@ -320,6 +339,12 @@ function normalizeServiceImages(services: ServiceDetail[]): ServiceDetail[] {
 export async function getServices(): Promise<ServiceDetail[]> {
   "use cache";
   cacheTag("services");
+
+  const local = getLocalContentSection("services") as ServiceDetail[] | null;
+  if (local && Array.isArray(local) && local.length > 0) {
+    return normalizeServiceImages(local);
+  }
+
   try {
     const res = await fetch(`${RTDB_BASE}/content/services.json`, {
       signal: AbortSignal.timeout(2500),
@@ -349,6 +374,12 @@ export async function getServiceBySlug(slug: string): Promise<ServiceDetail | un
 export async function getLifecycleSteps(): Promise<LifecycleStep[]> {
   "use cache";
   cacheTag("lifecycle-steps");
+
+  const local = getLocalContentSection("lifecycle") as LifecycleStep[] | null;
+  if (local && Array.isArray(local) && local.length > 0) {
+    return local;
+  }
+
   try {
     const res = await fetch(`${RTDB_BASE}/content/lifecycle.json`, {
       signal: AbortSignal.timeout(2500),
@@ -371,6 +402,19 @@ export async function getLifecycleSteps(): Promise<LifecycleStep[]> {
 export async function getSiteImages(): Promise<SiteImages> {
   "use cache";
   cacheTag("site-images");
+
+  const local = getLocalContentSection("siteImages") as Partial<SiteImages> | null;
+  if (local && typeof local === "object") {
+    const merged: SiteImages = { ...defaultSiteImages };
+    (Object.keys(defaultSiteImages) as (keyof SiteImages)[]).forEach((key) => {
+      const val = local[key];
+      if (typeof val === "string" && val.trim().length > 0) {
+        merged[key] = val.trim();
+      }
+    });
+    return merged;
+  }
+
   try {
     const res = await fetch(`${RTDB_BASE}/content/siteImages.json`, {
       signal: AbortSignal.timeout(2500),
@@ -392,5 +436,37 @@ export async function getSiteImages(): Promise<SiteImages> {
     // Fallback to default local images
   }
   return defaultSiteImages;
+}
+
+export async function getHeroMetrics(): Promise<HeroMetricsConfig> {
+  "use cache";
+  cacheTag("hero-metrics");
+
+  // In local dev/fallback, read directly from local content storage if available
+  const local = getLocalContentSection("heroMetrics") as HeroMetricsConfig | null;
+  if (local && typeof local === "object" && Array.isArray(local.items)) {
+    return {
+      enabled: typeof local.enabled === "boolean" ? local.enabled : true,
+      items: local.items,
+    };
+  }
+
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/heroMetrics.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === "object" && Array.isArray(data.items)) {
+        return {
+          enabled: typeof data.enabled === "boolean" ? data.enabled : true,
+          items: data.items,
+        };
+      }
+    }
+  } catch {
+    // Fallback to default hero metrics
+  }
+  return defaultHeroMetrics;
 }
 

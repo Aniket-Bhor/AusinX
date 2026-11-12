@@ -22,3 +22,55 @@ export const defaultSiteImages: SiteImages = {
   contactImage: "/images/client/contact-support.jpeg",
 };
 
+export interface HeroMetricItem {
+  id: string;
+  stat: string;
+  label: string;
+  desc: string;
+  color: "red" | "emerald" | "amber";
+  visible: boolean;
+}
+
+export interface HeroMetricsConfig {
+  enabled: boolean;
+  items: HeroMetricItem[];
+}
+
+export const defaultHeroMetrics: HeroMetricsConfig = {
+  enabled: true,
+  items: [
+    {
+      id: "callout",
+      stat: "24/7",
+      label: "Emergency Breakdown Callout",
+      desc: "Melbourne & National",
+      color: "red",
+      visible: true,
+    },
+    {
+      id: "uptime",
+      stat: "99.8%",
+      label: "Clinical Equipment Uptime",
+      desc: "Proactive Preventive Care",
+      color: "emerald",
+      visible: true,
+    },
+    {
+      id: "experience",
+      stat: "15+ Yrs",
+      label: "Specialist Engineering",
+      desc: "Linac, CT & Biomedical",
+      color: "amber",
+      visible: true,
+    },
+    {
+      id: "ownership",
+      stat: "100%",
+      label: "Australian Owned",
+      desc: "Local Leadership & Spares",
+      color: "emerald",
+      visible: true,
+    },
+  ],
+};
+

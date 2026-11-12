@@ -2,6 +2,17 @@ import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/firebase-admin";
+import {
+  initialAboutCopy,
+  initialLifecycleSteps,
+  initialServicesData,
+  initialSiteSettings,
+} from "@/lib/initial-content";
+import { defaultHeroMetrics, defaultSiteImages } from "@/lib/site-images";
+import {
+  getLocalContentSection,
+  saveLocalContentSection,
+} from "@/lib/local-content-storage";
 
 const editableSections = new Set([
   "services",
@@ -9,7 +20,17 @@ const editableSections = new Set([
   "about",
   "lifecycle",
   "siteImages",
+  "heroMetrics",
 ]);
+
+const initialDefaults: Record<string, unknown> = {
+  services: initialServicesData,
+  siteSettings: initialSiteSettings,
+  about: initialAboutCopy,
+  lifecycle: initialLifecycleSteps,
+  siteImages: defaultSiteImages,
+  heroMetrics: defaultHeroMetrics,
+};
 
 export async function GET(request: Request) {
   const admin = await getCurrentAdmin();
@@ -22,18 +43,45 @@ export async function GET(request: Request) {
 
   const db = getAdminDb();
   if (!db) {
-    return NextResponse.json(
-      { error: "Firebase Realtime Database is not configured." },
-      { status: 500 }
-    );
+    // If DB is not configured, check local storage first, then fallback to initial default content
+    if (section) {
+      const localSaved = getLocalContentSection(section);
+      if (localSaved !== null && localSaved !== undefined) {
+        return NextResponse.json({ data: localSaved });
+      }
+      if (initialDefaults[section] !== undefined) {
+        return NextResponse.json({
+          data: initialDefaults[section],
+          warning: "Database not configured. Showing default content.",
+        });
+      }
+    }
+    return NextResponse.json({
+      data: initialDefaults,
+      warning: "Database not configured. Showing default content.",
+    });
   }
 
   try {
     const path = section ? `content/${section}` : "content";
     const snapshot = await db.ref(path).once("value");
-    return NextResponse.json({ data: snapshot.val() });
+    const val = snapshot.val();
+
+    if (val !== null && val !== undefined) {
+      return NextResponse.json({ data: val });
+    }
+
+    // If section doesn't exist yet in DB, return initial defaults so admin sees pre-filled forms
+    if (section && initialDefaults[section] !== undefined) {
+      return NextResponse.json({ data: initialDefaults[section] });
+    }
+
+    return NextResponse.json({ data: val });
   } catch (error) {
     console.error("[Admin Content] Error fetching content:", error);
+    if (section && initialDefaults[section] !== undefined) {
+      return NextResponse.json({ data: initialDefaults[section] });
+    }
     return NextResponse.json(
       { error: "Failed to fetch content from database." },
       { status: 500 }
@@ -48,12 +96,6 @@ export async function PUT(request: Request) {
   }
 
   const db = getAdminDb();
-  if (!db) {
-    return NextResponse.json(
-      { error: "Firebase Realtime Database is not configured." },
-      { status: 500 }
-    );
-  }
 
   try {
     const { section, data } = await request.json();
@@ -127,11 +169,19 @@ export async function PUT(request: Request) {
       data.splice(0, data.length, ...safeServices);
     }
 
-    // Save to content/${section}
-    await db.ref(`content/${section}`).set(data);
+    // Save locally for dev/offline resilience
+    saveLocalContentSection(section, data);
 
-    // Also sync top-level node for compatibility
-    await db.ref(section).set(data);
+    if (db) {
+      try {
+        // Save to content/${section}
+        await db.ref(`content/${section}`).set(data);
+        // Also sync top-level node for compatibility
+        await db.ref(section).set(data);
+      } catch (dbErr) {
+        console.warn("[Admin Content] Failed writing to Firebase RTDB:", dbErr);
+      }
+    }
 
     if (section === "services") {
       revalidateTag("services", { expire: 0 });
@@ -143,15 +193,23 @@ export async function PUT(request: Request) {
       revalidateTag("lifecycle-steps", { expire: 0 });
     } else if (section === "siteImages") {
       revalidateTag("site-images", { expire: 0 });
+    } else if (section === "heroMetrics") {
+      revalidateTag("hero-metrics", { expire: 0 });
     }
 
-    // Record audit trail
-    await db.ref(`auditLog`).push({
-      action: "UPDATE_CONTENT",
-      section,
-      updatedBy: admin.email,
-      timestamp: new Date().toISOString(),
-    });
+    // Record audit trail if db connected
+    if (db) {
+      try {
+        await db.ref(`auditLog`).push({
+          action: "UPDATE_CONTENT",
+          section,
+          updatedBy: admin.email,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (logErr) {
+        console.warn("[Admin Content] Failed writing audit log:", logErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,
