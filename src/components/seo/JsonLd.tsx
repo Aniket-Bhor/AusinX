@@ -1,7 +1,11 @@
 import React from "react";
-import { siteSettings, servicesData } from "@/lib/content";
+import { getServices, getSiteSettings } from "@/lib/content";
 
-export default function JsonLd() {
+export default async function JsonLd() {
+  const [siteSettings, servicesData] = await Promise.all([
+    getSiteSettings(),
+    getServices(),
+  ]);
   const schema = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "MedicalBusiness"],
@@ -10,8 +14,8 @@ export default function JsonLd() {
     alternateName: "AusinX",
     legalName: "AusinX Solutions Pty Ltd",
     url: "https://www.ausinx.com.au",
-    logo: "https://www.ausinx.com.au/images/logo.png",
-    image: "https://www.ausinx.com.au/images/placeholders/hero-equipment.webp",
+    logo: "https://www.ausinx.com.au/images/client/ausinx-logo.jpeg",
+    image: "https://www.ausinx.com.au/images/client/imaging-suite.jpeg",
 
     description:
       "Proudly Australian-owned and operated engineering company providing full lifecycle services for medical equipment, healthcare products and industrial electronics: service, maintenance, installation, commissioning, parts supply, and calibration.",

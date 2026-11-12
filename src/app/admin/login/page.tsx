@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-4">
         <div className="w-16 h-16 rounded-full bg-white p-1 mx-auto shadow-lg flex items-center justify-center">
           <Image
-            src="/images/logo.png"
+            src="/images/client/ausinx-logo-cropped.png"
             alt="AusinX Solutions"
             width={56}
             height={56}
@@ -62,12 +62,12 @@ export default function AdminLoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="bg-[#1A2A3A] py-8 px-6 sm:px-10 shadow-2xl rounded-3xl border border-slate-700 space-y-6">
-          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-start gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+        <div className="bg-[#0B2942] py-8 px-6 sm:px-10 shadow-2xl rounded-3xl border border-slate-700 space-y-6">
+          <div className="p-3.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-xs text-teal-300 flex items-start gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
             <div className="leading-relaxed">
               <strong>Authorized Personnel Only</strong>
-              <p className="text-amber-200/80 mt-0.5">
+              <p className="text-teal-200/80 mt-0.5">
                 Restricted to AusinX management team (Sudhir, Shibu, Bhagwan).
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Asuinx@admin or staff email"
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#F8B800] focus:ring-1 focus:ring-[#F8B800] outline-none"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#07999A] focus:ring-1 focus:ring-[#07999A] outline-none"
                 />
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#F8B800] focus:ring-1 focus:ring-[#F8B800] outline-none"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#07999A] focus:ring-1 focus:ring-[#07999A] outline-none"
                 />
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shadow-md disabled:opacity-50 mt-2"
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50 mt-2"
             >
               {loading ? (
                 <>

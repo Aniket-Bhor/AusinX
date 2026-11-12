@@ -10,16 +10,15 @@ import {
   ArrowRight,
   CheckCircle2,
   ShieldCheck,
-  Phone,
   Mail,
 } from "lucide-react";
-import { servicesData, lifecycleSteps, siteSettings } from "@/lib/content";
+import { getLifecycleSteps, getServices } from "@/lib/content";
 
 export const metadata: Metadata = {
 
   title: "Services & Capabilities | Biomedical Engineering",
   description:
-    "Explore AusinX's four engineering pillars: Service & Maintenance, Installation & Commissioning (Radiotherapy & CT/MRI), Parts & Logistics, and Precision Calibration.",
+    "Explore AusinX biomedical and industrial engineering services, from maintenance and installation to parts supply and precision calibration.",
   openGraph: {
     title: "Services & Capabilities | AusinX Solutions Pty Ltd",
     description:
@@ -35,23 +34,28 @@ const iconMap = {
   calibration: Gauge,
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const [servicesData, lifecycleSteps] = await Promise.all([
+    getServices(),
+    getLifecycleSteps(),
+  ]);
+
   return (
-    <div className="bg-[#F1F5F9] min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* Services Header Banner */}
-      <section className="bg-[#1A2A3A] text-white py-16 sm:py-24 border-b border-slate-700">
+      <section className="bg-[#F5FAF9] text-[#0B2942] py-16 sm:py-24 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-amber-300 text-xs font-semibold border border-white/15">
-              <ShieldCheck className="w-4 h-4 text-[#F8B800]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white text-[#087F86] text-xs font-semibold border border-[#CEE8E5]">
+              <ShieldCheck className="w-4 h-4 text-[#07999A]" />
               <span>Australian Healthcare & Industrial Engineering</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight font-heading">
-              Our Core Pillars & Engineering Capabilities
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#0B2942] tracking-tight leading-tight font-heading">
+              Services for the full equipment lifecycle
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
               AusinX provides a full range of services for medical equipment, healthcare products and industrial products across the entire equipment lifecycle: planning, decommissioning, disposal, installation and commissioning, plus parts supply, service and calibration.
             </p>
           </div>
@@ -70,7 +74,7 @@ export default function ServicesPage() {
                 <div
                   key={service.slug}
                   id={service.slug}
-                  className="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 grid grid-cols-1 lg:grid-cols-12 gap-0"
+                  className="bg-white rounded-[1.6rem] overflow-hidden border border-slate-200/90 shadow-[0_8px_28px_rgba(15,41,57,.045)] hover:shadow-[0_16px_42px_rgba(15,41,57,.1)] transition-all duration-500 grid grid-cols-1 lg:grid-cols-12 gap-0"
                 >
                   {/* Service Visual */}
                   <div
@@ -86,16 +90,11 @@ export default function ServicesPage() {
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 42vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:hidden" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/20 via-transparent to-transparent lg:hidden" />
                     <div className="absolute top-4 left-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#1A2A3A] text-[#F8B800] flex items-center justify-center shadow-lg">
+                      <div className="w-12 h-12 rounded-xl bg-white/95 text-[#087F86] flex items-center justify-center shadow-lg">
                         <Icon className="w-6 h-6" />
                       </div>
-                    </div>
-                    <div className="absolute bottom-3 right-4">
-                      <span className="text-[10px] text-white/90 bg-black/60 px-2 py-0.5 rounded backdrop-blur-sm">
-                        TODO(client-review): Placeholder Photo
-                      </span>
                     </div>
                   </div>
 
@@ -103,12 +102,12 @@ export default function ServicesPage() {
                   <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-between space-y-6">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+                        <span className="text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
                           Pillar 0{index + 1}
                         </span>
                       </div>
 
-                      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A2A3A] font-heading">
+                      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2942] font-heading">
                         {service.title}
                       </h2>
 
@@ -128,7 +127,7 @@ export default function ServicesPage() {
                               className="p-3.5 rounded-xl bg-[#F1F5F9] border border-slate-200/80 space-y-1"
                             >
                               <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-[#F8B800] shrink-0" />
+                                <CheckCircle2 className="w-4 h-4 text-[#07999A] shrink-0" />
                                 <strong className="text-sm text-[#0F172A] font-semibold">
                                   {sub.title}
                                 </strong>
@@ -146,15 +145,15 @@ export default function ServicesPage() {
                     <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                       <Link
                         href={`/services/${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#1A2A3A] text-white font-bold text-sm hover:bg-[#121E2A] transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0B2942] text-white font-bold text-sm hover:bg-[#071F33] transition-colors shadow-sm"
                       >
                         <span>Detailed Specifications</span>
-                        <ArrowRight className="w-4 h-4 text-[#F8B800]" />
+                        <ArrowRight className="w-4 h-4 text-[#07999A]" />
                       </Link>
 
                       <Link
                         href={`/contact?service=${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-sm"
                       >
                         <span>Make an Enquiry</span>
                       </Link>
@@ -168,16 +167,16 @@ export default function ServicesPage() {
       </section>
 
       {/* Equipment Lifecycle Strip Overview */}
-      <section className="py-16 bg-[#1A2A3A] text-white">
+      <section className="py-16 bg-[#F5FAF9] text-[#0B2942] border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-300 bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#087F86] bg-white px-3 py-1 rounded-full border border-[#CEE8E5] inline-block mb-3">
               Full Lifecycle Support
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-heading">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#0B2942] font-heading">
               Lifecycle Integration for Healthcare Facilities
             </h2>
-            <p className="mt-2 text-sm text-slate-300">
+            <p className="mt-2 text-sm text-slate-600">
               From the first planning conversation through to safe, compliant disposal.
             </p>
           </div>
@@ -186,15 +185,15 @@ export default function ServicesPage() {
             {lifecycleSteps.map((step) => (
               <div
                 key={step.step}
-                className="p-5 rounded-2xl bg-[#24384D] border border-slate-700/80 space-y-2"
+                className="p-5 rounded-2xl bg-white border border-slate-200 space-y-2"
               >
-                <span className="text-xs font-mono font-bold text-amber-400">
+                <span className="text-xs font-mono font-bold text-teal-400">
                   Step {step.step}
                 </span>
-                <h3 className="text-base font-bold text-white font-heading">
+                <h3 className="text-base font-bold text-[#0B2942] font-heading">
                   {step.title}
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   {step.description}
                 </p>
               </div>
@@ -203,33 +202,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Direct Contact CTA Band */}
-      <section className="py-16 bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A2A3A] font-heading">
-            Need Dedicated Technical Service or Equipment Assessment?
-          </h2>
-          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-            Contact our engineering specialists directly to discuss preventive service agreements, rapid repairs, or turnkey installation.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shadow-md"
-            >
-              <span>Submit Service Enquiry</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <a
-              href="tel:0421081256"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg border border-slate-300 text-slate-800 font-bold text-sm hover:bg-slate-50 transition-colors"
-            >
-              <Phone className="w-4 h-4 text-amber-500" />
-              <span>Call 0421 081 256</span>
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

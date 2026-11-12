@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Send,
@@ -10,20 +10,36 @@ import {
   Loader2,
 } from "lucide-react";
 
-const serviceSlugMap: Record<string, string> = {
-  "service-maintenance": "Service & Maintenance",
-  service: "Service & Maintenance",
-  "installation-commissioning": "Installation & Commissioning",
-  installation: "Installation & Commissioning",
-  "parts-logistics": "Parts & Logistics",
-  parts: "Parts & Logistics",
-  calibration: "Calibration",
-  other: "Other",
-};
+interface ContactServiceOption {
+  slug: string;
+  navTitle: string;
+  contactValue: string;
+}
 
-export default function ContactForm() {
+export default function ContactForm({ services }: { services: ContactServiceOption[] }) {
   const searchParams = useSearchParams();
   const serviceParam = searchParams.get("service")?.toLowerCase();
+  const serviceSlugMap = useMemo(
+    () =>
+      Object.fromEntries(
+        services.flatMap((service) => [
+          [service.slug, service.contactValue],
+          [service.navTitle.toLowerCase(), service.contactValue],
+          [service.contactValue.toLowerCase(), service.contactValue],
+        ])
+      ),
+    [services]
+  );
+  const legacyServiceMap = useMemo(
+    () => ({
+      service: services.find((item) => item.slug === "service-maintenance")?.contactValue || "Other",
+      installation: services.find((item) => item.slug === "installation-commissioning")?.contactValue || "Other",
+      parts: services.find((item) => item.slug === "parts-logistics")?.contactValue || "Other",
+      other: "Other",
+    }),
+    [services]
+  );
+  const defaultService = services[0]?.contactValue || "Other";
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -34,7 +50,7 @@ export default function ContactForm() {
     organisation: "",
     email: "",
     phone: "",
-    serviceInterest: "Service & Maintenance",
+    serviceInterest: defaultService,
     message: "",
     consent: false,
     websiteHoneypot: "",
@@ -44,15 +60,12 @@ export default function ContactForm() {
   useEffect(() => {
     if (serviceParam) {
       const matched =
-        serviceSlugMap[serviceParam] ||
-        Object.values(serviceSlugMap).find(
-          (v) => v.toLowerCase() === serviceParam
-        );
+        serviceSlugMap[serviceParam] || legacyServiceMap[serviceParam];
       if (matched) {
         setFormData((prev) => ({ ...prev, serviceInterest: matched }));
       }
     }
-  }, [serviceParam]);
+  }, [serviceParam, serviceSlugMap, legacyServiceMap]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -118,7 +131,7 @@ export default function ContactForm() {
           <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-inner">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-bold text-[#1A2A3A] font-heading">
+          <h3 className="text-2xl font-bold text-[#0B2942] font-heading">
             Enquiry Received Successfully
           </h3>
           <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
@@ -134,13 +147,13 @@ export default function ContactForm() {
                   organisation: "",
                   email: "",
                   phone: "",
-                  serviceInterest: "Service & Maintenance",
+                  serviceInterest: defaultService,
                   message: "",
                   consent: false,
                   websiteHoneypot: "",
                 });
               }}
-              className="px-6 py-2.5 rounded-lg bg-[#1A2A3A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#121E2A] transition-colors shadow-sm"
+              className="px-6 py-2.5 rounded-lg bg-[#0B2942] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#071F33] transition-colors shadow-sm"
             >
               Send Another Enquiry
             </button>
@@ -149,11 +162,11 @@ export default function ContactForm() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5" noValidate={false}>
           <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-[#1A2A3A] font-heading">
+            <h2 className="text-xl font-bold text-[#0B2942] font-heading">
               Healthcare & Industrial Service Enquiry
             </h2>
             {serviceParam && (
-              <span className="text-xs bg-amber-50 text-amber-900 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">
+              <span className="text-xs bg-teal-50 text-teal-900 border border-teal-200 px-2.5 py-1 rounded-full font-semibold">
                 Service Pre-selected
               </span>
             )}
@@ -199,7 +212,7 @@ export default function ContactForm() {
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="e.g. Dr. Jane Smith"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#F8B800] focus:ring-2 focus:ring-[#F8B800]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#07999A] focus:ring-2 focus:ring-[#07999A]/20 outline-none transition-all"
               />
             </div>
 
@@ -218,7 +231,7 @@ export default function ContactForm() {
                 value={formData.organisation}
                 onChange={handleChange}
                 placeholder="e.g. Melbourne Health Clinic"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#F8B800] focus:ring-2 focus:ring-[#F8B800]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#07999A] focus:ring-2 focus:ring-[#07999A]/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -239,7 +252,7 @@ export default function ContactForm() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="name@hospital.com.au"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#F8B800] focus:ring-2 focus:ring-[#F8B800]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#07999A] focus:ring-2 focus:ring-[#07999A]/20 outline-none transition-all"
               />
             </div>
 
@@ -258,7 +271,7 @@ export default function ContactForm() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="04XX XXX XXX"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#F8B800] focus:ring-2 focus:ring-[#F8B800]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#07999A] focus:ring-2 focus:ring-[#07999A]/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -275,20 +288,14 @@ export default function ContactForm() {
               name="serviceInterest"
               value={formData.serviceInterest}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#F8B800] focus:ring-2 focus:ring-[#F8B800]/20 outline-none bg-white font-medium transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#07999A] focus:ring-2 focus:ring-[#07999A]/20 outline-none bg-white font-medium transition-all"
             >
-              <option value="Service & Maintenance">
-                Service & Maintenance (Preventive Servicing & Repairs)
-              </option>
-              <option value="Installation & Commissioning">
-                Installation & Commissioning (Radiotherapy & CT/MRI)
-              </option>
-              <option value="Parts & Logistics">
-                Parts Supply & Coordinated Hospital Logistics
-              </option>
-              <option value="Calibration">
-                Documented Precision Calibration
-              </option>
+              {services.map((service) => (
+                <option key={service.slug} value={service.contactValue}>
+                  {service.navTitle}
+                </option>
+              ))}
+              <option value="Other">Other Technical Enquiry</option>
               <option value="Other">Other Technical Enquiry</option>
             </select>
           </div>
@@ -308,7 +315,7 @@ export default function ContactForm() {
               value={formData.message}
               onChange={handleChange}
               placeholder="Describe your equipment model, facility department, and support requirements..."
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#F8B800] focus:ring-2 focus:ring-[#F8B800]/20 outline-none transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#07999A] focus:ring-2 focus:ring-[#07999A]/20 outline-none transition-all"
             ></textarea>
           </div>
 
@@ -329,7 +336,7 @@ export default function ContactForm() {
               required
               checked={formData.consent}
               onChange={handleChange}
-              className="mt-1 rounded border-slate-300 text-[#F8B800] focus:ring-[#F8B800]"
+              className="mt-1 rounded border-slate-300 text-[#07999A] focus:ring-[#07999A]"
             />
             <label htmlFor="consent" className="text-xs text-slate-600 leading-relaxed">
               I consent to AusinX Solutions contacting me regarding this enquiry. We respect your privacy in accordance with our{" "}
@@ -343,7 +350,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-all shadow-md active:scale-[0.99] disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-all shadow-md active:scale-[0.99] disabled:opacity-50"
           >
             {submitting ? (
               <>

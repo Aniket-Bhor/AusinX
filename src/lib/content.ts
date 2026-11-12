@@ -1,3 +1,5 @@
+import { cacheTag } from "next/cache";
+
 export interface SubService {
   title: string;
   description: string;
@@ -153,8 +155,8 @@ export const servicesData: ServiceDetail[] = [
         description: "Fast, responsive support that minimises downtime and keeps your systems running, so you can treat more patients.",
       },
     ],
-    image: "/images/placeholders/service-maintenance.webp",
-    imageAlt: "TODO(client-review): Biomedical engineer performing preventive maintenance testing on diagnostic equipment",
+    image: "/images/client/biomedical-service.jpeg",
+    imageAlt: "Biomedical engineer servicing clinical equipment",
     metaTitle: "Biomedical Service & Maintenance Support | AusinX Solutions",
     metaDescription: "Responsive biomedical equipment service and preventive maintenance support for Australian hospitals, clinical departments, and diagnostic facilities.",
   },
@@ -181,8 +183,8 @@ export const servicesData: ServiceDetail[] = [
         description: "Support at both ends of the lifecycle, from the first plan to safe, compliant retirement of equipment.",
       },
     ],
-    image: "/images/placeholders/installation-commissioning.webp",
-    imageAlt: "TODO(client-review): Biomedical engineering team commissioning a large medical imaging gantry",
+    image: "/images/client/specialist-linac.jpeg",
+    imageAlt: "Radiotherapy linear accelerator and oncology gantry installation",
     metaTitle: "Installation & Commissioning | Radiotherapy & CT/MRI Specialists | AusinX Solutions",
     metaDescription: "Precision installation, commissioning, planning, and compliant decommissioning for radiotherapy equipment and diagnostic systems (CT/MRI) across Australia.",
   },
@@ -205,8 +207,8 @@ export const servicesData: ServiceDetail[] = [
         description: "Reliable sourcing and supply of equipment and parts delivered when and where your healthcare team needs them.",
       },
     ],
-    image: "/images/placeholders/parts-logistics.webp",
-    imageAlt: "TODO(client-review): Medical parts storage and inventory logistics technician",
+    image: "/images/client/parts-logistics.jpeg",
+    imageAlt: "AusinX medical spare parts warehouse and logistics facility",
     metaTitle: "Medical Equipment Parts Supply & Logistics | AusinX Solutions",
     metaDescription: "Reliable biomedical parts sourcing and coordinated healthcare logistics to ensure critical components arrive on schedule when and where needed.",
   },
@@ -229,9 +231,8 @@ export const servicesData: ServiceDetail[] = [
         description: "Precise, documented calibration that supports the accuracy and safety of your equipment.",
       },
     ],
-    image: "/images/placeholders/calibration.webp",
-
-    imageAlt: "TODO(client-review): Calibration specialist verifying biomedical electronics circuit with precision multimeter",
+    image: "/images/client/calibration-lab.jpeg",
+    imageAlt: "Precision calibration test bench and electronic diagnostic instrumentation",
     metaTitle: "Biomedical Precision Calibration Services | AusinX Solutions",
     metaDescription: "Documented precision calibration support for medical and industrial electronics equipment, ensuring high clinical accuracy and safety compliance.",
   },
@@ -243,6 +244,7 @@ const RTDB_BASE =
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   "use cache";
+  cacheTag("site-settings");
   try {
     const res = await fetch(`${RTDB_BASE}/content/siteSettings.json`, {
       signal: AbortSignal.timeout(2500),
@@ -259,6 +261,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
 export async function getAboutCopy() {
   "use cache";
+  cacheTag("about-copy");
   try {
     const res = await fetch(`${RTDB_BASE}/content/about.json`, {
       signal: AbortSignal.timeout(2500),
@@ -273,8 +276,46 @@ export async function getAboutCopy() {
   return aboutCopy;
 }
 
+const clientServiceImages: Record<string, { image: string; imageAlt: string }> = {
+  "service-maintenance": { image: "/images/client/biomedical-service.jpeg", imageAlt: "Biomedical engineer servicing clinical equipment" },
+  "installation-commissioning": { image: "/images/client/specialist-linac.jpeg", imageAlt: "Radiotherapy linear accelerator and oncology gantry installation" },
+  "parts-logistics": { image: "/images/client/parts-logistics.jpeg", imageAlt: "AusinX medical spare parts warehouse and logistics facility" },
+  calibration: { image: "/images/client/calibration-lab.jpeg", imageAlt: "Precision calibration test bench and electronic diagnostic instrumentation" },
+};
+
+function normalizeServiceImages(services: ServiceDetail[]): ServiceDetail[] {
+  return services.map((service) => {
+    const defaultImage = clientServiceImages[service.slug];
+    const needsDefault =
+      !service.image || service.image.startsWith("/images/placeholders/");
+
+    return {
+      ...service,
+      ...(needsDefault && defaultImage ? defaultImage : {}),
+      image: needsDefault
+        ? defaultImage?.image || "/images/client/imaging-suite.jpeg"
+        : service.image,
+      navTitle: service.navTitle || service.title || "Service",
+      contactValue: service.contactValue || service.navTitle || service.title || "Service",
+      imageAlt:
+        service.imageAlt ||
+        defaultImage?.imageAlt ||
+        service.navTitle ||
+        service.title ||
+        "Service image",
+      metaTitle: service.metaTitle || service.title || service.navTitle || "AusinX service",
+      metaDescription: service.metaDescription || service.shortSummary || "Engineering service from AusinX Solutions.",
+      keyHighlights: Array.isArray(service.keyHighlights)
+        ? service.keyHighlights
+        : [],
+      subServices: Array.isArray(service.subServices) ? service.subServices : [],
+    };
+  });
+}
+
 export async function getServices(): Promise<ServiceDetail[]> {
   "use cache";
+  cacheTag("services");
   try {
     const res = await fetch(`${RTDB_BASE}/content/services.json`, {
       signal: AbortSignal.timeout(2500),
@@ -282,26 +323,28 @@ export async function getServices(): Promise<ServiceDetail[]> {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        return data as ServiceDetail[];
+        return normalizeServiceImages(data as ServiceDetail[]);
       }
       if (data && typeof data === "object") {
-        return Object.values(data) as ServiceDetail[];
+        return normalizeServiceImages(Object.values(data) as ServiceDetail[]);
       }
     }
   } catch {
     // Fallback
   }
-  return servicesData;
+  return normalizeServiceImages(servicesData);
 }
 
 export async function getServiceBySlug(slug: string): Promise<ServiceDetail | undefined> {
   "use cache";
+  cacheTag("services");
   const services = await getServices();
-  return services.find((s) => s.slug === slug) || servicesData.find((s) => s.slug === slug);
+  return services.find((s) => s.slug === slug);
 }
 
 export async function getLifecycleSteps(): Promise<LifecycleStep[]> {
   "use cache";
+  cacheTag("lifecycle-steps");
   try {
     const res = await fetch(`${RTDB_BASE}/content/lifecycle.json`, {
       signal: AbortSignal.timeout(2500),
@@ -320,5 +363,4 @@ export async function getLifecycleSteps(): Promise<LifecycleStep[]> {
   }
   return lifecycleSteps;
 }
-
 

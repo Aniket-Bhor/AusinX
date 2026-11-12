@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/firebase-admin";
+
+const editableSections = new Set([
+  "services",
+  "siteSettings",
+  "about",
+  "lifecycle",
+]);
 
 export async function GET(request: Request) {
   const admin = await getCurrentAdmin();
@@ -49,11 +57,73 @@ export async function PUT(request: Request) {
   try {
     const { section, data } = await request.json();
 
-    if (!section || !data) {
+    if (
+      typeof section !== "string" ||
+      !editableSections.has(section) ||
+      data === undefined ||
+      data === null
+    ) {
       return NextResponse.json(
-        { error: "Missing section or payload data." },
+        { error: "Choose a valid content section and provide its data." },
         { status: 400 }
       );
+    }
+
+    if (section === "services") {
+      if (!Array.isArray(data)) {
+        return NextResponse.json(
+          { error: "Services must be submitted as a list." },
+          { status: 400 }
+        );
+      }
+
+      const slugs = new Set<string>();
+      for (const service of data) {
+        if (
+          !service ||
+          typeof service.slug !== "string" ||
+          service.slug.length > 64 ||
+          !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(service.slug) ||
+          typeof service.navTitle !== "string" ||
+          !service.navTitle.trim() ||
+          typeof service.title !== "string" ||
+          !service.title.trim() ||
+          slugs.has(service.slug)
+        ) {
+          return NextResponse.json(
+            { error: "Every service needs a unique URL slug, navigation name, and title." },
+            { status: 400 }
+          );
+        }
+        slugs.add(service.slug);
+      }
+
+      const safeServices = data.map((service: Record<string, unknown>) => ({
+        ...service,
+        contactValue:
+          typeof service.contactValue === "string" && service.contactValue.trim()
+            ? service.contactValue.trim()
+            : String(service.navTitle).trim(),
+        image:
+          typeof service.image === "string" && service.image.trim()
+            ? service.image.trim()
+            : "/images/client/imaging-suite.jpeg",
+        imageAlt:
+          typeof service.imageAlt === "string" && service.imageAlt.trim()
+            ? service.imageAlt.trim()
+            : String(service.navTitle).trim(),
+        keyHighlights: Array.isArray(service.keyHighlights) ? service.keyHighlights : [],
+        subServices: Array.isArray(service.subServices) ? service.subServices : [],
+        metaTitle:
+          typeof service.metaTitle === "string" && service.metaTitle.trim()
+            ? service.metaTitle.trim()
+            : String(service.title).trim(),
+        metaDescription:
+          typeof service.metaDescription === "string" && service.metaDescription.trim()
+            ? service.metaDescription.trim()
+            : String(service.shortSummary || "").trim(),
+      }));
+      data.splice(0, data.length, ...safeServices);
     }
 
     // Save to content/${section}
@@ -61,6 +131,16 @@ export async function PUT(request: Request) {
 
     // Also sync top-level node for compatibility
     await db.ref(section).set(data);
+
+    if (section === "services") {
+      revalidateTag("services", { expire: 0 });
+    } else if (section === "siteSettings") {
+      revalidateTag("site-settings", { expire: 0 });
+    } else if (section === "about") {
+      revalidateTag("about-copy", { expire: 0 });
+    } else if (section === "lifecycle") {
+      revalidateTag("lifecycle-steps", { expire: 0 });
+    }
 
     // Record audit trail
     await db.ref(`auditLog`).push({

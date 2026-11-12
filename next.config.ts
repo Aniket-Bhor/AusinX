@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["firebase-admin"],
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+    ],
   },
   turbopack: {
     rules: {

@@ -1,77 +1,27 @@
-import React from "react";
 import Link from "next/link";
-import { Phone, Mail, ArrowRight, Clock, ShieldAlert } from "lucide-react";
-import { siteSettings } from "@/lib/content";
+import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { getSiteSettings } from "@/lib/content";
 
-export default function CtaBand() {
+export default async function CtaBand() {
+  const siteSettings = await getSiteSettings();
   return (
-    <section className="py-16 sm:py-20 bg-gradient-to-br from-[#121E2A] via-[#1A2A3A] to-[#121E2A] text-white border-t border-slate-700/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#24384D]/80 border border-slate-700 rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
-          {/* Ambient Glow */}
-          <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-amber-400/10 blur-3xl pointer-events-none" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400 bg-white/10 px-3 py-1 rounded-full border border-white/10 inline-block">
-                Direct Engineering Support
-              </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight font-heading">
-                Need Immediate Equipment Support or a Maintenance Assessment?
-              </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl">
-                Speak directly with our Australian engineering team. We assist healthcare departments, imaging facilities, and clinical engineering teams with rapid response and dependable scheduling.
-              </p>
-
-              <div className="flex items-center gap-3 text-xs text-slate-300 pt-2">
-                <Clock className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Operating Hours: 09:00 AM – 5:00 PM (Monday – Friday)</span>
-              </div>
+    <section className="bg-[#F4F8F8] py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid overflow-hidden rounded-[1.75rem] border border-[#DDEAE9] bg-white shadow-[0_16px_55px_rgba(15,41,57,.07)] lg:grid-cols-[1.1fr_.9fr]">
+          <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
+            <span className="mb-4 inline-flex w-fit rounded-full bg-[#EAF5F4] px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#087F86]">Get in touch</span>
+            <h2 className="max-w-xl text-3xl font-semibold leading-tight tracking-tight text-[#0B2942] sm:text-4xl">Let’s talk about your equipment needs.</h2>
+            <p className="mt-4 max-w-lg text-base leading-8 text-slate-600 sm:text-lg">If you have a question about service, installation, parts or calibration, our team is happy to hear from you.</p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Link href="/contact" className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0B2942] px-5 py-3 text-base font-semibold text-white transition-colors duration-300 hover:bg-[#087F86]">Contact the team <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
+              <Link href="/contact#support" className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-5 py-3 text-base font-semibold text-[#0B2942] transition-colors hover:border-[#B5DCD9] hover:bg-[#F5FAFA]"><Mail className="h-4 w-4 text-[#07999A]" /> Email support</Link>
             </div>
-
-            {/* Right Contact Card & Actions */}
-            <div className="lg:col-span-5 bg-[#1A2A3A] rounded-2xl p-6 sm:p-8 border border-slate-700 shadow-xl space-y-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                Call Our Engineering Team
-              </p>
-
-              <div className="space-y-2">
-                {siteSettings.phones.map((phone) => (
-                  <a
-                    key={phone.raw}
-                    href={`tel:${phone.raw}`}
-                    className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-slate-700/60 text-white font-semibold text-sm transition-all group"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <Phone className="w-4 h-4 text-amber-400" />
-                      <span>{phone.display}</span>
-                    </span>
-                    <span className="text-xs text-amber-400 group-hover:translate-x-1 transition-transform">
-                      Call Now →
-                    </span>
-                  </a>
-                ))}
-              </div>
-
-              <div className="pt-2 border-t border-slate-700">
-                <a
-                  href={`mailto:${siteSettings.publicEmail}`}
-                  className="flex items-center gap-2.5 text-xs text-slate-300 hover:text-amber-300 transition-colors py-1"
-                >
-                  <Mail className="w-4 h-4 text-amber-400" />
-                  <span>{siteSettings.publicEmail}</span>
-                </a>
-              </div>
-
-              <Link
-                href="/contact"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-lg bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-all shadow-md active:scale-98"
-              >
-                <span>Submit an Online Enquiry</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+          </div>
+          <div className="flex flex-col justify-center gap-5 bg-[#F8FBFB] p-7 sm:p-10 lg:p-12">
+            <p className="text-sm font-semibold text-[#0B2942]">AusinX Solutions Pty Ltd</p>
+            <div className="flex gap-3 text-sm text-slate-600"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#07999A]" /><span>{siteSettings.address.formatted}</span></div>
+            <div className="space-y-2">{siteSettings.phones.slice(0, 2).map((phone) => <a key={phone.raw} href={`tel:${phone.raw}`} className="flex items-center gap-3 text-sm text-slate-600 transition-colors hover:text-[#087F86]"><Phone className="h-4 w-4 text-[#07999A]" />{phone.display}</a>)}</div>
+            <p className="text-xs text-slate-500">{siteSettings.businessHours}</p>
           </div>
         </div>
       </div>

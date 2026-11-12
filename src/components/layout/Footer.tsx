@@ -1,239 +1,55 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  ShieldCheck,
-  ArrowUpRight,
-} from "lucide-react";
+import Link from "next/link";
+import { Mail, MapPin, Phone } from "lucide-react";
+import type { SiteSettings } from "@/lib/content";
+import CurrentYear from "@/components/layout/CurrentYear";
 
-export default function Footer() {
-  const [currentYear, setCurrentYear] = useState(2026);
+interface ServiceNavItem {
+  slug: string;
+  navTitle: string;
+}
 
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
-
-
+export default function Footer({
+  services,
+  siteSettings,
+}: {
+  services: ServiceNavItem[];
+  siteSettings: SiteSettings;
+}) {
   return (
-    <footer className="bg-[#121E2A] text-slate-300 border-t border-slate-800">
-      {/* Upper Footer: Contact and Navigation */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* Column 1 & 2: Brand & About */}
-          <div className="lg:col-span-2 space-y-5">
-            <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-white p-0.5 shadow-sm ring-1 ring-slate-700 flex items-center justify-center shrink-0">
-                <Image
-                  src="/images/logo.png"
-                  alt="AusinX Solutions"
-                  width={48}
-                  height={48}
-                  style={{ width: "auto", height: "auto" }}
-                  className="object-contain max-h-full max-w-full"
-                />
+    <footer className="border-t border-slate-200 bg-[#F7FAFA] text-slate-600">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+        <div className="space-y-4 lg:col-span-2">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <span className="relative block h-[88px] w-[250px]">
+              <Image src="/images/client/ausinx-logo-brand-clean.png" alt="AusinX Biomedical and Industrial Engineering Solutions" fill sizes="250px" className="object-contain" />
+            </span>
+          </Link>
+          <p className="max-w-md text-sm leading-7 text-slate-600">AusinX is a proudly Australian-owned and operated company supporting medical and industrial equipment across its full lifecycle.</p>
+          <span className="inline-flex rounded-full border border-[#BCE0DF] bg-white px-3 py-1.5 text-xs font-medium text-[#0B5963]">Australian owned and operated</span>
+        </div>
 
-              </div>
-              <div>
-                <span className="text-xl font-bold tracking-tight text-white block font-heading">
-                  AusinX Solutions Pty Ltd
-                </span>
-                <span className="text-xs uppercase tracking-wider text-amber-400 font-semibold block">
-                  Biomedical & Industrial Electronics
-                </span>
-              </div>
-            </Link>
+        <div>
+          <h2 className="mb-4 text-sm font-semibold text-[#0B2942]">Services</h2>
+          <ul className="space-y-3 text-sm">
+            {services.map(({ slug, navTitle }) => <li key={slug}><Link href={`/services/${slug}`} className="transition-colors hover:text-[#087F86]">{navTitle}</Link></li>)}
+            <li><Link href="/services" className="font-medium text-[#087F86] hover:underline">All services</Link></li>
+          </ul>
+        </div>
 
-            <p className="text-sm text-slate-400 leading-relaxed max-w-md">
-              AusinX is a proudly Australian-owned and operated company providing a full range of services for medical equipment, healthcare products and industrial products across the entire lifecycle: planning, decommissioning, disposal, installation, commissioning, parts supply, and calibration.
-            </p>
-
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/80 text-xs font-medium text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-amber-400" />
-              <span>Proudly Australian Owned & Operated</span>
-            </div>
-
-            {/* Hidden Social Links Placeholder (TODO: client to provide links) */}
-            {/* 
-            <div className="pt-2 flex items-center gap-3 text-slate-400" aria-hidden="true">
-              TODO(client-review): Social media links hidden until provided by client
-            </div>
-            */}
-          </div>
-
-          {/* Column 3: Core Services */}
-          <div className="space-y-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Core Pillars
-            </p>
-            <ul className="space-y-2.5 text-sm">
-              <li>
-                <Link
-                  href="/services/service-maintenance"
-                  className="text-slate-300 hover:text-white hover:underline transition-colors"
-                >
-                  Service & Maintenance
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/installation-commissioning"
-                  className="text-slate-300 hover:text-white hover:underline transition-colors"
-                >
-                  Installation & Commissioning
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/parts-logistics"
-                  className="text-slate-300 hover:text-white hover:underline transition-colors"
-                >
-                  Parts & Logistics
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/calibration"
-                  className="text-slate-300 hover:text-white hover:underline transition-colors"
-                >
-                  Precision Calibration
-                </Link>
-              </li>
-              <li className="pt-1">
-                <Link
-                  href="/services"
-                  className="text-amber-400 hover:text-amber-300 font-semibold text-xs inline-flex items-center gap-1"
-                >
-                  <span>All Services</span>
-                  <ArrowUpRight className="w-3 h-3" />
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Quick Navigation */}
-          <div className="space-y-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Company
-            </p>
-            <ul className="space-y-2.5 text-sm">
-              <li>
-                <Link
-                  href="/"
-                  className="text-slate-300 hover:text-white transition-colors"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-slate-300 hover:text-white transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-slate-300 hover:text-white transition-colors"
-                >
-                  Contact & Enquiries
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-slate-300 hover:text-white transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 5: Direct Contact Details */}
-          <div className="space-y-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Contact Us
-            </p>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2.5 text-slate-300">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>
-                  470 St Kilda Rd,
-                  <br />
-                  Melbourne VIC 3004, Australia
-                </span>
-              </li>
-              <li className="flex items-center gap-2.5 text-slate-300">
-                <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <a
-                  href="mailto:support@ausinx.com.au"
-                  className="hover:text-amber-400 transition-colors"
-                >
-                  support@ausinx.com.au
-                </a>
-              </li>
-              <li className="space-y-1">
-                <div className="flex items-start gap-2.5 text-slate-300">
-                  <Phone className="w-4 h-4 text-amber-400 shrink-0 mt-1" />
-                  <div className="flex flex-col gap-1">
-                    <a
-                      href="tel:0421081256"
-                      className="hover:text-amber-400 transition-colors font-medium"
-                    >
-                      0421 081 256
-                    </a>
-                    <a
-                      href="tel:0494730478"
-                      className="hover:text-amber-400 transition-colors font-medium"
-                    >
-                      0494 730 478
-                    </a>
-                    <a
-                      href="tel:0470525997"
-                      className="hover:text-amber-400 transition-colors font-medium"
-                    >
-                      0470 525 997
-                    </a>
-                  </div>
-                </div>
-              </li>
-              <li className="flex items-center gap-2.5 text-slate-400 text-xs pt-1">
-                <Clock className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Mon – Fri: 09:00 AM – 5:00 PM</span>
-              </li>
-            </ul>
-          </div>
+        <div>
+          <h2 className="mb-4 text-sm font-semibold text-[#0B2942]">Contact</h2>
+          <ul className="space-y-3 text-sm">
+            <li className="flex gap-2.5"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#07999A]" /><span>{siteSettings.address.formatted}</span></li>
+            <li><a href={`mailto:${siteSettings.publicEmail}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-[#087F86]"><Mail className="h-4 w-4 text-[#07999A]" />{siteSettings.publicEmail}</a></li>
+            {siteSettings.phones.slice(0, 2).map((phone) => <li key={phone.raw}><a href={`tel:${phone.raw}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-[#087F86]"><Phone className="h-4 w-4 text-[#07999A]" />{phone.display}</a></li>)}
+          </ul>
         </div>
       </div>
-
-      {/* Lower Footer: Copyright & Legal */}
-      <div className="border-t border-slate-800 bg-[#0E1720] text-slate-400 text-xs py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>
-            © {currentYear} AusinX Solutions Pty Ltd. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6">
-            {/* Hidden ABN placeholder as per instructions */}
-            <span className="text-slate-500 hidden sm:inline" aria-hidden="true">
-              {/* TODO(client-review): ABN XX XXX XXX XXX placeholder */}
-            </span>
-            <Link
-              href="/privacy"
-              className="text-slate-400 hover:text-slate-200 underline transition-colors"
-            >
-              Privacy Policy
-            </Link>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-400">Australian Owned & Operated</span>
-          </div>
+      <div className="border-t border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+          <span>© <CurrentYear /> {siteSettings.companyName}</span>
+          <div className="flex gap-5"><Link href="/about" className="hover:text-[#087F86]">About</Link><Link href="/contact" className="hover:text-[#087F86]">Contact</Link><Link href="/privacy" className="hover:text-[#087F86]">Privacy policy</Link></div>
         </div>
       </div>
     </footer>

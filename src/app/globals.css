@@ -1,13 +1,20 @@
 @import "tailwindcss";
 
+/* Let shared page shells use the customer's full viewport. The px-* classes
+   on each shell keep comfortable gutters on phones, tablets, and desktops. */
+.max-w-7xl {
+  width: 100%;
+  max-width: none;
+}
+
 :root {
-  /* Brand Colours (LOCKED) */
-  --primary-navy: #1A2A3A;
-  --primary-navy-hover: #121E2A;
-  --primary-navy-light: #24384D;
-  --accent-amber: #F8B800;
-  --accent-amber-hover: #E0A400;
-  --accent-amber-light: #FFF8E6;
+  /* AusinX logo palette */
+  --primary-navy: #0B2942;
+  --primary-navy-hover: #071F33;
+  --primary-navy-light: #173D55;
+  --accent-teal: #07999A;
+  --accent-teal-hover: #087F86;
+  --accent-teal-light: #E7F5F3;
 
   /* Neutrals */
   --text-main: #0F172A;
@@ -22,13 +29,29 @@
 }
 
 @theme {
-  --color-navy: #1A2A3A;
-  --color-navy-hover: #121E2A;
-  --color-navy-light: #24384D;
-  --color-navy-muted: #334A61;
-  --color-amber: #F8B800;
-  --color-amber-hover: #E0A400;
-  --color-amber-light: #FFF8E6;
+  /* A comfortable reading scale across the whole site. */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --color-navy: #0B2942;
+  --color-navy-hover: #071F33;
+  --color-navy-light: #173D55;
+  --color-navy-muted: #355369;
+  --color-teal: #07999A;
+  --color-teal-50: #F4FAF9;
+  --color-teal-100: #E7F5F3;
+  --color-teal-200: #CEE8E5;
+  --color-teal-300: #9ED9D5;
+  --color-teal-400: #55C7C2;
+  --color-teal-500: #07999A;
+  --color-teal-600: #087F86;
+  --color-teal-700: #0B5963;
+  --color-teal-800: #0B4852;
+  --color-teal-900: #083B49;
+  --color-teal-950: #062D38;
+  --color-teal-hover: #087F86;
+  --color-teal-light: #E7F5F3;
   --color-text-main: #0F172A;
   --color-text-muted: #475569;
   --color-bg-light: #F1F5F9;
@@ -52,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Accessible focus ring */
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid #F8B800;
+  outline: 2px solid #07999A;
   outline-offset: 2px;
 }
 
@@ -63,7 +86,116 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(26, 42, 58, 0.08), 0 8px 10px -6px rgba(26, 42, 58, 0.04);
+  box-shadow: 0 10px 25px -5px rgba(11, 41, 66, 0.08), 0 8px 10px -6px rgba(11, 41, 66, 0.04);
+}
+
+::selection { background: #CBE9E6; color: #0B2942; }
+
+body { background: #FFFFFF; color: #0F172A; }
+
+/* High-impact visual animations and effects */
+@keyframes content-pop {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pop-modal-in {
+  0% { opacity: 0; transform: scale(0.92) translateY(12px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(8px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(7, 153, 154, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(7, 153, 154, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(7, 153, 154, 0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-pop-in {
+  animation: pop-modal-in 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: float-slow 4.5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-reverse 5.5s ease-in-out 1.2s infinite;
+}
+
+.pulse-beacon {
+  animation: pulse-ring 2.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-card-dark {
+  background: rgba(11, 41, 66, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glow-teal {
+  box-shadow: 0 0 40px -10px rgba(7, 153, 154, 0.35);
+}
+
+@keyframes image-settle {
+  from { opacity: 0; transform: translateY(22px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.motion-pop {
+  animation: content-pop 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.motion-pop-delay-1 { animation-delay: 100ms; }
+.motion-pop-delay-2 { animation-delay: 190ms; }
+.motion-pop-delay-3 { animation-delay: 280ms; }
+.motion-pop-delay-4 { animation-delay: 370ms; }
+.motion-image {
+  animation: image-settle 850ms cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
+}
+
+.soft-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.soft-reveal.reveal-pending {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 650ms ease, transform 650ms cubic-bezier(.2,.7,.2,1);
+}
+
+.soft-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  main a, main button { transition-property: color, background-color, border-color, box-shadow, transform; transition-duration: 220ms; }
+  main a:hover img, main button:hover img { transform: scale(1.025); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soft-reveal, .motion-pop, .motion-image { opacity: 1; transform: none; transition: none; animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

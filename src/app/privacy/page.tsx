@@ -21,12 +21,12 @@ export default function PrivacyPage() {
     <div className="py-16 sm:py-24 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-bold uppercase tracking-wider mb-4 border border-amber-200">
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider mb-4 border border-teal-200">
+            <AlertTriangle className="w-4 h-4 text-teal-600" />
             <span>TODO(client-review): Draft Privacy Policy</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A2A3A] tracking-tight font-heading">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B2942] tracking-tight font-heading">
             Privacy Policy
           </h1>
           <p className="mt-2 text-sm text-slate-500">
@@ -36,14 +36,14 @@ export default function PrivacyPage() {
 
         <div className="prose prose-slate max-w-none space-y-6 text-sm text-slate-700 leading-relaxed">
           <section className="space-y-2">
-            <h2 className="text-lg font-bold text-[#1A2A3A]">1. Introduction</h2>
+            <h2 className="text-lg font-bold text-[#0B2942]">1. Introduction</h2>
             <p>
               AusinX Solutions Pty Ltd (&quot;AusinX&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is committed to protecting the privacy of individuals who interact with us, in accordance with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs). This document sets out how we collect, hold, use, and disclose personal information.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-lg font-bold text-[#1A2A3A]">2. Information We Collect</h2>
+            <h2 className="text-lg font-bold text-[#0B2942]">2. Information We Collect</h2>
             <p>
               When you submit an enquiry through our website or contact us by phone or email, we may collect:
             </p>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-lg font-bold text-[#1A2A3A]">3. How We Use Your Information</h2>
+            <h2 className="text-lg font-bold text-[#0B2942]">3. How We Use Your Information</h2>
             <p>
               We collect and use your personal information solely for legitimate business purposes, including:
             </p>
@@ -69,25 +69,25 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-lg font-bold text-[#1A2A3A]">4. Data Security and Retention</h2>
+            <h2 className="text-lg font-bold text-[#0B2942]">4. Data Security and Retention</h2>
             <p>
               We take reasonable steps to protect your personal information from misuse, interference, loss, unauthorised access, modification, or disclosure. We do not sell or rent personal information to third parties.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-lg font-bold text-[#1A2A3A]">5. Cookies & Analytics</h2>
+            <h2 className="text-lg font-bold text-[#0B2942]">5. Cookies & Analytics</h2>
             <p>
               Our website may use standard technical cookies and privacy-friendly analytics to assess website performance, traffic patterns, and navigation ease. These tools do not track personal identifying information across external websites.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-lg font-bold text-[#1A2A3A]">6. Contact Us Regarding Privacy</h2>
+            <h2 className="text-lg font-bold text-[#0B2942]">6. Contact Us Regarding Privacy</h2>
             <p>
               If you have any questions about this Privacy Policy or wish to access or correct your personal information, please contact us:
             </p>
-            <p className="font-medium text-[#1A2A3A]">
+            <p className="font-medium text-[#0B2942]">
               Privacy Officer, AusinX Solutions Pty Ltd
               <br />
               470 St Kilda Rd, Melbourne VIC 3004, Australia
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
         <div className="pt-6 border-t border-slate-200">
           <Link
             href="/"
-            className="text-xs font-bold uppercase tracking-wider text-[#1A2A3A] hover:underline"
+            className="text-xs font-bold uppercase tracking-wider text-[#0B2942] hover:underline"
           >
             ← Return to Homepage
           </Link>

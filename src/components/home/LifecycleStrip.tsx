@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ClipboardList,
   Cpu,
@@ -6,92 +5,69 @@ import {
   PackageCheck,
   Trash2,
   ArrowRight,
+  Sparkles,
 } from "lucide-react";
+import { getLifecycleSteps } from "@/lib/content";
 
-const steps = [
-  {
-    num: "01",
-    title: "Planning & Sourcing",
-    desc: "Technical consultation & requirements alignment",
-    icon: ClipboardList,
-  },
-  {
-    num: "02",
-    title: "Installation & Commissioning",
-    desc: "Precision handover ready for immediate clinical use",
-    icon: Cpu,
-  },
-  {
-    num: "03",
-    title: "Service & Calibration",
-    desc: "Preventive maintenance & documented accuracy checks",
-    icon: Wrench,
-  },
-  {
-    num: "04",
-    title: "Parts & Logistics",
-    desc: "Reliable sourcing and prompt healthcare delivery",
-    icon: PackageCheck,
-  },
-  {
-    num: "05",
-    title: "Decommissioning & Disposal",
-    desc: "Safe, compliant retirement at end of lifecycle",
-    icon: Trash2,
-  },
-];
+const icons = [ClipboardList, Cpu, Wrench, PackageCheck, Trash2];
 
-export default function LifecycleStrip() {
+export default async function LifecycleStrip() {
+  const steps = await getLifecycleSteps();
   return (
-    <section className="py-20 bg-[#1A2A3A] text-white overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-300 bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block">
-            Full Equipment Journey
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#0B2942] to-[#071F33] text-white py-24">
+      {/* Background radial glow */}
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[70rem] h-[25rem] bg-teal-500/10 blur-[140px] rounded-full" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Header */}
+        <div className="mx-auto mb-16 max-w-3xl space-y-4 text-center">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-400/30 bg-teal-950/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-teal-200">
+            <Sparkles className="w-3.5 h-3.5 text-[#55C7C2]" />
+            <span>Complete Lifecycle Governance</span>
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-heading">
-            Your Single Partner Across the Whole Equipment Lifecycle
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-heading">
+            One Single Partner Through Every Phase
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base">
-            From the first planning conversation through to safe, compliant disposal, we manage the detail so your clinical teams can stay focused on patient care.
+          <p className="text-sm sm:text-base leading-relaxed text-slate-300 max-w-2xl mx-auto">
+            From initial clinical room planning to certified retirement, AusinX delivers end-to-end technical continuity.
           </p>
         </div>
 
-        {/* Horizontal Process Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 relative">
-          {steps.map((step, idx) => {
-            const Icon = step.icon;
+        {/* 5-Step Connected Workflow */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {steps.map((step, index) => {
+            const Icon = icons[index] || Wrench;
             return (
               <div
-                key={step.num}
-                className="bg-[#24384D]/70 hover:bg-[#24384D] border border-slate-700/80 rounded-xl p-5 transition-all duration-200 flex flex-col justify-between group"
+                key={step.step}
+                className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-6 transition-all duration-300 hover:-translate-y-2 hover:border-[#55C7C2] hover:bg-white/10 hover:shadow-[0_20px_40px_rgba(7,153,154,0.25)] flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-black text-amber-400 font-mono tracking-wider">
-                      {step.num}
+                  <div className="mb-5 flex items-center justify-between">
+                    <span className="font-mono text-xs font-extrabold tracking-widest text-[#55C7C2] bg-teal-950/70 border border-teal-500/30 px-2.5 py-1 rounded-lg">
+                      {step.step}
                     </span>
-                    <div className="w-8 h-8 rounded-lg bg-white/10 text-amber-300 flex items-center justify-center group-hover:bg-[#F8B800] group-hover:text-[#1A2A3A] transition-colors">
-                      <Icon className="w-4 h-4" />
-                    </div>
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-[#55C7C2] transition-all duration-300 group-hover:bg-[#07999A] group-hover:text-white shadow-inner">
+                      <Icon className="h-5 w-5" />
+                    </span>
                   </div>
-                  <h3 className="text-base font-bold text-white mb-1.5 font-heading">
+                  <h3 className="mb-2 text-base font-bold text-white group-hover:text-[#55C7C2] transition-colors">
                     {step.title}
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {step.desc}
+                  <p className="text-xs leading-5 text-slate-300">
+                    {step.description}
                   </p>
                 </div>
 
-                {idx < steps.length - 1 && (
-                  <div className="hidden lg:block pt-3 text-right text-slate-500">
-                    <ArrowRight className="w-3.5 h-3.5 inline text-amber-400/50" />
-                  </div>
+                {index < steps.length - 1 && (
+                  <ArrowRight className="absolute -right-3.5 top-1/2 z-10 hidden h-7 w-7 -translate-y-1/2 rounded-full bg-[#07999A] p-1.5 text-white shadow-lg lg:block group-hover:scale-110 transition-transform" />
                 )}
               </div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

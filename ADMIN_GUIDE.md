@@ -8,11 +8,8 @@ Welcome to the **AusinX Solutions Admin Portal** (`/admin`). This guide explains
 
 1. Open your web browser and navigate to:  
    **`https://www.ausinx.com.au/admin/login`** (or `http://localhost:3000/admin/login` when testing locally).
-2. Enter your Admin ID:
-   **`ausinx@admin`**
-3. Enter your password:  
-   **`ausinx@2026`**
-4. Click **Sign In to Admin Panel**.
+2. Sign in with the private admin credentials provisioned for your account.
+3. Click **Sign In to Admin Panel**.
 
 *(Note: Admin accounts are managed dynamically in the Firebase Realtime Database under the `/user` node).*
 
@@ -36,14 +33,11 @@ Under the **Enquiries Inbox** tab:
 ## 3. Editing Website Content
 
 ### 3.1 Services Editor
-- Select any of the 4 core engineering pillars:
-  1. *Service & Maintenance*
-  2. *Installation & Commissioning*
-  3. *Parts & Logistics*
-  4. *Calibration*
-- Update the display title, short summary (shown on cards and homepage), and full technical description.
-- Edit individual sub-services (titles and descriptions).
-- Click **Save Services to Firebase RTDB**. Changes sync live across the website.
+- Select an existing service or click **Add service** to create one.
+- Set its URL slug, navigation name, enquiry form name, title, short summary, and full description.
+- Upload a JPG, PNG, or WebP image up to 8 MB, add accessible image text, and edit highlights or sub-service details.
+- Click **Save & Publish Services**. Saved service changes appear on the home page, services pages, navigation, and enquiry form without a code change or Git push.
+- The site automatically fits and crops uploaded images for mobile, tablet, and desktop layouts.
 
 ### 3.2 Site Settings
 - Update official company identity details:
@@ -67,6 +61,7 @@ Under the **Enquiries Inbox** tab:
 - **Realtime Database URL:** `https://ausinx-default-rtdb.firebaseio.com/`
 - **Security Rules:** Configured in `firebase.rules.json`. Public users can read content, but only authenticated staff can write changes. Enquiries are private and only viewable by authorized staff.
 - **Fallback Protection:** If Firebase is ever temporarily unreachable, the public website automatically falls back to the high-reliability built-in content in `src/lib/content.ts` so prospective healthcare clients never see a blank screen or broken page.
+- **Image uploads:** Set `FIREBASE_STORAGE_BUCKET` in the server environment to the bucket name shown in Firebase Storage. The Firebase service account must have permission to create Storage objects. The image upload endpoint is private to signed-in admins; uploaded images are served to website visitors using their public download URL.
 
 ---
 

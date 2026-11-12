@@ -1,5 +1,6 @@
 import { getApps, getApp, initializeApp, cert, type App } from "firebase-admin/app";
 import { getDatabase, type Database } from "firebase-admin/database";
+import { getStorage } from "firebase-admin/storage";
 
 let adminApp: App | null = null;
 
@@ -50,6 +51,18 @@ export function getAdminDb(): Database | null {
   const app = getFirebaseAdminApp();
   if (!app) return null;
   return getDatabase(app);
+}
+
+export function getAdminStorageBucket() {
+  const app = getFirebaseAdminApp();
+  if (!app) return null;
+
+  const bucketName =
+    process.env.FIREBASE_STORAGE_BUCKET ||
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  if (!bucketName) return null;
+
+  return getStorage(app).bucket(bucketName);
 }
 
 // Lazy dynamic import for auth to prevent jose/jwks-rsa ESM bundling conflict during build

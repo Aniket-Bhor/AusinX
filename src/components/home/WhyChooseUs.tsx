@@ -1,65 +1,92 @@
 import React from "react";
+import Image from "next/image";
 import {
   ShieldCheck,
   RefreshCw,
   Clock,
   MessageSquareCheck,
   CheckCircle2,
+  Sparkles,
 } from "lucide-react";
-import { aboutCopy } from "@/lib/content";
+import { getAboutCopy } from "@/lib/content";
 
 const icons = [ShieldCheck, RefreshCw, Clock, MessageSquareCheck];
 
-export default function WhyChooseUs() {
+export default async function WhyChooseUs() {
+  const aboutCopy = await getAboutCopy();
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 sm:py-28 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Heading & Value Proposition */}
-          <div className="lg:col-span-5 space-y-5">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#1A2A3A] bg-[#F1F5F9] px-3 py-1 rounded-full border border-slate-200 inline-block">
-              Trust & Accountability
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1A2A3A] tracking-tight leading-tight font-heading">
-              Why Healthcare Teams Choose AusinX
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+          
+          {/* Left Column: Heading, Value Proposition & Real Visual Card */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-[#07999A] text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Trust &amp; Engineering Accountability</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0B2942] tracking-tight leading-[1.12] font-heading">
+              Why Australian Clinics Trust AusinX
             </h2>
-            <p className="text-base text-slate-600 leading-relaxed">
-              We understand that downtime in clinical and industrial environments has real consequences. Our team works proactively to keep your equipment available, accurate, and performing as it should.
+            
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+              Downtime in clinical and radiation oncology environments has direct consequences for patient scheduling and treatment efficacy. We eliminate risk with proactive engineering.
             </p>
 
-            <div className="p-5 rounded-xl bg-amber-50/70 border border-amber-200/80 space-y-2">
-              <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
-                <CheckCircle2 className="w-4 h-4 text-amber-600" />
-                <span>Clinical & Operational Peace of Mind</span>
+            {/* Embedded Visual Feature Card */}
+            <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-lg group">
+              <div className="relative h-44 w-full">
+                <Image
+                  src="/images/client/clinical-trust.jpeg"
+                  alt="Senior AusinX biomedical service engineer conducting clinical equipment inspection"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/90 via-[#0B2942]/30 to-transparent" />
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#55C7C2]">
+                    <CheckCircle2 className="w-4 h-4" /> Direct Senior Engineer Accountability
+                  </div>
+                  <p className="text-xs text-slate-200 mt-0.5">
+                    No offshore call centres. Immediate direct access to specialist field engineers.
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-amber-800/90 leading-relaxed">
-                Whether fitting out a new clinical space, upgrading ageing technology, or retiring equipment at end of life, we manage the technical detail so your teams can stay focused on patient care.
-              </p>
             </div>
           </div>
 
-          {/* Right Column: 4 Points from Section 7.1 */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Right Column: 4 Interactive Glowing Cards */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
             {aboutCopy.whyChooseUs.map((point, index) => {
               const Icon = icons[index] || ShieldCheck;
               return (
                 <div
                   key={point.title}
-                  className="p-6 rounded-2xl bg-[#F1F5F9] border border-slate-200/90 hover:border-slate-300 hover:bg-slate-50 transition-all space-y-3"
+                  className="group relative p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-teal-300 hover:bg-white hover:shadow-[0_16px_40px_rgba(7,153,154,0.12)] hover:-translate-y-1 transition-all duration-300 space-y-3"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#1A2A3A] text-[#F8B800] flex items-center justify-center font-bold shadow-sm">
-                    <Icon className="w-5 h-5" />
+                  <div className="flex items-center justify-between">
+                    <div className="w-12 h-12 rounded-2xl bg-[#0B2942] text-[#55C7C2] group-hover:bg-[#07999A] group-hover:text-white transition-colors flex items-center justify-center font-bold shadow-md">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-[#07999A] transition-colors">
+                      0{index + 1}
+                    </span>
                   </div>
-                  <h3 className="text-lg font-bold text-[#1A2A3A] font-heading">
+
+                  <h3 className="text-lg font-bold text-[#0B2942] font-heading group-hover:text-[#07999A] transition-colors">
                     {point.title}
                   </h3>
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  
+                  <p className="text-sm text-slate-600 leading-relaxed font-normal">
                     {point.description}
                   </p>
                 </div>
               );
             })}
           </div>
+
         </div>
       </div>
     </section>

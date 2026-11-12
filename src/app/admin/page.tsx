@@ -22,6 +22,9 @@ import {
   Loader2,
   ShieldCheck,
   RefreshCw,
+  Plus,
+  UploadCloud,
+  X,
 } from "lucide-react";
 
 interface AdminUser {
@@ -68,6 +71,7 @@ export default function AdminDashboardPage() {
   const [servicesData, setServicesData] = useState<any[]>([]);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
   const [savingServices, setSavingServices] = useState(false);
+  const [uploadingServiceImage, setUploadingServiceImage] = useState(false);
 
   // Home / About / Lifecycle state
   const [aboutData, setAboutData] = useState<any>(null);
@@ -235,14 +239,82 @@ export default function AdminDashboardPage() {
         }),
       });
       if (res.ok) {
-        showFeedback("success", "Services updated in Firebase RTDB.");
+        showFeedback("success", "Services are live on the customer website.");
       } else {
-        showFeedback("error", "Failed to save services.");
+        const result = await res.json().catch(() => null);
+        showFeedback("error", result?.error || "Failed to save services.");
       }
     } catch {
       showFeedback("error", "Network error saving services.");
     } finally {
       setSavingServices(false);
+    }
+  };
+
+  const handleAddService = () => {
+    let suffix = servicesData.length + 1;
+    let slug = `new-service-${suffix}`;
+    while (servicesData.some((service) => service.slug === slug)) {
+      suffix += 1;
+      slug = `new-service-${suffix}`;
+    }
+
+    const service = {
+      slug,
+      navTitle: "New Service",
+      contactValue: "New Service",
+      title: "New Service",
+      shortSummary: "",
+      fullDescription: "",
+      keyHighlights: [],
+      subServices: [],
+      image: "/images/client/imaging-suite.jpeg",
+      imageAlt: "New service image",
+      metaTitle: "New Service | AusinX Solutions",
+      metaDescription: "",
+    };
+
+    setServicesData((current) => [...current, service]);
+    setSelectedServiceIndex(servicesData.length);
+    showFeedback("success", "New service added. Complete its details and save to publish it.");
+  };
+
+  const handleServiceImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    const service = servicesData[selectedServiceIndex];
+    if (!file || !service) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("slug", service.slug);
+    setUploadingServiceImage(true);
+
+    try {
+      const response = await fetch("/api/admin/service-image", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+      if (!response.ok || !result.imageUrl) {
+        showFeedback("error", result.error || "Image upload failed.");
+        return;
+      }
+
+      setServicesData((current) =>
+        current.map((item, index) =>
+          index === selectedServiceIndex
+            ? { ...item, image: result.imageUrl }
+            : item
+        )
+      );
+      showFeedback("success", "Image uploaded. Save the service to publish the change.");
+    } catch {
+      showFeedback("error", "Network error while uploading the image.");
+    } finally {
+      setUploadingServiceImage(false);
     }
   };
 
@@ -275,7 +347,7 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center text-white">
         <div className="flex items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-[#F8B800]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#07999A]" />
           <span>Verifying AusinX staff credentials...</span>
         </div>
       </div>
@@ -285,12 +357,12 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-[#F1F5F9] text-[#0F172A] flex flex-col">
       {/* Top Navbar */}
-      <header className="bg-[#1A2A3A] text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
+      <header className="bg-[#0B2942] text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-white p-0.5 flex items-center justify-center shrink-0">
               <Image
-                src="/images/logo.png"
+                src="/images/client/ausinx-logo-cropped.png"
                 alt="AusinX Solutions"
                 width={32}
                 height={32}
@@ -303,7 +375,7 @@ export default function AdminDashboardPage() {
               <span className="font-extrabold text-sm sm:text-base tracking-tight font-heading block">
                 AusinX Admin Console
               </span>
-              <span className="text-[10px] text-amber-400 font-semibold block">
+              <span className="text-[10px] text-teal-400 font-semibold block">
                 Firebase Realtime Database Connected
               </span>
             </div>
@@ -344,14 +416,14 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("enquiries")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "enquiries"
-                ? "border-[#F8B800] text-[#F8B800]"
+                ? "border-[#07999A] text-[#07999A]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Inbox className="w-4 h-4" />
             <span>Enquiries Inbox</span>
             {enquiries.filter((e) => e.status === "new").length > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#F8B800] text-[#1A2A3A] text-[10px] font-black">
+              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#07999A] text-[#0B2942] text-[10px] font-black">
                 {enquiries.filter((e) => e.status === "new").length}
               </span>
             )}
@@ -361,7 +433,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("services")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "services"
-                ? "border-[#F8B800] text-[#F8B800]"
+                ? "border-[#07999A] text-[#07999A]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -373,7 +445,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("settings")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "settings"
-                ? "border-[#F8B800] text-[#F8B800]"
+                ? "border-[#07999A] text-[#07999A]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -385,7 +457,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("home")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "home"
-                ? "border-[#F8B800] text-[#F8B800]"
+                ? "border-[#07999A] text-[#07999A]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -421,7 +493,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#1A2A3A] font-heading">
+                <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
                   Website Enquiries Inbox
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
@@ -445,7 +517,7 @@ export default function AdminDashboardPage() {
             {enquiries.length === 0 ? (
               <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-sm space-y-3">
                 <Inbox className="w-12 h-12 text-slate-300 mx-auto" />
-                <h3 className="text-lg font-bold text-[#1A2A3A]">
+                <h3 className="text-lg font-bold text-[#0B2942]">
                   No Enquiries Yet
                 </h3>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto">
@@ -464,7 +536,7 @@ export default function AdminDashboardPage() {
                         <span
                           className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${
                             enq.status === "new"
-                              ? "bg-amber-100 text-amber-800 border border-amber-300"
+                              ? "bg-teal-100 text-teal-800 border border-teal-300"
                               : enq.status === "in_review"
                               ? "bg-blue-100 text-blue-800 border border-blue-300"
                               : enq.status === "contacted"
@@ -474,7 +546,7 @@ export default function AdminDashboardPage() {
                         >
                           {enq.status.replace("_", " ")}
                         </span>
-                        <h3 className="text-base font-bold text-[#1A2A3A]">
+                        <h3 className="text-base font-bold text-[#0B2942]">
                           {enq.fullName}
                         </h3>
                         <span className="text-xs text-slate-500">
@@ -518,7 +590,7 @@ export default function AdminDashboardPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Mail className="w-4 h-4 text-amber-500 shrink-0" />
+                        <Mail className="w-4 h-4 text-teal-500 shrink-0" />
                         <a
                           href={`mailto:${enq.email}`}
                           className="hover:underline font-medium text-slate-800"
@@ -527,7 +599,7 @@ export default function AdminDashboardPage() {
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Phone className="w-4 h-4 text-amber-500 shrink-0" />
+                        <Phone className="w-4 h-4 text-teal-500 shrink-0" />
                         <a
                           href={`tel:${enq.phone}`}
                           className="hover:underline font-medium text-slate-800"
@@ -536,7 +608,7 @@ export default function AdminDashboardPage() {
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Building className="w-4 h-4 text-amber-500 shrink-0" />
+                        <Building className="w-4 h-4 text-teal-500 shrink-0" />
                         <span>
                           Service: <strong>{enq.serviceInterest}</strong>
                         </span>
@@ -554,40 +626,90 @@ export default function AdminDashboardPage() {
         )}
 
         {/* TAB 2: SERVICES EDITOR */}
-        {activeTab === "services" && servicesData.length > 0 && (
+        {activeTab === "services" && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#1A2A3A] font-heading">
+                <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
                   Services Content Editor
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
-                  Manage the 4 core pillars rendered across the site. Content writes directly to Firebase RTDB.
+                  Create and update services, descriptions, and images shown across the customer website.
                 </p>
               </div>
+              <button
+                type="button"
+                onClick={handleAddService}
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0B2942] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#087F86]"
+              >
+                <Plus className="h-4 w-4" /> Add service
+              </button>
+            </div>
 
-              {/* Pillar Selector Pills */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-2">
+            {servicesData.length > 0 ? (
+              <>
+                <div className="flex items-center gap-2 overflow-x-auto pb-2">
                 {servicesData.map((s, idx) => (
                   <button
+                    type="button"
                     key={s.slug}
                     onClick={() => setSelectedServiceIndex(idx)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors whitespace-nowrap ${
                       selectedServiceIndex === idx
-                        ? "bg-[#1A2A3A] text-white shadow"
+                        ? "bg-[#0B2942] text-white shadow"
                         : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50"
                     }`}
                   >
                     {s.navTitle}
                   </button>
                 ))}
-              </div>
-            </div>
+                </div>
 
             <form
               onSubmit={handleSaveServices}
               className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6"
             >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Service URL Slug
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                    value={servicesData[selectedServiceIndex]?.slug || ""}
+                    onChange={(e) => {
+                      const updated = [...servicesData];
+                      updated[selectedServiceIndex].slug = e.target.value
+                        .toLowerCase()
+                        .trim()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/^-|-$/g, "");
+                      setServicesData(updated);
+                    }}
+                    placeholder="example-service"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  />
+                  <span className="mt-1 block text-[11px] text-slate-500">Customer page: /services/{servicesData[selectedServiceIndex]?.slug || "service-name"}</span>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Enquiry Form Service Name
+                  </label>
+                  <input
+                    type="text"
+                    value={servicesData[selectedServiceIndex]?.contactValue || ""}
+                    onChange={(e) => {
+                      const updated = [...servicesData];
+                      updated[selectedServiceIndex].contactValue = e.target.value;
+                      setServicesData(updated);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
@@ -601,7 +723,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].navTitle = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                   />
                 </div>
 
@@ -617,8 +739,58 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].title = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-[minmax(0,1fr)_minmax(220px,0.8fr)] sm:items-center">
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                      Service Image
+                    </label>
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-[#07999A] hover:text-[#087F86]">
+                      {uploadingServiceImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
+                      {uploadingServiceImage ? "Uploading image…" : "Choose image"}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={handleServiceImageUpload}
+                        disabled={uploadingServiceImage}
+                        className="sr-only"
+                      />
+                    </label>
+                    <p className="mt-1.5 text-xs text-slate-500">JPG, PNG, or WebP · up to 8 MB. The website automatically crops and sizes it for each screen.</p>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                      Image Description (Accessibility)
+                    </label>
+                    <input
+                      type="text"
+                      value={servicesData[selectedServiceIndex]?.imageAlt || ""}
+                      onChange={(e) => {
+                        const updated = [...servicesData];
+                        updated[selectedServiceIndex].imageAlt = e.target.value;
+                        setServicesData(updated);
+                      }}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-[#07999A]"
+                    />
+                  </div>
+                </div>
+                <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-white">
+                  {servicesData[selectedServiceIndex]?.image ? (
+                    <Image
+                      src={servicesData[selectedServiceIndex].image}
+                      alt={servicesData[selectedServiceIndex].imageAlt || "Service image preview"}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 40vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-slate-400">Image preview appears here</div>
+                  )}
                 </div>
               </div>
 
@@ -634,7 +806,7 @@ export default function AdminDashboardPage() {
                     updated[selectedServiceIndex].shortSummary = e.target.value;
                     setServicesData(updated);
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                 />
               </div>
 
@@ -650,21 +822,102 @@ export default function AdminDashboardPage() {
                     updated[selectedServiceIndex].fullDescription = e.target.value;
                     setServicesData(updated);
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Key Highlights (one per line)
+                </label>
+                <textarea
+                  rows={4}
+                  value={(servicesData[selectedServiceIndex]?.keyHighlights || []).join("\n")}
+                  onChange={(e) => {
+                    const updated = [...servicesData];
+                    updated[selectedServiceIndex].keyHighlights = e.target.value
+                      .split("\n")
+                      .map((line) => line.trim())
+                      .filter(Boolean);
+                    setServicesData(updated);
+                  }}
+                  placeholder="Preventive maintenance scheduling\nRapid response support"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Title</label>
+                  <input
+                    type="text"
+                    value={servicesData[selectedServiceIndex]?.metaTitle || ""}
+                    onChange={(e) => {
+                      const updated = [...servicesData];
+                      updated[selectedServiceIndex].metaTitle = e.target.value;
+                      setServicesData(updated);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Description</label>
+                  <input
+                    type="text"
+                    value={servicesData[selectedServiceIndex]?.metaDescription || ""}
+                    onChange={(e) => {
+                      const updated = [...servicesData];
+                      updated[selectedServiceIndex].metaDescription = e.target.value;
+                      setServicesData(updated);
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  />
+                </div>
               </div>
 
               {/* Sub-services */}
               <div className="space-y-3 pt-2">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  Sub-Services Breakdown
-                </label>
+                <div className="flex items-center justify-between gap-3">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Sub-Services Breakdown
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = [...servicesData];
+                      updated[selectedServiceIndex].subServices = [
+                        ...(updated[selectedServiceIndex].subServices || []),
+                        { title: "", description: "" },
+                      ];
+                      setServicesData(updated);
+                    }}
+                    className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#07999A] hover:text-[#087F86]"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> Add detail
+                  </button>
+                </div>
                 {servicesData[selectedServiceIndex]?.subServices?.map(
                   (sub: any, subIdx: number) => (
                     <div
                       key={subIdx}
                       className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3"
                     >
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = [...servicesData];
+                            updated[selectedServiceIndex].subServices = updated[
+                              selectedServiceIndex
+                            ].subServices.filter((_: any, index: number) => index !== subIdx);
+                            setServicesData(updated);
+                          }}
+                          aria-label="Remove sub-service"
+                          className="rounded-lg p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={sub.title}
@@ -699,17 +952,31 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingServices}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingServices ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  <span>Save Services to Firebase RTDB</span>
+                  <span>Save & Publish Services</span>
                 </button>
               </div>
             </form>
+              </>
+            ) : (
+              <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
+                <h2 className="text-lg font-bold text-[#0B2942]">No services have been added yet.</h2>
+                <p className="mt-2 text-sm text-slate-500">Start with a service name, description, and image. You can add sub-service details too.</p>
+                <button
+                  type="button"
+                  onClick={handleAddService}
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0B2942] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#087F86]"
+                >
+                  <Plus className="h-4 w-4" /> Create the first service
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -717,7 +984,7 @@ export default function AdminDashboardPage() {
         {activeTab === "settings" && settingsData && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-extrabold text-[#1A2A3A] font-heading">
+              <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
                 Site Settings & Identity
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -743,7 +1010,7 @@ export default function AdminDashboardPage() {
                         companyName: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                   />
                 </div>
 
@@ -760,7 +1027,7 @@ export default function AdminDashboardPage() {
                         publicEmail: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                   />
                 </div>
               </div>
@@ -778,7 +1045,7 @@ export default function AdminDashboardPage() {
                       tagline: e.target.value,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                 />
               </div>
 
@@ -795,12 +1062,12 @@ export default function AdminDashboardPage() {
                       businessHours: e.target.value,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#F8B800]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
                 />
               </div>
 
               <div className="pt-2 border-t border-slate-100">
-                <h3 className="text-sm font-bold text-[#1A2A3A] mb-3">
+                <h3 className="text-sm font-bold text-[#0B2942] mb-3">
                   Melbourne Office Address
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
@@ -872,7 +1139,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingSettings}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingSettings ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -890,7 +1157,7 @@ export default function AdminDashboardPage() {
         {activeTab === "home" && aboutData && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-extrabold text-[#1A2A3A] font-heading">
+              <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
                 Home & Lifecycle Sections
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -968,7 +1235,7 @@ export default function AdminDashboardPage() {
                       key={idx}
                       className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs"
                     >
-                      <span className="font-mono text-[10px] font-bold text-amber-600 block">
+                      <span className="font-mono text-[10px] font-bold text-teal-600 block">
                         Step {step.step}
                       </span>
                       <input
@@ -1000,7 +1267,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingHome}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#F8B800] text-[#1A2A3A] font-bold text-sm hover:bg-[#E0A400] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingHome ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

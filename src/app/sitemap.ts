@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
-import { servicesData } from "@/lib/content";
+import { getServices } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const servicesData = await getServices();
   const baseUrl = "https://www.ausinx.com.au";
   const lastModified = new Date();
 

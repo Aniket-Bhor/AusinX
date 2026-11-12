@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
+import { getServices, getSiteSettings } from "@/lib/content";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -31,8 +32,8 @@ export const metadata: Metadata = {
     canonical: "https://www.ausinx.com.au",
   },
   icons: {
-    icon: "/images/logo.png",
-    apple: "/images/logo.png",
+    icon: "/images/client/ausinx-icon.png",
+    apple: "/images/client/ausinx-icon.png",
   },
   openGraph: {
     title: "AusinX Solutions | Biomedical & Industrial Equipment Solutions",
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/placeholders/hero-equipment.webp",
+        url: "/images/client/imaging-suite.jpeg",
         width: 1200,
         height: 630,
         alt: "AusinX Biomedical Engineering Solutions",
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
     title: "AusinX Solutions | Biomedical & Industrial Equipment Solutions",
     description:
       "Precision healthcare and industrial equipment lifecycle solutions: Service · Installation · Parts · Calibration.",
-    images: ["/images/placeholders/hero-equipment.webp"],
+    images: ["/images/client/imaging-suite.jpeg"],
   },
 
   robots: {
@@ -87,10 +88,21 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body className="min-h-full flex flex-col bg-white text-[#0F172A]">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
+  );
+}
+
+async function SiteChrome({ children }: { children: React.ReactNode }) {
+  const [services, siteSettings] = await Promise.all([getServices(), getSiteSettings()]);
+  const serviceNav = services.map(({ slug, navTitle }) => ({ slug, navTitle }));
+
+  return (
+    <>
+        <Header services={serviceNav} siteSettings={siteSettings} />
+        <main className="flex-1">{children}</main>
+        <Footer services={serviceNav} siteSettings={siteSettings} />
+    </>
   );
 }
