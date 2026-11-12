@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
+import Reveal from "@/components/ui/Reveal";
 
 const modalities = [
   {
@@ -80,25 +81,25 @@ export default function InteractiveBento() {
 
         {/* Equalized 2x2 Grid (2 per row on desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {modalities.map((item) => (
-            <div
-              key={item.title}
-              className="group relative overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_rgba(7,153,154,0.15)] transition-all duration-500 hover:-translate-y-1 flex flex-col justify-between"
-            >
+          {modalities.map((item, index) => (
+            <Reveal key={item.title} delay={index * 110} direction="scale">
+              <div
+                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_rgba(7,153,154,0.18)] hover:border-teal-300/80 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
+              >
               {/* Image Section */}
               <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
                 <Image
                   src={item.image}
                   alt={item.imageAlt}
                   fill
-                  className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                  className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/90 via-[#0B2942]/30 to-transparent" />
                 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#0B2942] text-xs font-bold uppercase tracking-wider shadow-sm">
+                  <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#0B2942] text-xs font-bold uppercase tracking-wider shadow-sm transition-transform duration-300 group-hover:scale-105 inline-block">
                     {item.category}
                   </span>
                 </div>
@@ -119,7 +120,7 @@ export default function InteractiveBento() {
                 {item.pills.map((pill) => (
                   <span
                     key={pill.label}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-transform duration-200 group-hover:translate-y-[-1px] ${
                       pill.type === "accent"
                         ? "bg-teal-50 text-[#07999A] border border-teal-100"
                         : "bg-slate-100 text-slate-700"
@@ -129,7 +130,8 @@ export default function InteractiveBento() {
                   </span>
                 ))}
               </div>
-            </div>
+              </div>
+            </Reveal>
           ))}
         </div>
 

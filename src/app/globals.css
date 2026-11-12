@@ -179,15 +179,70 @@ body { background: #FFFFFF; color: #0F172A; }
 .soft-reveal {
   opacity: 1;
   transform: none;
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .soft-reveal.reveal-pending {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 650ms ease, transform 650ms cubic-bezier(.2,.7,.2,1);
+  transform: translateY(20px);
 }
 
-.soft-reveal.is-visible { opacity: 1; transform: translateY(0); }
+.soft-reveal.reveal-pending.reveal-left {
+  transform: translateX(-24px);
+}
+
+.soft-reveal.reveal-pending.reveal-right {
+  transform: translateX(24px);
+}
+
+.soft-reveal.reveal-pending.reveal-scale {
+  transform: scale(0.95) translateY(12px);
+}
+
+.soft-reveal.is-visible { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+
+@keyframes orb-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.85; }
+  50% { transform: translate3d(18px, -14px, 0) scale(1.06); opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-orb {
+  animation: orb-drift 9s ease-in-out infinite;
+}
+
+.animate-orb-delayed {
+  animation: orb-drift 11s ease-in-out 2.5s infinite reverse;
+}
+
+.animate-gradient-text {
+  background-size: 200% auto;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%) skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-shine:hover::after {
+  transform: translateX(120%) skewX(-20deg);
+}
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   main a, main button { transition-property: color, background-color, border-color, box-shadow, transform; transition-duration: 220ms; }

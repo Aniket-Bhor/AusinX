@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getAboutCopy } from "@/lib/content";
+import Reveal from "@/components/ui/Reveal";
 
 const icons = [ShieldCheck, RefreshCw, Clock, MessageSquareCheck];
 
@@ -18,7 +19,7 @@ export default async function WhyChooseUs() {
     <section className="py-20 sm:py-28 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
-          
+
           {/* Left Column: Heading, Value Proposition & Real Visual Card */}
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-[#07999A] text-xs font-bold uppercase tracking-wider">
@@ -29,7 +30,7 @@ export default async function WhyChooseUs() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0B2942] tracking-tight leading-[1.12] font-heading">
               Why Australian Clinics Trust AusinX
             </h2>
-            
+
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
               Downtime in clinical and radiation oncology environments has direct consequences for patient scheduling and treatment efficacy. We eliminate risk with proactive engineering.
             </p>
@@ -62,27 +63,28 @@ export default async function WhyChooseUs() {
             {aboutCopy.whyChooseUs.map((point, index) => {
               const Icon = icons[index] || ShieldCheck;
               return (
-                <div
-                  key={point.title}
-                  className="group relative p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-teal-300 hover:bg-white hover:shadow-[0_16px_40px_rgba(7,153,154,0.12)] hover:-translate-y-1 transition-all duration-300 space-y-3"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#0B2942] text-[#55C7C2] group-hover:bg-[#07999A] group-hover:text-white transition-colors flex items-center justify-center font-bold shadow-md">
-                      <Icon className="w-6 h-6" />
+                <Reveal key={point.title} delay={index * 90} direction="scale">
+                  <div
+                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-teal-300 hover:bg-white hover:shadow-[0_16px_40px_rgba(7,153,154,0.14)] hover:-translate-y-1.5 transition-all duration-300 space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-12 h-12 rounded-2xl bg-[#0B2942] text-[#55C7C2] group-hover:bg-[#07999A] group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-[#07999A] transition-colors">
+                        0{index + 1}
+                      </span>
                     </div>
-                    <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-[#07999A] transition-colors">
-                      0{index + 1}
-                    </span>
-                  </div>
 
-                  <h3 className="text-lg font-bold text-[#0B2942] font-heading group-hover:text-[#07999A] transition-colors">
-                    {point.title}
-                  </h3>
-                  
-                  <p className="text-sm text-slate-600 leading-relaxed font-normal">
-                    {point.description}
-                  </p>
-                </div>
+                    <h3 className="text-lg font-bold text-[#0B2942] font-heading group-hover:text-[#07999A] transition-colors">
+                      {point.title}
+                    </h3>
+
+                    <p className="text-sm text-slate-600 leading-relaxed font-normal">
+                      {point.description}
+                    </p>
+                  </div>
+                </Reveal>
               );
             })}
           </div>
