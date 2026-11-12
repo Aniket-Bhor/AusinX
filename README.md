@@ -146,8 +146,8 @@ The portal allows directors to manage incoming enquiries and make live updates t
 
 - **URL**: `/admin/login`
 - **Admin Login (Stored in Firebase RTDB `/user`)**:
-  - **Login ID**: `ausinx@admin`
-  - **Password**: `ausinx@2026`
+  - **Login ID**: `Mail`
+  - **Password**: `xxxxxxxxxxx`
 - **Features**:
   - **Enquiries Inbox**: Real-time listing of customer submissions with contact info, requested service, urgency, and timestamp. Mark as `contacted`, `in-progress`, `resolved`, or delete spam.
   - **Services Editor**: Edit tagline, description, features list, and deliverables for each of the 4 service pillars.
