@@ -50,7 +50,17 @@ export default function Footer({
       </div>
       <div className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-          <span>© <CurrentYear /> {siteSettings.companyName}</span>
+          <span>
+            © <CurrentYear /> AusinX – All rights reserved | Designed By{" "}
+            <a
+              href="https://thefifthelements.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-slate-700 hover:text-[#059669] transition-colors"
+            >
+              thefifthelements.com
+            </a>
+          </span>
           <div className="flex gap-5"><Link href="/about" className="hover:text-[#059669]">About</Link><Link href="/contact" className="hover:text-[#059669]">Contact</Link><Link href="/privacy" className="hover:text-[#059669]">Privacy policy</Link></div>
         </div>
       </div>
