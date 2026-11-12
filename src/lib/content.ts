@@ -1,4 +1,8 @@
 import { cacheTag } from "next/cache";
+import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
+
+export type { SiteImages };
+export { defaultSiteImages };
 
 export interface SubService {
   title: string;
@@ -362,5 +366,31 @@ export async function getLifecycleSteps(): Promise<LifecycleStep[]> {
     // Fallback
   }
   return lifecycleSteps;
+}
+
+export async function getSiteImages(): Promise<SiteImages> {
+  "use cache";
+  cacheTag("site-images");
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/siteImages.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        const merged: SiteImages = { ...defaultSiteImages };
+        (Object.keys(defaultSiteImages) as (keyof SiteImages)[]).forEach((key) => {
+          const val = data[key];
+          if (typeof val === "string" && val.trim().length > 0) {
+            merged[key] = val.trim();
+          }
+        });
+        return merged;
+      }
+    }
+  } catch {
+    // Fallback to default local images
+  }
+  return defaultSiteImages;
 }
 

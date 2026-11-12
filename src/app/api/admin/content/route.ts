@@ -8,6 +8,7 @@ const editableSections = new Set([
   "siteSettings",
   "about",
   "lifecycle",
+  "siteImages",
 ]);
 
 export async function GET(request: Request) {
@@ -140,6 +141,8 @@ export async function PUT(request: Request) {
       revalidateTag("about-copy", { expire: 0 });
     } else if (section === "lifecycle") {
       revalidateTag("lifecycle-steps", { expire: 0 });
+    } else if (section === "siteImages") {
+      revalidateTag("site-images", { expire: 0 });
     }
 
     // Record audit trail

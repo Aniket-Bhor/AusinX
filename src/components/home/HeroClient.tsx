@@ -13,7 +13,13 @@ import {
 } from "lucide-react";
 import type { SiteSettings } from "@/lib/content";
 
-export default function HeroClient({ siteSettings }: { siteSettings: SiteSettings }) {
+export default function HeroClient({
+  siteSettings,
+  heroImage = "/images/client/imaging-suite.jpeg",
+}: {
+  siteSettings: SiteSettings;
+  heroImage?: string;
+}) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#0B2942] via-[#0D3352] to-[#071F33] text-white pt-10 pb-20 sm:pt-14 sm:pb-28">
       {/* Glowing Background Radial Effects */}
@@ -82,7 +88,7 @@ export default function HeroClient({ siteSettings }: { siteSettings: SiteSetting
             {/* Main Image Container */}
             <div className="relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-[2.5rem] border border-white/15 bg-slate-900 shadow-[0_25px_60px_rgba(0,0,0,0.45)] group">
               <Image
-                src="/images/client/imaging-suite.jpeg"
+                src={heroImage}
                 alt="Modern hospital imaging suite maintained by AusinX"
                 fill
                 priority

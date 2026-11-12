@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { CheckCircle2, ShieldCheck, HeartPulse, Settings2, ShieldCheck as ComplianceIcon, MapPinned } from "lucide-react";
-import { getAboutCopy, getLifecycleSteps } from "@/lib/content";
+import { getAboutCopy, getLifecycleSteps, getSiteImages } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "About Us | Australian Biomedical Engineering Solutions",
@@ -18,9 +18,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const [aboutCopy, lifecycleSteps] = await Promise.all([
+  const [aboutCopy, lifecycleSteps, siteImages] = await Promise.all([
     getAboutCopy(),
     getLifecycleSteps(),
+    getSiteImages(),
   ]);
   return (
     <div className="bg-white">
@@ -42,7 +43,7 @@ export default async function AboutPage() {
         </div>
         <div className="relative">
           <div className="relative aspect-[1.25/1] overflow-hidden rounded-[2rem] border border-white shadow-[0_24px_75px_rgba(11,41,66,.14)]">
-            <Image src="/images/client/engineering-workshop.jpeg" alt="Biomedical engineering workshop and equipment" fill className="object-cover transition-transform duration-700 hover:scale-[1.03]" sizes="(max-width: 1024px) 100vw, 45vw" />
+            <Image src={siteImages.aboutImage} alt="Biomedical engineering workshop and equipment" fill className="object-cover transition-transform duration-700 hover:scale-[1.03]" sizes="(max-width: 1024px) 100vw, 45vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/30 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/70 bg-white/95 p-4 shadow-lg sm:bottom-6 sm:left-6 sm:right-6 sm:p-5">
               <p className="text-xs font-bold uppercase tracking-wider text-[#087F86]">Across the equipment lifecycle</p>

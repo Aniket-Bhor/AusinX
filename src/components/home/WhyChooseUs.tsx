@@ -8,13 +8,16 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import { getAboutCopy } from "@/lib/content";
+import { getAboutCopy, getSiteImages } from "@/lib/content";
 import Reveal from "@/components/ui/Reveal";
 
 const icons = [ShieldCheck, RefreshCw, Clock, MessageSquareCheck];
 
 export default async function WhyChooseUs() {
-  const aboutCopy = await getAboutCopy();
+  const [aboutCopy, siteImages] = await Promise.all([
+    getAboutCopy(),
+    getSiteImages(),
+  ]);
   return (
     <section className="py-20 sm:py-28 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +42,7 @@ export default async function WhyChooseUs() {
             <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-lg group">
               <div className="relative h-44 w-full">
                 <Image
-                  src="/images/client/clinical-trust.jpeg"
+                  src={siteImages.whyChooseUsImage}
                   alt="Senior AusinX biomedical service engineer conducting clinical equipment inspection"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
-import { getServices, getSiteSettings } from "@/lib/content";
+import { getServices, getSiteImages, getSiteSettings } from "@/lib/content";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -95,14 +95,18 @@ export default function RootLayout({
 }
 
 async function SiteChrome({ children }: { children: React.ReactNode }) {
-  const [services, siteSettings] = await Promise.all([getServices(), getSiteSettings()]);
+  const [services, siteSettings, siteImages] = await Promise.all([
+    getServices(),
+    getSiteSettings(),
+    getSiteImages(),
+  ]);
   const serviceNav = services.map(({ slug, navTitle }) => ({ slug, navTitle }));
 
   return (
     <>
-        <Header services={serviceNav} siteSettings={siteSettings} />
+        <Header services={serviceNav} siteSettings={siteSettings} logoUrl={siteImages.headerLogo} />
         <main className="flex-1">{children}</main>
-        <Footer services={serviceNav} siteSettings={siteSettings} />
+        <Footer services={serviceNav} siteSettings={siteSettings} logoUrl={siteImages.headerLogo} />
     </>
   );
 }

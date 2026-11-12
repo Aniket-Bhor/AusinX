@@ -25,7 +25,10 @@ import {
   Plus,
   UploadCloud,
   X,
+  ImageIcon,
+  RotateCcw,
 } from "lucide-react";
+import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
 
 interface AdminUser {
   email: string;
@@ -50,7 +53,7 @@ export default function AdminDashboardPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "enquiries" | "services" | "settings" | "home"
+    "enquiries" | "services" | "images" | "settings" | "home"
   >("enquiries");
 
   // Notifications / feedback
@@ -77,6 +80,11 @@ export default function AdminDashboardPage() {
   const [aboutData, setAboutData] = useState<any>(null);
   const [lifecycleData, setLifecycleData] = useState<any[]>([]);
   const [savingHome, setSavingHome] = useState(false);
+
+  // Website Images state
+  const [siteImagesData, setSiteImagesData] = useState<SiteImages>(defaultSiteImages);
+  const [savingImages, setSavingImages] = useState(false);
+  const [uploadingImageSlot, setUploadingImageSlot] = useState<string | null>(null);
 
   const showFeedback = (type: "success" | "error", message: string) => {
     setFeedback({ type, message });
@@ -113,9 +121,12 @@ export default function AdminDashboardPage() {
       const data = await res.json();
       if (res.ok && data.enquiries) {
         setEnquiries(data.enquiries);
+      } else if (!res.ok) {
+        showFeedback("error", data.error || "Failed to load enquiries from database.");
       }
     } catch (e) {
       console.error(e);
+      showFeedback("error", "Network error loading enquiries.");
     } finally {
       setLoadingEnquiries(false);
     }
@@ -124,18 +135,20 @@ export default function AdminDashboardPage() {
   // Load Content from RTDB
   const loadContent = async () => {
     try {
-      const [resSettings, resServices, resAbout, resLifecycle] =
+      const [resSettings, resServices, resAbout, resLifecycle, resImages] =
         await Promise.all([
           fetch("/api/admin/content?section=siteSettings"),
           fetch("/api/admin/content?section=services"),
           fetch("/api/admin/content?section=about"),
           fetch("/api/admin/content?section=lifecycle"),
+          fetch("/api/admin/content?section=siteImages"),
         ]);
 
       const sData = await resSettings.json();
       const srvData = await resServices.json();
       const aData = await resAbout.json();
       const lData = await resLifecycle.json();
+      const iData = await resImages.json();
 
       if (sData.data) setSettingsData(sData.data);
       if (srvData.data) {
@@ -150,6 +163,9 @@ export default function AdminDashboardPage() {
           ? lData.data
           : Object.values(lData.data);
         setLifecycleData(lList);
+      }
+      if (iData.data && typeof iData.data === "object") {
+        setSiteImagesData({ ...defaultSiteImages, ...iData.data });
       }
     } catch (e) {
       console.error(e);
@@ -343,6 +359,66 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Upload Website Image for a specific slot
+  const handleSiteImageUpload = async (
+    slot: keyof SiteImages,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("slot", slot);
+    setUploadingImageSlot(slot);
+
+    try {
+      const response = await fetch("/api/admin/service-image", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+      if (!response.ok || !result.imageUrl) {
+        showFeedback("error", result.error || "Image upload failed.");
+        return;
+      }
+
+      setSiteImagesData((prev) => ({ ...prev, [slot]: result.imageUrl }));
+      showFeedback("success", "Image uploaded. Click 'Save Website Images' to publish.");
+    } catch {
+      showFeedback("error", "Network error while uploading image.");
+    } finally {
+      setUploadingImageSlot(null);
+    }
+  };
+
+  // Save Website Images
+  const handleSaveSiteImages = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingImages(true);
+    try {
+      const res = await fetch("/api/admin/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section: "siteImages",
+          data: siteImagesData,
+        }),
+      });
+      if (res.ok) {
+        showFeedback("success", "Website images published to live site.");
+      } else {
+        const result = await res.json().catch(() => null);
+        showFeedback("error", result?.error || "Failed to save website images.");
+      }
+    } catch {
+      showFeedback("error", "Network error saving website images.");
+    } finally {
+      setSavingImages(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center text-white">
@@ -439,6 +515,18 @@ export default function AdminDashboardPage() {
           >
             <Wrench className="w-4 h-4" />
             <span>Services Editor</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("images")}
+            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
+              activeTab === "images"
+                ? "border-[#07999A] text-[#07999A]"
+                : "border-transparent text-slate-400 hover:text-white"
+            }`}
+          >
+            <ImageIcon className="w-4 h-4" />
+            <span>Website Images</span>
           </button>
 
           <button
@@ -1279,6 +1367,179 @@ export default function AdminDashboardPage() {
               </div>
             </form>
           </div>
+        )}
+
+        {/* TAB 5: WEBSITE IMAGES */}
+        {activeTab === "images" && (
+          <form onSubmit={handleSaveSiteImages} className="space-y-6">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                <div>
+                  <h2 className="text-xl font-extrabold text-[#0B2942] font-heading">
+                    Website Images Manager
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Upload or update images for every section across the website. Service-specific images can also be uploaded in the{" "}
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("services")}
+                      className="text-[#07999A] font-bold hover:underline"
+                    >
+                      Services Editor
+                    </button>
+                    .
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  disabled={savingImages}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-xs hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
+                >
+                  {savingImages ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  <span>Save Website Images</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(
+                  [
+                    {
+                      key: "headerLogo",
+                      label: "Header & Footer Brand Logo",
+                      location: "Top Navbar & Site Footer",
+                    },
+                    {
+                      key: "heroImage",
+                      label: "Home Hero Showcase",
+                      location: "Homepage Top Banner",
+                    },
+                    {
+                      key: "bentoCt",
+                      label: "Modality 1: CT & Radiotherapy",
+                      location: "Homepage Multi-Modality Grid",
+                    },
+                    {
+                      key: "bentoCArm",
+                      label: "Modality 2: C-Arm & Mobile X-Ray",
+                      location: "Homepage Multi-Modality Grid",
+                    },
+                    {
+                      key: "bentoMonitor",
+                      label: "Modality 3: Patient Monitors & Ventilators",
+                      location: "Homepage Multi-Modality Grid",
+                    },
+                    {
+                      key: "bentoUltrasound",
+                      label: "Modality 4: Ultrasound Transducers",
+                      location: "Homepage Multi-Modality Grid",
+                    },
+                    {
+                      key: "whyChooseUsImage",
+                      label: "Why Choose Us Feature Image",
+                      location: "Homepage Why Choose Us Section",
+                    },
+                    {
+                      key: "aboutImage",
+                      label: "About Page Workshop Image",
+                      location: "About Us Page Hero",
+                    },
+                    {
+                      key: "contactImage",
+                      label: "Contact Page Support Desk",
+                      location: "Contact Page Information Card",
+                    },
+                  ] as { key: keyof SiteImages; label: string; location: string }[]
+                ).map((slot) => {
+                  const currentUrl = siteImagesData[slot.key] || defaultSiteImages[slot.key];
+                  const isUploading = uploadingImageSlot === slot.key;
+                  return (
+                    <div
+                      key={slot.key}
+                      className="rounded-2xl border border-slate-200 bg-[#F8FAFC] p-4 flex flex-col justify-between space-y-4"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h3 className="text-sm font-bold text-[#0B2942]">
+                              {slot.label}
+                            </h3>
+                            <p className="text-[11px] text-slate-500">
+                              {slot.location}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setSiteImagesData((prev) => ({
+                                ...prev,
+                                [slot.key]: defaultSiteImages[slot.key],
+                              }))
+                            }
+                            title="Reset to default image"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white border border-transparent hover:border-slate-200 transition-colors"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        <div className="relative h-40 w-full rounded-xl overflow-hidden border border-slate-200 bg-white">
+                          <Image
+                            src={currentUrl}
+                            alt={slot.label}
+                            fill
+                            unoptimized
+                            className={
+                              slot.key === "headerLogo"
+                                ? "object-contain p-3"
+                                : "object-cover"
+                            }
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2.5">
+                        <input
+                          type="text"
+                          value={currentUrl}
+                          onChange={(e) =>
+                            setSiteImagesData((prev) => ({
+                              ...prev,
+                              [slot.key]: e.target.value,
+                            }))
+                          }
+                          placeholder="/images/client/..."
+                          className="w-full px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-[11px] font-mono text-slate-700"
+                        />
+
+                        <label className="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#0B2942] text-white text-xs font-bold hover:bg-[#071F33] transition-colors cursor-pointer">
+                          {isUploading ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <UploadCloud className="w-3.5 h-3.5 text-[#55C7C2]" />
+                          )}
+                          <span>
+                            {isUploading ? "Uploading..." : "Upload New Image"}
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            className="hidden"
+                            disabled={isUploading}
+                            onChange={(e) => handleSiteImageUpload(slot.key, e)}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </form>
         )}
       </main>
     </div>

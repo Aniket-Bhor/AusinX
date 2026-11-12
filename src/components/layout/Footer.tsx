@@ -12,9 +12,11 @@ interface ServiceNavItem {
 export default function Footer({
   services,
   siteSettings,
+  logoUrl = "/images/client/ausinx-logo-brand-clean.png",
 }: {
   services: ServiceNavItem[];
   siteSettings: SiteSettings;
+  logoUrl?: string;
 }) {
   return (
     <footer className="border-t border-slate-200 bg-[#F7FAFA] text-slate-600">
@@ -22,7 +24,7 @@ export default function Footer({
         <div className="space-y-4 lg:col-span-2">
           <Link href="/" className="inline-flex items-center gap-3">
             <span className="relative block h-[88px] w-[250px]">
-              <Image src="/images/client/ausinx-logo-brand-clean.png" alt="AusinX Biomedical and Industrial Engineering Solutions" fill sizes="250px" className="object-contain" />
+              <Image src={logoUrl} alt="AusinX Biomedical and Industrial Engineering Solutions" fill sizes="250px" className="object-contain" />
             </span>
           </Link>
           <p className="max-w-md text-sm leading-7 text-slate-600">AusinX is a proudly Australian-owned and operated company supporting medical and industrial equipment across its full lifecycle.</p>

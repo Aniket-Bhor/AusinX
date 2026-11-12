@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Clock, ShieldCheck, Wrench, Building2 } from "lucide-react";
-import { getServices, getSiteSettings } from "@/lib/content";
+import { getServices, getSiteImages, getSiteSettings } from "@/lib/content";
 import ContactForm from "@/components/contact/ContactForm";
 
 export const metadata: Metadata = {
@@ -18,7 +18,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const [services, siteSettings] = await Promise.all([getServices(), getSiteSettings()]);
+  const [services, siteSettings, siteImages] = await Promise.all([
+    getServices(),
+    getSiteSettings(),
+    getSiteImages(),
+  ]);
   return (
     <div className="py-12 sm:py-20 bg-[#F1F5F9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,7 +62,7 @@ export default async function ContactPage() {
           <div className="lg:col-span-5 space-y-5">
             <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white text-[#0B2942] shadow-sm">
               <div className="relative h-44 sm:h-52">
-                <Image src="/images/client/contact-support.jpeg" alt="AusinX engineering technical support desk and telemetry operations" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 40vw" />
+                <Image src={siteImages.contactImage} alt="AusinX engineering technical support desk and telemetry operations" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 40vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/70 via-[#0B2942]/10 to-transparent" />
                 <div className="absolute bottom-4 left-5 flex items-center gap-2 text-sm font-semibold text-white"><Wrench className="h-4 w-4 text-[#55C7C2]" /> Engineering support, made accessible</div>
               </div>

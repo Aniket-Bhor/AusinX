@@ -15,9 +15,11 @@ interface ServiceNavItem {
 export default function Header({
   services,
   siteSettings,
+  logoUrl = "/images/client/ausinx-logo-brand-clean.png",
 }: {
   services: ServiceNavItem[];
   siteSettings: SiteSettings;
+  logoUrl?: string;
 }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -32,7 +34,7 @@ export default function Header({
         <div className="mx-auto flex h-[100px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" aria-label="AusinX home" className="flex h-full items-center gap-4">
             <span className="relative block h-[88px] w-[230px] shrink-0 sm:w-[280px] lg:w-[300px]">
-              <Image src="/images/client/ausinx-logo-brand-clean.png" alt="AusinX Biomedical and Industrial Engineering Solutions" fill sizes="(max-width: 640px) 230px, (max-width: 1024px) 280px, 300px" className="object-contain" />
+              <Image src={logoUrl} alt="AusinX Biomedical and Industrial Engineering Solutions" fill sizes="(max-width: 640px) 230px, (max-width: 1024px) 280px, 300px" className="object-contain" />
             </span>
           </Link>
 

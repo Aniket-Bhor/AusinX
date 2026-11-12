@@ -4,14 +4,15 @@ import React from "react";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
+import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
 
-const modalities = [
+const getModalities = (siteImages: SiteImages) => [
   {
     title: "Computed Tomography & Radiotherapy",
     category: "Diagnostic Imaging",
     description:
       "Full-scope preventive maintenance, mechanical gantry overhauls, detector calibration, and radiation safety verification.",
-    image: "/images/client/ct-suite.jpeg",
+    image: siteImages.bentoCt,
     imageAlt: "Modern CT Diagnostic Suite maintained by AusinX",
     pills: [
       { label: "OEM Calibrated", type: "neutral" },
@@ -24,7 +25,7 @@ const modalities = [
     category: "Surgical & Fluoroscopy",
     description:
       "High-uptime operating theatre readiness, image intensifier calibration, and mechanical articulation testing.",
-    image: "/images/client/c-arm.jpeg",
+    image: siteImages.bentoCArm,
     imageAlt: "Mobile C-Arm surgical imaging system",
     pills: [
       { label: "Theatre Ready QA", type: "neutral" },
@@ -37,7 +38,7 @@ const modalities = [
     category: "Telemetry & ICU",
     description:
       "Multiparameter telemetry systems, ICU ventilators, vital sign monitors, and clinical alert accuracy testing.",
-    image: "/images/client/patient-monitor.jpeg",
+    image: siteImages.bentoMonitor,
     imageAlt: "Patient monitoring and diagnostic telemetry",
     pills: [
       { label: "AS/NZS 3551 Safety", type: "neutral" },
@@ -50,7 +51,7 @@ const modalities = [
     category: "Point of Care",
     description:
       "Transducer acoustic lens inspection, probe phantom validation, and diagnostic console electronic servicing.",
-    image: "/images/client/ultrasound-care.jpeg",
+    image: siteImages.bentoUltrasound,
     imageAlt: "Clinical ultrasound care and transducer testing",
     pills: [
       { label: "Acoustic Testing", type: "neutral" },
@@ -60,7 +61,12 @@ const modalities = [
   },
 ];
 
-export default function InteractiveBento() {
+export default function InteractiveBento({
+  siteImages = defaultSiteImages,
+}: {
+  siteImages?: SiteImages;
+}) {
+  const modalities = getModalities(siteImages);
   return (
     <section className="py-20 sm:py-24 bg-[#F8FAFC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

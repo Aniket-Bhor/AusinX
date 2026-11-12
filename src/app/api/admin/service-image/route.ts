@@ -28,9 +28,15 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
     const slug = formData.get("slug");
+    const slot = formData.get("slot");
 
-    if (typeof slug !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
-      return NextResponse.json({ error: "Enter a valid service URL slug before uploading." }, { status: 400 });
+    let folderPrefix = "";
+    if (typeof slot === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(slot)) {
+      folderPrefix = `site-images/${slot}`;
+    } else if (typeof slug === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      folderPrefix = `service-images/${slug}`;
+    } else {
+      return NextResponse.json({ error: "Provide a valid service slug or website image slot before uploading." }, { status: 400 });
     }
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Choose an image file to upload." }, { status: 400 });
@@ -48,7 +54,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const objectPath = `service-images/${slug}/${randomUUID()}.${imageType.extension}`;
+    const objectPath = `${folderPrefix}/${randomUUID()}.${imageType.extension}`;
     const downloadToken = randomUUID();
     const imageFile = bucket.file(objectPath);
     await imageFile.save(bytes, {

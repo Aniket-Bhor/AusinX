@@ -72,21 +72,33 @@ export async function POST(request: Request) {
     const db = getAdminDb();
     let savedToFirebase = false;
 
-    if (db) {
-      try {
-        const enquiriesRef = db.ref("enquiries");
-        const newRef = enquiriesRef.push();
-        await newRef.set({
-          id: newRef.key,
-          ...enquiryRecord,
-        });
-        savedToFirebase = true;
-      } catch (dbError) {
-        console.error("[Contact API] Failed to write to Firebase RTDB:", dbError);
-      }
-    } else {
-      console.warn(
-        "[Contact API] Firebase Admin DB not configured. Enquiry logged locally."
+    if (!db) {
+      console.error("[Contact API] Firebase Admin DB not configured. Cannot save enquiry.");
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Enquiry service is temporarily unavailable (database not configured). Please call us directly.",
+        },
+        { status: 503 }
+      );
+    }
+
+    try {
+      const enquiriesRef = db.ref("enquiries");
+      const newRef = enquiriesRef.push();
+      await newRef.set({
+        id: newRef.key,
+        ...enquiryRecord,
+      });
+      savedToFirebase = true;
+    } catch (dbError) {
+      console.error("[Contact API] Failed to write to Firebase RTDB:", dbError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unable to save your enquiry to the database. Please try again or call us directly.",
+        },
+        { status: 500 }
       );
     }
 
