@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import { getAdminStorageBucket } from "@/lib/firebase-admin";
 
-export const runtime = "nodejs";
-
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const allowedTypes = new Map([
   ["image/jpeg", { extension: "jpg", signature: (bytes: Buffer) => bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff }],

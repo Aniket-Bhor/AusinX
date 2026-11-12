@@ -259,7 +259,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return siteSettings;
 }
 
-export async function getAboutCopy() {
+export async function getAboutCopy(): Promise<typeof aboutCopy> {
   "use cache";
   cacheTag("about-copy");
   try {
@@ -268,7 +268,7 @@ export async function getAboutCopy() {
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && data.intro && data.whyChooseUs) return data;
+      if (data && data.intro && data.whyChooseUs) return data as typeof aboutCopy;
     }
   } catch {
     // Fallback

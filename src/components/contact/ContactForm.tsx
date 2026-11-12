@@ -30,7 +30,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
       ),
     [services]
   );
-  const legacyServiceMap = useMemo(
+  const legacyServiceMap = useMemo<Record<string, string>>(
     () => ({
       service: services.find((item) => item.slug === "service-maintenance")?.contactValue || "Other",
       installation: services.find((item) => item.slug === "installation-commissioning")?.contactValue || "Other",
