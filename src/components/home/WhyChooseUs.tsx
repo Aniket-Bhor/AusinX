@@ -25,12 +25,12 @@ export default async function WhyChooseUs() {
 
           {/* Left Column: Heading, Value Proposition & Real Visual Card */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-[#07999A] text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#059669] text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Trust &amp; Engineering Accountability</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0B2942] tracking-tight leading-[1.12] font-heading">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight leading-[1.12] font-heading">
               Why Australian Clinics Trust AusinX
             </h2>
 
@@ -48,9 +48,9 @@ export default async function WhyChooseUs() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/90 via-[#0B2942]/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/30 to-transparent" />
                 <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#55C7C2]">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#34D399]">
                     <CheckCircle2 className="w-4 h-4" /> Direct Senior Engineer Accountability
                   </div>
                   <p className="text-xs text-slate-200 mt-0.5">
@@ -68,18 +68,18 @@ export default async function WhyChooseUs() {
               return (
                 <Reveal key={point.title} delay={index * 90} direction="scale">
                   <div
-                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-teal-300 hover:bg-white hover:shadow-[0_16px_40px_rgba(7,153,154,0.14)] hover:-translate-y-1.5 transition-all duration-300 space-y-3"
+                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-emerald-300 hover:bg-white hover:shadow-[0_16px_40px_rgba(7,153,154,0.14)] hover:-translate-y-1.5 transition-all duration-300 space-y-3"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-12 h-12 rounded-2xl bg-[#0B2942] text-[#55C7C2] group-hover:bg-[#07999A] group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">
+                      <div className="w-12 h-12 rounded-2xl bg-[#0F172A] text-[#34D399] group-hover:bg-[#059669] group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-[#07999A] transition-colors">
+                      <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-[#059669] transition-colors">
                         0{index + 1}
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-[#0B2942] font-heading group-hover:text-[#07999A] transition-colors">
+                    <h3 className="text-lg font-bold text-[#0F172A] font-heading group-hover:text-[#059669] transition-colors">
                       {point.title}
                     </h3>
 

@@ -99,15 +99,15 @@ export default async function ServiceDetailPage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Breadcrumb Nav */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-          <Link href="/" className="hover:text-[#0B2942] transition-colors">
+          <Link href="/" className="hover:text-[#0F172A] transition-colors">
             Home
           </Link>
           <span>/</span>
-          <Link href="/services" className="hover:text-[#0B2942] transition-colors">
+          <Link href="/services" className="hover:text-[#0F172A] transition-colors">
             Services
           </Link>
           <span>/</span>
-          <span className="text-[#0B2942] font-bold">{service.navTitle}</span>
+          <span className="text-[#0F172A] font-bold">{service.navTitle}</span>
         </nav>
 
         {/* Main Grid: Content (8 cols) + Sticky Sidebar (4 cols) */}
@@ -117,14 +117,14 @@ export default async function ServiceDetailPage({
             {/* Header Box */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/90 shadow-sm space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#0B2942] text-[#07999A] flex items-center justify-center shrink-0 shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-[#0F172A] text-[#059669] flex items-center justify-center shrink-0 shadow-md">
                   <Icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded border border-teal-200">
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
                     Core Engineering Pillar
                   </span>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B2942] tracking-tight font-heading mt-1">
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight font-heading mt-1">
                     {service.title}
                   </h1>
                 </div>
@@ -152,7 +152,7 @@ export default async function ServiceDetailPage({
             {/* Sub-Services Capabilities (Verbatim Copy from Section 7.3) */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/90 shadow-sm space-y-6">
               <div className="border-b border-slate-100 pb-4">
-                <h2 className="text-2xl font-bold text-[#0B2942] font-heading">
+                <h2 className="text-2xl font-bold text-[#0F172A] font-heading">
                   Service Capabilities & Scope
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
@@ -166,8 +166,8 @@ export default async function ServiceDetailPage({
                     key={sub.title}
                     className="p-5 sm:p-6 rounded-2xl bg-[#F1F5F9] border border-slate-200/80 space-y-2 hover:bg-slate-100 transition-colors"
                   >
-                    <h3 className="text-lg font-bold text-[#0B2942] flex items-center gap-2.5 font-heading">
-                      <CheckCircle2 className="w-5 h-5 text-[#07999A] shrink-0" />
+                    <h3 className="text-lg font-bold text-[#0F172A] flex items-center gap-2.5 font-heading">
+                      <CheckCircle2 className="w-5 h-5 text-[#059669] shrink-0" />
                       <span>{sub.title}</span>
                     </h3>
                     <p className="text-sm text-slate-600 pl-7 leading-relaxed">
@@ -180,7 +180,7 @@ export default async function ServiceDetailPage({
 
             {/* Key Engineering Commitments */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/90 shadow-sm space-y-4">
-              <h2 className="text-xl font-bold text-[#0B2942] font-heading">
+              <h2 className="text-xl font-bold text-[#0F172A] font-heading">
                 Operational Commitments
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-700">
@@ -189,7 +189,7 @@ export default async function ServiceDetailPage({
                     key={hl}
                     className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-100"
                   >
-                    <span className="w-2 h-2 rounded-full bg-[#07999A] shrink-0" />
+                    <span className="w-2 h-2 rounded-full bg-[#059669] shrink-0" />
                     <span className="font-medium">{hl}</span>
                   </li>
                 ))}
@@ -201,14 +201,14 @@ export default async function ServiceDetailPage({
               <div className="flex items-center justify-between pt-4 border-t border-slate-200 text-xs font-bold uppercase tracking-wider">
                 <Link
                   href={`/services/${prevService.slug}`}
-                  className="inline-flex items-center gap-2 text-slate-600 hover:text-[#0B2942] transition-colors"
+                  className="inline-flex items-center gap-2 text-slate-600 hover:text-[#0F172A] transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Previous: {prevService.navTitle}</span>
                 </Link>
                 <Link
                   href={`/services/${nextService.slug}`}
-                  className="inline-flex items-center gap-2 text-slate-600 hover:text-[#0B2942] transition-colors"
+                  className="inline-flex items-center gap-2 text-slate-600 hover:text-[#0F172A] transition-colors"
                 >
                   <span>Next: {nextService.navTitle}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -220,8 +220,8 @@ export default async function ServiceDetailPage({
           {/* Sticky Sidebar Column */}
           <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
             {/* Quick Contact & Action Card */}
-            <div className="bg-white text-[#0B2942] rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#087F86] block">
+            <div className="bg-white text-[#0F172A] rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#047857] block">
                 Direct Engineering Line
               </span>
               <h3 className="text-xl font-bold font-heading">
@@ -236,29 +236,29 @@ export default async function ServiceDetailPage({
                   <a
                     key={phone.raw}
                     href={`tel:${phone.raw}`}
-                    className="flex items-center justify-between p-2.5 rounded-lg bg-[#F7FAFA] hover:bg-[#EAF5F4] text-[#0B2942] font-semibold text-sm transition-colors"
+                    className="flex items-center justify-between p-2.5 rounded-lg bg-[#F8FAFC] hover:bg-[#EAF5F4] text-[#0F172A] font-semibold text-sm transition-colors"
                   >
                     <span className="flex items-center gap-2 text-xs">
-                      <Phone className="w-3.5 h-3.5 text-teal-400" />
+                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
                       <span>{phone.display}</span>
                     </span>
-                    <span className="text-xs text-teal-400">Call →</span>
+                    <span className="text-xs text-emerald-400">Call →</span>
                   </a>
                 ))}
               </div>
 
               <div className="pt-2 border-t border-slate-200 space-y-2 text-xs text-slate-600">
                 <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-teal-400 shrink-0" />
+                  <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
                   <a
                     href={`mailto:${siteSettings.publicEmail}`}
-                    className="hover:text-teal-300 transition-colors"
+                    className="hover:text-emerald-300 transition-colors"
                   >
                     {siteSettings.publicEmail}
                   </a>
                 </div>
                 <div className="flex items-center gap-2 text-slate-400">
-                  <Clock className="w-4 h-4 text-teal-400 shrink-0" />
+                  <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Mon – Fri: 09:00 AM – 5:00 PM</span>
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default async function ServiceDetailPage({
               <div className="pt-3">
                 <Link
                   href={`/contact?service=${service.slug}`}
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-lg bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-all shadow-md active:scale-98"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-lg bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-all shadow-md active:scale-98"
                 >
                   <span>Enquire for This Service</span>
                   <ArrowRight className="w-4 h-4" />
@@ -288,8 +288,8 @@ export default async function ServiceDetailPage({
                       href={`/services/${s.slug}`}
                       className={`block p-2.5 rounded-xl text-xs font-bold transition-colors ${
                         isCurrent
-                          ? "bg-teal-50 text-[#0B2942] border border-teal-200"
-                          : "text-slate-700 hover:bg-slate-50 hover:text-[#0B2942]"
+                          ? "bg-emerald-50 text-[#0F172A] border border-emerald-200"
+                          : "text-slate-700 hover:bg-slate-50 hover:text-[#0F172A]"
                       }`}
                     >
                       {s.navTitle}

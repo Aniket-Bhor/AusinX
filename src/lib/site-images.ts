@@ -21,3 +21,4 @@ export const defaultSiteImages: SiteImages = {
   aboutImage: "/images/client/engineering-workshop.jpeg",
   contactImage: "/images/client/contact-support.jpeg",
 };
+

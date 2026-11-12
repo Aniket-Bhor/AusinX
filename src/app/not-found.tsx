@@ -6,8 +6,8 @@ export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex items-center justify-center bg-[#F1F5F9] px-4 py-16">
       <div className="max-w-md w-full bg-white rounded-2xl p-8 border border-slate-200 shadow-lg text-center space-y-5">
-        <span className="text-4xl font-extrabold text-[#07999A] font-mono">404</span>
-        <h1 className="text-2xl font-bold text-[#0B2942] font-heading">
+        <span className="text-4xl font-extrabold text-[#059669] font-mono">404</span>
+        <h1 className="text-2xl font-bold text-[#0F172A] font-heading">
           Page Not Found
         </h1>
         <p className="text-sm text-slate-600 leading-relaxed">
@@ -17,9 +17,9 @@ export default function NotFound() {
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0B2942] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#071F33] transition-colors"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F172A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#020617] transition-colors"
           >
-            <Home className="w-4 h-4 text-[#07999A]" />
+            <Home className="w-4 h-4 text-[#059669]" />
             <span>Return Home</span>
           </Link>
           <Link

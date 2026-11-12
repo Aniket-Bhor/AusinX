@@ -87,25 +87,25 @@ export default function QuickQuoteModal({
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#0B2942]/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#0F172A]/80 backdrop-blur-sm transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Pop-up Dialog Card */}
-      <div className="relative w-full max-w-xl rounded-3xl bg-white shadow-[0_25px_70px_rgba(11,41,66,0.35)] border border-teal-100 overflow-hidden animate-pop-in z-10 my-8">
-        {/* Glowing Top Ribbon */}
-        <div className="h-2 w-full bg-gradient-to-r from-[#07999A] via-[#55C7C2] to-[#0B2942]" />
+      <div className="relative w-full max-w-xl rounded-3xl bg-white shadow-[0_25px_70px_rgba(15,23,42,0.35)] border border-slate-200 overflow-hidden animate-pop-in z-10 my-8">
+        {/* 3-Colour Clinical Telemetry Top Ribbon (Red -> Amber -> Green) */}
+        <div className="h-2 w-full bg-gradient-to-r from-[#EF4444] via-[#F59E0B] to-[#059669]" />
 
         <div className="p-6 sm:p-8">
           {/* Header */}
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-[#07999A] text-xs font-bold uppercase tracking-wider mb-2 border border-teal-100">
-                <Zap className="w-3.5 h-3.5 text-[#07999A] fill-current" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#059669] text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
+                <Zap className="w-3.5 h-3.5 text-[#F59E0B] fill-current" />
                 <span>Instant Clinical Triage & Quote</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2942] tracking-tight font-heading">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight font-heading">
                 Rapid Engineering Support
               </h2>
               <p className="text-sm text-slate-500 mt-1">
@@ -123,18 +123,18 @@ export default function QuickQuoteModal({
 
           {submitted ? (
             <div className="py-10 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-teal-50 text-[#07999A] flex items-center justify-center mx-auto shadow-inner">
-                <CheckCircle2 className="w-10 h-10 text-[#07999A]" />
+              <div className="w-16 h-16 rounded-full bg-emerald-50 text-[#059669] flex items-center justify-center mx-auto shadow-inner">
+                <CheckCircle2 className="w-10 h-10 text-[#059669]" />
               </div>
-              <h3 className="text-xl font-bold text-[#0B2942]">Dispatch Request Received!</h3>
+              <h3 className="text-xl font-bold text-[#0F172A]">Dispatch Request Received!</h3>
               <p className="text-sm text-slate-600 max-w-sm mx-auto">
                 Our duty engineer has been notified. For urgent hospital or clinic emergencies, you can also dial directly:
               </p>
               <a
                 href="tel:0421081256"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0B2942] text-white font-semibold hover:bg-[#07999A] transition-all shadow-md"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F172A] text-white font-semibold hover:bg-[#059669] transition-all shadow-md"
               >
-                <Phone className="w-4 h-4 text-[#55C7C2]" /> Call 0421 081 256 Now
+                <Phone className="w-4 h-4 text-[#34D399]" /> Call 0421 081 256 Now
               </a>
               <div>
                 <button
@@ -147,16 +147,31 @@ export default function QuickQuoteModal({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-              {/* Urgency Pill Selector */}
+              {/* Urgency Pill Selector: Red=Urgent, Amber=Standard, Green=Planned */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                   Urgency Level:
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { id: "urgent", label: "🚨 Urgent Emergency", desc: "Breakdown" },
-                    { id: "standard", label: "⚡ Standard Service", desc: "1-2 Business Days" },
-                    { id: "planned", label: "📅 Scheduled / QA", desc: "Planning" },
+                    {
+                      id: "urgent",
+                      label: "🚨 Urgent Emergency",
+                      desc: "Breakdown",
+                      activeClass: "border-[#EF4444] bg-red-50 text-red-900 shadow-sm font-semibold ring-1 ring-[#EF4444]",
+                    },
+                    {
+                      id: "standard",
+                      label: "⚡ Standard Service",
+                      desc: "1-2 Business Days",
+                      activeClass: "border-[#F59E0B] bg-amber-50 text-amber-950 shadow-sm font-semibold ring-1 ring-[#F59E0B]",
+                    },
+                    {
+                      id: "planned",
+                      label: "📅 Scheduled / QA",
+                      desc: "Planning",
+                      activeClass: "border-[#059669] bg-emerald-50 text-emerald-950 shadow-sm font-semibold ring-1 ring-[#059669]",
+                    },
                   ].map((level) => (
                     <button
                       type="button"
@@ -164,12 +179,12 @@ export default function QuickQuoteModal({
                       onClick={() => setUrgency(level.id as any)}
                       className={`p-2.5 rounded-xl text-left border text-xs font-medium transition-all ${
                         urgency === level.id
-                          ? "border-[#07999A] bg-teal-50/70 text-[#0B2942] shadow-sm font-semibold ring-1 ring-[#07999A]"
+                          ? level.activeClass
                           : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                       }`}
                     >
                       <div>{level.label}</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">{level.desc}</div>
+                      <div className="text-[10px] text-slate-500 mt-0.5">{level.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -188,7 +203,7 @@ export default function QuickQuoteModal({
                       onClick={() => setSelectedModality(item.id)}
                       className={`p-3 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${
                         selectedModality === item.id
-                          ? "border-[#07999A] bg-[#0B2942] text-white shadow-md font-semibold"
+                          ? "border-[#059669] bg-[#0F172A] text-white shadow-md font-semibold"
                           : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
                       }`}
                     >
@@ -196,7 +211,7 @@ export default function QuickQuoteModal({
                       <span
                         className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase shrink-0 ${
                           selectedModality === item.id
-                            ? "bg-[#07999A] text-white"
+                            ? "bg-[#059669] text-white"
                             : "bg-white text-slate-500 border border-slate-200"
                         }`}
                       >
@@ -219,7 +234,7 @@ export default function QuickQuoteModal({
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
                     placeholder="e.g. Dr. Sarah / Radiology Dept"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#07999A] focus:ring-1 focus:ring-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#059669] focus:ring-1 focus:ring-[#059669]"
                   />
                 </div>
                 <div>
@@ -232,7 +247,7 @@ export default function QuickQuoteModal({
                     value={contactPhone}
                     onChange={(e) => setContactPhone(e.target.value)}
                     placeholder="e.g. 0400 000 000"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#07999A] focus:ring-1 focus:ring-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#059669] focus:ring-1 focus:ring-[#059669]"
                   />
                 </div>
               </div>
@@ -242,27 +257,27 @@ export default function QuickQuoteModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:flex-1 py-3.5 px-6 rounded-full bg-[#07999A] hover:bg-[#087F86] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-teal-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full sm:flex-1 py-3.5 px-6 rounded-full bg-[#059669] hover:bg-[#047857] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting ? "Connecting..." : "Request Immediate Callback"}
                 </button>
                 <a
                   href="tel:0421081256"
-                  className="w-full sm:w-auto py-3.5 px-5 rounded-full border border-slate-200 hover:bg-slate-50 text-[#0B2942] font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+                  className="w-full sm:w-auto py-3.5 px-5 rounded-full border border-slate-200 hover:bg-slate-50 text-[#0F172A] font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
                 >
-                  <Phone className="w-4 h-4 text-[#07999A]" />
+                  <Phone className="w-4 h-4 text-[#059669]" />
                   <span>Call 0421 081 256</span>
                 </a>
               </div>
 
               <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400 pt-1">
                 <span className="flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-teal-600" /> Australian Compliant
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Australian Compliant
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-teal-600" /> Fast Response
+                  <Clock className="w-3.5 h-3.5 text-amber-500" /> Fast Response
                 </span>
                 <span>•</span>
                 <span>Direct to Melbourne Engineers</span>

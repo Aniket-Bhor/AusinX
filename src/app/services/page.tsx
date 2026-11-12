@@ -43,15 +43,15 @@ export default async function ServicesPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Services Header Banner */}
-      <section className="bg-[#F5FAF9] text-[#0B2942] py-16 sm:py-24 border-b border-slate-200">
+      <section className="bg-[#F8FAFC] text-[#0F172A] py-16 sm:py-24 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white text-[#087F86] text-xs font-semibold border border-[#CEE8E5]">
-              <ShieldCheck className="w-4 h-4 text-[#07999A]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white text-[#047857] text-xs font-semibold border border-[#CEE8E5]">
+              <ShieldCheck className="w-4 h-4 text-[#059669]" />
               <span>Australian Healthcare & Industrial Engineering</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#0B2942] tracking-tight leading-tight font-heading">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#0F172A] tracking-tight leading-tight font-heading">
               Services for the full equipment lifecycle
             </h1>
 
@@ -90,9 +90,9 @@ export default async function ServicesPage() {
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 42vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/20 via-transparent to-transparent lg:hidden" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/20 via-transparent to-transparent lg:hidden" />
                     <div className="absolute top-4 left-4">
-                      <div className="w-12 h-12 rounded-xl bg-white/95 text-[#087F86] flex items-center justify-center shadow-lg">
+                      <div className="w-12 h-12 rounded-xl bg-white/95 text-[#047857] flex items-center justify-center shadow-lg">
                         <Icon className="w-6 h-6" />
                       </div>
                     </div>
@@ -102,12 +102,12 @@ export default async function ServicesPage() {
                   <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-between space-y-6">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
+                        <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
                           Pillar 0{index + 1}
                         </span>
                       </div>
 
-                      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B2942] font-heading">
+                      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] font-heading">
                         {service.title}
                       </h2>
 
@@ -127,7 +127,7 @@ export default async function ServicesPage() {
                               className="p-3.5 rounded-xl bg-[#F1F5F9] border border-slate-200/80 space-y-1"
                             >
                               <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-[#07999A] shrink-0" />
+                                <CheckCircle2 className="w-4 h-4 text-[#059669] shrink-0" />
                                 <strong className="text-sm text-[#0F172A] font-semibold">
                                   {sub.title}
                                 </strong>
@@ -145,15 +145,15 @@ export default async function ServicesPage() {
                     <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                       <Link
                         href={`/services/${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0B2942] text-white font-bold text-sm hover:bg-[#071F33] transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold text-sm hover:bg-[#020617] transition-colors shadow-sm"
                       >
                         <span>Detailed Specifications</span>
-                        <ArrowRight className="w-4 h-4 text-[#07999A]" />
+                        <ArrowRight className="w-4 h-4 text-[#059669]" />
                       </Link>
 
                       <Link
                         href={`/contact?service=${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-sm"
                       >
                         <span>Make an Enquiry</span>
                       </Link>
@@ -167,13 +167,13 @@ export default async function ServicesPage() {
       </section>
 
       {/* Equipment Lifecycle Strip Overview */}
-      <section className="py-16 bg-[#F5FAF9] text-[#0B2942] border-y border-slate-200/80">
+      <section className="py-16 bg-[#F8FAFC] text-[#0F172A] border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#087F86] bg-white px-3 py-1 rounded-full border border-[#CEE8E5] inline-block mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#047857] bg-white px-3 py-1 rounded-full border border-[#CEE8E5] inline-block mb-3">
               Full Lifecycle Support
             </span>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-[#0B2942] font-heading">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#0F172A] font-heading">
               Lifecycle Integration for Healthcare Facilities
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -187,10 +187,10 @@ export default async function ServicesPage() {
                 key={step.step}
                 className="p-5 rounded-2xl bg-white border border-slate-200 space-y-2"
               >
-                <span className="text-xs font-mono font-bold text-teal-400">
+                <span className="text-xs font-mono font-bold text-emerald-400">
                   Step {step.step}
                 </span>
-                <h3 className="text-base font-bold text-[#0B2942] font-heading">
+                <h3 className="text-base font-bold text-[#0F172A] font-heading">
                   {step.title}
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">

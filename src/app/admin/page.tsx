@@ -423,7 +423,7 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center text-white">
         <div className="flex items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-[#07999A]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#059669]" />
           <span>Verifying AusinX staff credentials...</span>
         </div>
       </div>
@@ -433,7 +433,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-[#F1F5F9] text-[#0F172A] flex flex-col">
       {/* Top Navbar */}
-      <header className="bg-[#0B2942] text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
+      <header className="bg-[#0F172A] text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-white p-0.5 flex items-center justify-center shrink-0">
@@ -451,7 +451,7 @@ export default function AdminDashboardPage() {
               <span className="font-extrabold text-sm sm:text-base tracking-tight font-heading block">
                 AusinX Admin Console
               </span>
-              <span className="text-[10px] text-teal-400 font-semibold block">
+              <span className="text-[10px] text-emerald-400 font-semibold block">
                 Firebase Realtime Database Connected
               </span>
             </div>
@@ -492,14 +492,14 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("enquiries")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "enquiries"
-                ? "border-[#07999A] text-[#07999A]"
+                ? "border-[#059669] text-[#059669]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Inbox className="w-4 h-4" />
             <span>Enquiries Inbox</span>
             {enquiries.filter((e) => e.status === "new").length > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#07999A] text-[#0B2942] text-[10px] font-black">
+              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#059669] text-[#0F172A] text-[10px] font-black">
                 {enquiries.filter((e) => e.status === "new").length}
               </span>
             )}
@@ -509,7 +509,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("services")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "services"
-                ? "border-[#07999A] text-[#07999A]"
+                ? "border-[#059669] text-[#059669]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -521,7 +521,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("images")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "images"
-                ? "border-[#07999A] text-[#07999A]"
+                ? "border-[#059669] text-[#059669]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -533,7 +533,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("settings")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "settings"
-                ? "border-[#07999A] text-[#07999A]"
+                ? "border-[#059669] text-[#059669]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -545,7 +545,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("home")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "home"
-                ? "border-[#07999A] text-[#07999A]"
+                ? "border-[#059669] text-[#059669]"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -581,7 +581,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
+                <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
                   Website Enquiries Inbox
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
@@ -605,7 +605,7 @@ export default function AdminDashboardPage() {
             {enquiries.length === 0 ? (
               <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-sm space-y-3">
                 <Inbox className="w-12 h-12 text-slate-300 mx-auto" />
-                <h3 className="text-lg font-bold text-[#0B2942]">
+                <h3 className="text-lg font-bold text-[#0F172A]">
                   No Enquiries Yet
                 </h3>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto">
@@ -624,7 +624,7 @@ export default function AdminDashboardPage() {
                         <span
                           className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${
                             enq.status === "new"
-                              ? "bg-teal-100 text-teal-800 border border-teal-300"
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
                               : enq.status === "in_review"
                               ? "bg-blue-100 text-blue-800 border border-blue-300"
                               : enq.status === "contacted"
@@ -634,7 +634,7 @@ export default function AdminDashboardPage() {
                         >
                           {enq.status.replace("_", " ")}
                         </span>
-                        <h3 className="text-base font-bold text-[#0B2942]">
+                        <h3 className="text-base font-bold text-[#0F172A]">
                           {enq.fullName}
                         </h3>
                         <span className="text-xs text-slate-500">
@@ -678,7 +678,7 @@ export default function AdminDashboardPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Mail className="w-4 h-4 text-teal-500 shrink-0" />
+                        <Mail className="w-4 h-4 text-emerald-500 shrink-0" />
                         <a
                           href={`mailto:${enq.email}`}
                           className="hover:underline font-medium text-slate-800"
@@ -687,7 +687,7 @@ export default function AdminDashboardPage() {
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Phone className="w-4 h-4 text-teal-500 shrink-0" />
+                        <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
                         <a
                           href={`tel:${enq.phone}`}
                           className="hover:underline font-medium text-slate-800"
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Building className="w-4 h-4 text-teal-500 shrink-0" />
+                        <Building className="w-4 h-4 text-emerald-500 shrink-0" />
                         <span>
                           Service: <strong>{enq.serviceInterest}</strong>
                         </span>
@@ -718,7 +718,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
+                <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
                   Services Content Editor
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
@@ -728,7 +728,7 @@ export default function AdminDashboardPage() {
               <button
                 type="button"
                 onClick={handleAddService}
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0B2942] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#087F86]"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#047857]"
               >
                 <Plus className="h-4 w-4" /> Add service
               </button>
@@ -744,7 +744,7 @@ export default function AdminDashboardPage() {
                     onClick={() => setSelectedServiceIndex(idx)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors whitespace-nowrap ${
                       selectedServiceIndex === idx
-                        ? "bg-[#0B2942] text-white shadow"
+                        ? "bg-[#0F172A] text-white shadow"
                         : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50"
                     }`}
                   >
@@ -777,7 +777,7 @@ export default function AdminDashboardPage() {
                       setServicesData(updated);
                     }}
                     placeholder="example-service"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                   <span className="mt-1 block text-[11px] text-slate-500">Customer page: /services/{servicesData[selectedServiceIndex]?.slug || "service-name"}</span>
                 </div>
@@ -793,7 +793,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].contactValue = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
               </div>
@@ -811,7 +811,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].navTitle = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
 
@@ -827,7 +827,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].title = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
               </div>
@@ -838,9 +838,9 @@ export default function AdminDashboardPage() {
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                       Service Image
                     </label>
-                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-[#07999A] hover:text-[#087F86]">
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-[#059669] hover:text-[#047857]">
                       {uploadingServiceImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
-                      {uploadingServiceImage ? "Uploading image…" : "Choose image"}
+                      {uploadingServiceImage ? "Uploading imageâ€¦" : "Choose image"}
                       <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -849,7 +849,7 @@ export default function AdminDashboardPage() {
                         className="sr-only"
                       />
                     </label>
-                    <p className="mt-1.5 text-xs text-slate-500">JPG, PNG, or WebP · up to 8 MB. The website automatically crops and sizes it for each screen.</p>
+                    <p className="mt-1.5 text-xs text-slate-500">JPG, PNG, or WebP Â· up to 8 MB. The website automatically crops and sizes it for each screen.</p>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
@@ -863,7 +863,7 @@ export default function AdminDashboardPage() {
                         updated[selectedServiceIndex].imageAlt = e.target.value;
                         setServicesData(updated);
                       }}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-[#07999A]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-[#059669]"
                     />
                   </div>
                 </div>
@@ -894,7 +894,7 @@ export default function AdminDashboardPage() {
                     updated[selectedServiceIndex].shortSummary = e.target.value;
                     setServicesData(updated);
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                 />
               </div>
 
@@ -910,7 +910,7 @@ export default function AdminDashboardPage() {
                     updated[selectedServiceIndex].fullDescription = e.target.value;
                     setServicesData(updated);
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                 />
               </div>
 
@@ -930,7 +930,7 @@ export default function AdminDashboardPage() {
                     setServicesData(updated);
                   }}
                   placeholder="Preventive maintenance scheduling\nRapid response support"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                 />
               </div>
 
@@ -945,7 +945,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].metaTitle = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
                 <div>
@@ -958,7 +958,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].metaDescription = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
               </div>
@@ -979,7 +979,7 @@ export default function AdminDashboardPage() {
                       ];
                       setServicesData(updated);
                     }}
-                    className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#07999A] hover:text-[#087F86]"
+                    className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#059669] hover:text-[#047857]"
                   >
                     <Plus className="h-3.5 w-3.5" /> Add detail
                   </button>
@@ -1040,7 +1040,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingServices}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingServices ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1054,12 +1054,12 @@ export default function AdminDashboardPage() {
               </>
             ) : (
               <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                <h2 className="text-lg font-bold text-[#0B2942]">No services have been added yet.</h2>
+                <h2 className="text-lg font-bold text-[#0F172A]">No services have been added yet.</h2>
                 <p className="mt-2 text-sm text-slate-500">Start with a service name, description, and image. You can add sub-service details too.</p>
                 <button
                   type="button"
                   onClick={handleAddService}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0B2942] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#087F86]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#047857]"
                 >
                   <Plus className="h-4 w-4" /> Create the first service
                 </button>
@@ -1072,7 +1072,7 @@ export default function AdminDashboardPage() {
         {activeTab === "settings" && settingsData && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
+              <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
                 Site Settings & Identity
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -1098,7 +1098,7 @@ export default function AdminDashboardPage() {
                         companyName: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
 
@@ -1115,7 +1115,7 @@ export default function AdminDashboardPage() {
                         publicEmail: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                   />
                 </div>
               </div>
@@ -1133,7 +1133,7 @@ export default function AdminDashboardPage() {
                       tagline: e.target.value,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                 />
               </div>
 
@@ -1150,12 +1150,12 @@ export default function AdminDashboardPage() {
                       businessHours: e.target.value,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#07999A]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
                 />
               </div>
 
               <div className="pt-2 border-t border-slate-100">
-                <h3 className="text-sm font-bold text-[#0B2942] mb-3">
+                <h3 className="text-sm font-bold text-[#0F172A] mb-3">
                   Melbourne Office Address
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
@@ -1227,7 +1227,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingSettings}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingSettings ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1245,7 +1245,7 @@ export default function AdminDashboardPage() {
         {activeTab === "home" && aboutData && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-extrabold text-[#0B2942] font-heading">
+              <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
                 Home & Lifecycle Sections
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -1323,7 +1323,7 @@ export default function AdminDashboardPage() {
                       key={idx}
                       className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs"
                     >
-                      <span className="font-mono text-[10px] font-bold text-teal-600 block">
+                      <span className="font-mono text-[10px] font-bold text-emerald-600 block">
                         Step {step.step}
                       </span>
                       <input
@@ -1355,7 +1355,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingHome}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-sm hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingHome ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1375,7 +1375,7 @@ export default function AdminDashboardPage() {
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
                 <div>
-                  <h2 className="text-xl font-extrabold text-[#0B2942] font-heading">
+                  <h2 className="text-xl font-extrabold text-[#0F172A] font-heading">
                     Website Images Manager
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
@@ -1383,7 +1383,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setActiveTab("services")}
-                      className="text-[#07999A] font-bold hover:underline"
+                      className="text-[#059669] font-bold hover:underline"
                     >
                       Services Editor
                     </button>
@@ -1393,7 +1393,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingImages}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#07999A] text-[#0B2942] font-bold text-xs hover:bg-[#087F86] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-xs hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingImages ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1464,7 +1464,7 @@ export default function AdminDashboardPage() {
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <h3 className="text-sm font-bold text-[#0B2942]">
+                            <h3 className="text-sm font-bold text-[#0F172A]">
                               {slot.label}
                             </h3>
                             <p className="text-[11px] text-slate-500">
@@ -1516,11 +1516,11 @@ export default function AdminDashboardPage() {
                           className="w-full px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-[11px] font-mono text-slate-700"
                         />
 
-                        <label className="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#0B2942] text-white text-xs font-bold hover:bg-[#071F33] transition-colors cursor-pointer">
+                        <label className="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#0F172A] text-white text-xs font-bold hover:bg-[#020617] transition-colors cursor-pointer">
                           {isUploading ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
                           ) : (
-                            <UploadCloud className="w-3.5 h-3.5 text-[#55C7C2]" />
+                            <UploadCloud className="w-3.5 h-3.5 text-[#34D399]" />
                           )}
                           <span>
                             {isUploading ? "Uploading..." : "Upload New Image"}

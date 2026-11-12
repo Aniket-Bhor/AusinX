@@ -21,10 +21,10 @@ export default function HeroClient({
   heroImage?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#0B2942] via-[#0D3352] to-[#071F33] text-white pt-10 pb-20 sm:pt-14 sm:pb-28">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#020617] text-white pt-10 pb-20 sm:pt-14 sm:pb-28">
       {/* Glowing Background Radial Effects */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-[38rem] w-[38rem] rounded-full bg-[#07999A]/20 blur-[130px] animate-orb" />
-      <div className="pointer-events-none absolute top-1/3 -right-40 h-[35rem] w-[35rem] rounded-full bg-[#55C7C2]/15 blur-[140px] animate-orb-delayed" />
+      <div className="pointer-events-none absolute -top-40 -left-40 h-[38rem] w-[38rem] rounded-full bg-[#059669]/20 blur-[130px] animate-orb" />
+      <div className="pointer-events-none absolute top-1/3 -right-40 h-[35rem] w-[35rem] rounded-full bg-[#F59E0B]/15 blur-[140px] animate-orb-delayed" />
 
       {/* Subtle grid pattern overlay */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:24px_24px] opacity-40" />
@@ -38,7 +38,7 @@ export default function HeroClient({
             <div className="space-y-4">
               <h1 className="motion-pop text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.08] font-heading">
                 High-Performance <br />
-                <span className="bg-gradient-to-r from-[#55C7C2] via-[#75E2DD] to-white bg-clip-text text-transparent animate-gradient-text">
+                <span className="bg-gradient-to-r from-[#34D399] via-[#FBBF24] to-white bg-clip-text text-transparent animate-gradient-text">
                   Biomedical &amp; Clinical
                 </span>{" "}
                 Engineering
@@ -53,11 +53,11 @@ export default function HeroClient({
             <div className="motion-pop motion-pop-delay-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
                 href="/contact"
-                className="btn-shine w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#07999A] to-[#087F86] hover:from-[#087F86] hover:to-[#0B5963] px-7 py-4 text-base font-bold text-white shadow-[0_10px_35px_rgba(7,153,154,0.45)] transition-all duration-300 hover:scale-105 active:scale-95 group"
+                className="btn-shine w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#059669] to-[#047857] hover:from-[#047857] hover:to-[#065F46] px-7 py-4 text-base font-bold text-white shadow-[0_10px_35px_rgba(5,150,105,0.45)] transition-all duration-300 hover:scale-105 active:scale-95 group"
               >
-                <MessageSquare className="h-5 w-5 text-teal-200" />
+                <MessageSquare className="h-5 w-5 text-emerald-200" />
                 <span>Talk to our team</span>
-                <ArrowRight className="h-4 w-4 text-teal-200 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-emerald-200 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
@@ -65,18 +65,18 @@ export default function HeroClient({
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 px-6 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:-translate-y-0.5 group"
               >
                 <span>Explore Modalities</span>
-                <ArrowRight className="h-4 w-4 text-[#55C7C2] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-[#34D399] group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
             {/* Trust Badges */}
             <div className="motion-pop motion-pop-delay-3 flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-4 text-xs font-medium text-slate-300">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[#55C7C2]" />
+                <CheckCircle2 className="h-4 w-4 text-[#34D399]" />
                 <span>OEM-Trained Engineers</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-[#55C7C2]" />
+                <Clock className="h-4 w-4 text-[#F59E0B]" />
                 <span>Under 2-Hour Response</span>
               </div>
             </div>
@@ -95,11 +95,11 @@ export default function HeroClient({
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.95]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B2942]/85 via-[#0B2942]/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/85 via-[#0F172A]/20 to-transparent" />
 
               {/* Bottom Overlay Info Banner */}
               <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 rounded-2xl glass-card-dark p-4 shadow-xl border border-white/10">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#55C7C2] block">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#34D399] block">
                   Diagnostic Imaging &amp; Oncology
                 </span>
                 <p className="text-sm font-semibold text-white mt-0.5">
@@ -112,19 +112,19 @@ export default function HeroClient({
 
         </div>
 
-        {/* Bottom High-Impact Metrics Ribbon */}
+        {/* Bottom High-Impact Metrics Ribbon (Red / Green / Amber Clinical Telemetry Trio) */}
         <div className="mt-16 sm:mt-20 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { stat: "24/7", label: "Emergency Breakdown Callout", desc: "Melbourne & National" },
-            { stat: "99.8%", label: "Clinical Equipment Uptime", desc: "Proactive Preventive Care" },
-            { stat: "15+ Yrs", label: "Specialist Engineering", desc: "Linac, CT & Biomedical" },
-            { stat: "100%", label: "Australian Owned", desc: "Local Leadership & Spares" },
+            { stat: "24/7", label: "Emergency Breakdown Callout", desc: "Melbourne & National", color: "text-[#EF4444]" },
+            { stat: "99.8%", label: "Clinical Equipment Uptime", desc: "Proactive Preventive Care", color: "text-[#10B981]" },
+            { stat: "15+ Yrs", label: "Specialist Engineering", desc: "Linac, CT & Biomedical", color: "text-[#F59E0B]" },
+            { stat: "100%", label: "Australian Owned", desc: "Local Leadership & Spares", color: "text-[#34D399]" },
           ].map((metric) => (
             <div
               key={metric.label}
               className="group p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/10"
             >
-              <div className="text-3xl sm:text-4xl font-extrabold text-[#55C7C2] font-heading tracking-tight group-hover:scale-105 transition-transform">
+              <div className={`text-3xl sm:text-4xl font-extrabold font-heading tracking-tight group-hover:scale-105 transition-transform ${metric.color}`}>
                 {metric.stat}
               </div>
               <div className="text-sm font-semibold text-white mt-1">
