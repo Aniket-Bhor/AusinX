@@ -128,10 +128,10 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
     <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-md">
       {submitted ? (
         <div className="py-12 text-center space-y-4">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-inner">
+          <div className="w-16 h-16 rounded-full bg-brand-accent-light text-brand-accent mx-auto flex items-center justify-center shadow-inner">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-bold text-[#0F172A] font-heading">
+          <h3 className="text-2xl font-bold text-brand-primary font-heading">
             Enquiry Received Successfully
           </h3>
           <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
@@ -153,7 +153,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                   websiteHoneypot: "",
                 });
               }}
-              className="px-6 py-2.5 rounded-lg bg-[#0F172A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#020617] transition-colors shadow-sm"
+              className="px-6 py-2.5 rounded-lg bg-brand-primary text-white text-xs font-bold uppercase tracking-wider hover:bg-brand-primary-hover transition-colors shadow-sm"
             >
               Send Another Enquiry
             </button>
@@ -162,11 +162,11 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5" noValidate={false}>
           <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-[#0F172A] font-heading">
+            <h2 className="text-xl font-bold text-brand-primary font-heading">
               Healthcare & Industrial Service Enquiry
             </h2>
             {serviceParam && (
-              <span className="text-xs bg-emerald-50 text-emerald-900 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">
+              <span className="text-xs bg-brand-accent-light text-brand-accent-hover border border-brand-accent/20 px-2.5 py-1 rounded-full font-semibold">
                 Service Pre-selected
               </span>
             )}
@@ -212,7 +212,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="e.g. Dr. Jane Smith"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
               />
             </div>
 
@@ -231,7 +231,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 value={formData.organisation}
                 onChange={handleChange}
                 placeholder="e.g. Melbourne Health Clinic"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -252,7 +252,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="name@hospital.com.au"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
               />
             </div>
 
@@ -271,7 +271,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="04XX XXX XXX"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/20 outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -288,7 +288,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
               name="serviceInterest"
               value={formData.serviceInterest}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/20 outline-none bg-white font-medium transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none bg-white font-medium transition-all"
             >
               {services.map((service) => (
                 <option key={service.slug} value={service.contactValue}>
@@ -315,14 +315,14 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
               value={formData.message}
               onChange={handleChange}
               placeholder="Describe your equipment model, facility department, and support requirements..."
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-[#059669] focus:ring-2 focus:ring-[#059669]/20 outline-none transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
             ></textarea>
           </div>
 
           {/* Privacy & Anti-Spam Notice */}
           <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-brand-accent shrink-0" />
               <span>Protected by server-side verification & anti-spam shield</span>
             </div>
             <span className="text-[10px] text-slate-400 font-mono">AusinX Secure</span>
@@ -336,7 +336,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
               required
               checked={formData.consent}
               onChange={handleChange}
-              className="mt-1 rounded border-slate-300 text-[#059669] focus:ring-[#059669]"
+              className="mt-1 rounded border-slate-300 text-brand-accent focus:ring-brand-accent"
             />
             <label htmlFor="consent" className="text-xs text-slate-600 leading-relaxed">
               I consent to AusinX Solutions contacting me regarding this enquiry. We respect your privacy in accordance with our{" "}
@@ -350,7 +350,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
           <button
             type="submit"
             disabled={submitting}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-all shadow-md active:scale-[0.99] disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-accent text-brand-primary font-bold text-sm hover:bg-brand-accent-hover transition-all shadow-md active:scale-[0.99] disabled:opacity-50"
           >
             {submitting ? (
               <>

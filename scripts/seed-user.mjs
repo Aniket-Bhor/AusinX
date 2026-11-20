@@ -52,11 +52,14 @@ async function seedUserNode() {
   try {
     console.log("Connecting to Firebase RTDB at:", databaseURL);
     
+    const defaultAdminUsername = process.env.ADMIN_DEFAULT_USERNAME || "ausinx@admin";
+    const defaultAdminPassword = process.env.ADMIN_DEFAULT_PASSWORD || "ausinx@2026";
+
     const usersData = {
       ausinx_admin: {
-        id: "ausinx@admin",
-        username: "ausinx@admin",
-        password: "ausinx@2026",
+        id: defaultAdminUsername,
+        username: defaultAdminUsername,
+        password: defaultAdminPassword,
         name: "AusinX Administrator",
         role: "Administrator",
         active: true,

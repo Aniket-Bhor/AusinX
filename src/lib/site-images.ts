@@ -11,13 +11,13 @@ export interface SiteImages {
 }
 
 export const defaultSiteImages: SiteImages = {
-  headerLogo: "/images/client/ausinx-logo-brand-clean.png",
+  headerLogo: "/images/client/ausinx-logo-new.png",
   heroImage: "/images/client/imaging-suite.jpeg",
   bentoCt: "/images/client/ct-suite.jpeg",
   bentoCArm: "/images/client/c-arm.jpeg",
   bentoMonitor: "/images/client/patient-monitor.jpeg",
   bentoUltrasound: "/images/client/ultrasound-care.jpeg",
-  whyChooseUsImage: "/images/client/clinical-trust.jpeg",
+  whyChooseUsImage: "/images/client/precision-calibration.jpeg",
   aboutImage: "/images/client/engineering-workshop.jpeg",
   contactImage: "/images/client/contact-support.jpeg",
 };
@@ -42,7 +42,7 @@ export const defaultHeroMetrics: HeroMetricsConfig = {
     {
       id: "callout",
       stat: "24/7",
-      label: "Emergency Breakdown Callout",
+      label: "On-Call Engineering Support",
       desc: "Melbourne & National",
       color: "red",
       visible: true,
@@ -59,7 +59,7 @@ export const defaultHeroMetrics: HeroMetricsConfig = {
       id: "experience",
       stat: "15+ Yrs",
       label: "Specialist Engineering",
-      desc: "Linac, CT & Biomedical",
+      desc: "CT, Imaging & Biomedical",
       color: "amber",
       visible: true,
     },

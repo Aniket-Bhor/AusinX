@@ -30,7 +30,11 @@ import {
   Eye,
   EyeOff,
   ChevronDown,
+  Sparkles,
+  Palette,
 } from "lucide-react";
+import Logo from "@/components/ui/Logo";
+import { PALETTES, type ThemePalette } from "@/lib/themes";
 import {
   defaultHeroMetrics,
   defaultSiteImages,
@@ -100,6 +104,11 @@ export default function AdminDashboardPage() {
   const [savingImages, setSavingImages] = useState(false);
   const [uploadingImageSlot, setUploadingImageSlot] = useState<string | null>(null);
 
+  // Theme Switcher state
+  const [selectedThemeId, setSelectedThemeId] = useState<string>("default");
+  const [activeThemeId, setActiveThemeId] = useState<string>("default");
+  const [savingTheme, setSavingTheme] = useState(false);
+
   const showFeedback = (type: "success" | "error", message: string) => {
     setFeedback({ type, message });
     setTimeout(() => setFeedback(null), 4000);
@@ -149,7 +158,7 @@ export default function AdminDashboardPage() {
   // Load Content from RTDB
   const loadContent = async () => {
     try {
-      const [resSettings, resServices, resAbout, resLifecycle, resImages, resMetrics] =
+      const [resSettings, resServices, resAbout, resLifecycle, resImages, resMetrics, resTheme] =
         await Promise.all([
           fetch("/api/admin/content?section=siteSettings"),
           fetch("/api/admin/content?section=services"),
@@ -157,6 +166,7 @@ export default function AdminDashboardPage() {
           fetch("/api/admin/content?section=lifecycle"),
           fetch("/api/admin/content?section=siteImages"),
           fetch("/api/admin/content?section=heroMetrics"),
+          fetch("/api/admin/content?section=theme"),
         ]);
 
       const sData = await resSettings.json();
@@ -165,6 +175,7 @@ export default function AdminDashboardPage() {
       const lData = await resLifecycle.json();
       const iData = await resImages.json();
       const mData = await resMetrics.json();
+      const tData = await resTheme.json();
 
       if (sData.data) setSettingsData(sData.data);
       if (srvData.data) {
@@ -188,6 +199,10 @@ export default function AdminDashboardPage() {
           enabled: typeof mData.data.enabled === "boolean" ? mData.data.enabled : true,
           items: mData.data.items,
         });
+      }
+      if (tData.data && typeof tData.data === "object" && typeof tData.data.themeId === "string") {
+        setSelectedThemeId(tData.data.themeId);
+        setActiveThemeId(tData.data.themeId);
       }
     } catch (e) {
       console.error(e);
@@ -238,21 +253,32 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Save Settings
+  // Save Settings & Logo
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavingSettings(true);
     try {
-      const res = await fetch("/api/admin/content", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          section: "siteSettings",
-          data: settingsData,
+      const [resSettings, resImages] = await Promise.all([
+        fetch("/api/admin/content", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            section: "siteSettings",
+            data: settingsData,
+          }),
         }),
-      });
-      if (res.ok) {
-        showFeedback("success", "Site settings updated in Firebase RTDB.");
+        fetch("/api/admin/content", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            section: "siteImages",
+            data: siteImagesData,
+          }),
+        }),
+      ]);
+
+      if (resSettings.ok && resImages.ok) {
+        showFeedback("success", "Site settings and brand logo updated successfully.");
       } else {
         showFeedback("error", "Failed to save site settings.");
       }
@@ -260,6 +286,35 @@ export default function AdminDashboardPage() {
       showFeedback("error", "Network error saving site settings.");
     } finally {
       setSavingSettings(false);
+    }
+  };
+
+  // Save Theme Palette
+  const handleSaveTheme = async (themeIdToApply?: string) => {
+    const targetThemeId = themeIdToApply || selectedThemeId;
+    setSavingTheme(true);
+    try {
+      const res = await fetch("/api/admin/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section: "theme",
+          data: { themeId: targetThemeId },
+        }),
+      });
+
+      if (res.ok) {
+        setSelectedThemeId(targetThemeId);
+        setActiveThemeId(targetThemeId);
+        showFeedback("success", `Palette applied successfully: ${PALETTES[targetThemeId]?.name || targetThemeId}`);
+      } else {
+        const result = await res.json().catch(() => null);
+        showFeedback("error", result?.error || "Failed to save theme palette.");
+      }
+    } catch {
+      showFeedback("error", "Network error saving theme palette.");
+    } finally {
+      setSavingTheme(false);
     }
   };
 
@@ -448,9 +503,9 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center text-white">
+      <div className="min-h-screen bg-brand-primary flex items-center justify-center text-white">
         <div className="flex items-center gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-[#059669]" />
+          <Loader2 className="w-6 h-6 animate-spin text-brand-accent" />
           <span>Verifying AusinX staff credentials...</span>
         </div>
       </div>
@@ -458,9 +513,9 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] text-[#0F172A] flex flex-col">
+    <div className="min-h-screen bg-bg-tint text-brand-primary flex flex-col">
       {/* Top Navbar */}
-      <header className="bg-[#0F172A] text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
+      <header className="bg-brand-primary text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-white p-0.5 flex items-center justify-center shrink-0">
@@ -478,7 +533,7 @@ export default function AdminDashboardPage() {
               <span className="font-extrabold text-sm sm:text-base tracking-tight font-heading block">
                 AusinX Admin Console
               </span>
-              <span className="text-[10px] text-emerald-400 font-semibold block">
+              <span className="text-[10px] text-brand-accent-on-dark font-semibold block">
                 Firebase Realtime Database Connected
               </span>
             </div>
@@ -519,7 +574,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("enquiries")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "enquiries"
-                ? "border-[#059669] text-[#34D399]"
+                ? "border-brand-accent text-brand-accent-on-dark"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -536,7 +591,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("home")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "home"
-                ? "border-[#059669] text-[#34D399]"
+                ? "border-brand-accent text-brand-accent-on-dark"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -548,7 +603,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("services")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "services"
-                ? "border-[#059669] text-[#34D399]"
+                ? "border-brand-accent text-brand-accent-on-dark"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -560,7 +615,7 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("images")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "images"
-                ? "border-[#059669] text-[#34D399]"
+                ? "border-brand-accent text-brand-accent-on-dark"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
@@ -572,12 +627,12 @@ export default function AdminDashboardPage() {
             onClick={() => setActiveTab("settings")}
             className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === "settings"
-                ? "border-[#059669] text-[#34D399]"
+                ? "border-brand-accent text-brand-accent-on-dark"
                 : "border-transparent text-slate-400 hover:text-white"
             }`}
           >
             <Settings className="w-4 h-4" />
-            <span>Company Info</span>
+            <span>Company Info &amp; Logo</span>
           </button>
         </div>
       </header>
@@ -588,12 +643,12 @@ export default function AdminDashboardPage() {
           role="status"
           className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl border text-sm font-semibold flex items-center gap-2.5 transition-all ${
             feedback.type === "success"
-              ? "bg-emerald-900 text-emerald-100 border-emerald-700"
+              ? "bg-brand-primary-light text-brand-accent-light border-brand-accent-hover"
               : "bg-red-900 text-red-100 border-red-700"
           }`}
         >
           {feedback.type === "success" ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            <CheckCircle2 className="w-5 h-5 text-brand-accent-on-dark" />
           ) : (
             <AlertCircle className="w-5 h-5 text-red-400" />
           )}
@@ -611,7 +666,7 @@ export default function AdminDashboardPage() {
               setActiveTab("enquiries");
               setEnquiryFilter("new");
             }}
-            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
               New Enquiries
@@ -629,7 +684,7 @@ export default function AdminDashboardPage() {
           <button
             type="button"
             onClick={() => setActiveTab("home")}
-            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
               Hero Stats Bar
@@ -638,13 +693,13 @@ export default function AdminDashboardPage() {
               <span
                 className={`text-sm font-extrabold px-2.5 py-0.5 rounded-full ${
                   heroMetricsData.enabled
-                    ? "bg-emerald-100 text-emerald-800"
+                    ? "bg-brand-accent-light text-brand-accent-hover"
                     : "bg-slate-100 text-slate-600"
                 }`}
               >
                 {heroMetricsData.enabled ? "Visible on Site" : "Hidden"}
               </span>
-              <span className="text-[11px] font-semibold text-[#059669]">
+              <span className="text-[11px] font-semibold text-brand-accent">
                 Edit →
               </span>
             </div>
@@ -653,16 +708,16 @@ export default function AdminDashboardPage() {
           <button
             type="button"
             onClick={() => setActiveTab("services")}
-            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
               Active Services
             </div>
             <div className="mt-1 flex items-baseline justify-between">
-              <span className="text-2xl font-extrabold text-[#0F172A]">
+              <span className="text-2xl font-extrabold text-brand-primary">
                 {servicesData.length}
               </span>
-              <span className="text-[11px] font-semibold text-[#059669]">
+              <span className="text-[11px] font-semibold text-brand-accent">
                 Manage →
               </span>
             </div>
@@ -671,14 +726,14 @@ export default function AdminDashboardPage() {
           <button
             type="button"
             onClick={() => setActiveTab("images")}
-            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-[#059669] transition-all"
+            className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
               Website Photos
             </div>
             <div className="mt-1 flex items-baseline justify-between">
               <span className="text-2xl font-extrabold text-[#F59E0B]">9</span>
-              <span className="text-[11px] font-semibold text-[#059669]">
+              <span className="text-[11px] font-semibold text-brand-accent">
                 Upload →
               </span>
             </div>
@@ -690,7 +745,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
+                <h1 className="text-2xl font-extrabold text-brand-primary font-heading">
                   Customer Enquiries
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
@@ -740,7 +795,7 @@ export default function AdminDashboardPage() {
                     onClick={() => setEnquiryFilter(pill.id)}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
                       enquiryFilter === pill.id
-                        ? "bg-[#0F172A] text-white"
+                        ? "bg-brand-primary text-white"
                         : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
                     }`}
                   >
@@ -755,7 +810,7 @@ export default function AdminDashboardPage() {
             ).length === 0 ? (
               <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/90 shadow-sm space-y-3">
                 <Inbox className="w-12 h-12 text-slate-300 mx-auto" />
-                <h3 className="text-lg font-bold text-[#0F172A]">
+                <h3 className="text-lg font-bold text-brand-primary">
                   {enquiries.length === 0
                     ? "No Enquiries Yet"
                     : "No Enquiries in This Filter"}
@@ -782,17 +837,17 @@ export default function AdminDashboardPage() {
                         <span
                           className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${
                             enq.status === "new"
-                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              ? "bg-brand-accent-light text-brand-accent-hover border border-brand-accent/30"
                               : enq.status === "in_review"
                               ? "bg-blue-100 text-blue-800 border border-blue-300"
                               : enq.status === "contacted"
-                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              ? "bg-brand-accent-light text-brand-accent-hover border border-brand-accent/30"
                               : "bg-slate-100 text-slate-600 border border-slate-300"
                           }`}
                         >
                           {enq.status.replace("_", " ")}
                         </span>
-                        <h3 className="text-base font-bold text-[#0F172A]">
+                        <h3 className="text-base font-bold text-brand-primary">
                           {enq.fullName}
                         </h3>
                         <span className="text-xs text-slate-500">
@@ -836,7 +891,7 @@ export default function AdminDashboardPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Mail className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <Mail className="w-4 h-4 text-brand-accent shrink-0" />
                         <a
                           href={`mailto:${enq.email}`}
                           className="hover:underline font-medium text-slate-800"
@@ -845,7 +900,7 @@ export default function AdminDashboardPage() {
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <Phone className="w-4 h-4 text-brand-accent shrink-0" />
                         <a
                           href={`tel:${enq.phone}`}
                           className="hover:underline font-medium text-slate-800"
@@ -854,14 +909,14 @@ export default function AdminDashboardPage() {
                         </a>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
-                        <Building className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <Building className="w-4 h-4 text-brand-accent shrink-0" />
                         <span>
                           Service: <strong>{enq.serviceInterest}</strong>
                         </span>
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-100 text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">
+                    <div className="p-4 rounded-2xl bg-surface-subtle border border-slate-100 text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">
                       {enq.message}
                     </div>
                   </div>
@@ -876,7 +931,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
+                <h1 className="text-2xl font-extrabold text-brand-primary font-heading">
                   Services Content Editor
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
@@ -886,7 +941,7 @@ export default function AdminDashboardPage() {
               <button
                 type="button"
                 onClick={handleAddService}
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#047857]"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-accent-hover"
               >
                 <Plus className="h-4 w-4" /> Add service
               </button>
@@ -902,7 +957,7 @@ export default function AdminDashboardPage() {
                     onClick={() => setSelectedServiceIndex(idx)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors whitespace-nowrap ${
                       selectedServiceIndex === idx
-                        ? "bg-[#0F172A] text-white shadow"
+                        ? "bg-brand-primary text-white shadow"
                         : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50"
                     }`}
                   >
@@ -935,7 +990,7 @@ export default function AdminDashboardPage() {
                       setServicesData(updated);
                     }}
                     placeholder="example-service"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                   />
                   <span className="mt-1 block text-[11px] text-slate-500">Customer page: /services/{servicesData[selectedServiceIndex]?.slug || "service-name"}</span>
                 </div>
@@ -951,7 +1006,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].contactValue = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                   />
                 </div>
               </div>
@@ -969,7 +1024,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].navTitle = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                   />
                 </div>
 
@@ -985,7 +1040,7 @@ export default function AdminDashboardPage() {
                       updated[selectedServiceIndex].title = e.target.value;
                       setServicesData(updated);
                     }}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                   />
                 </div>
               </div>
@@ -996,7 +1051,7 @@ export default function AdminDashboardPage() {
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                       Service Image
                     </label>
-                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-[#059669] hover:text-[#047857]">
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-brand-accent hover:text-brand-accent-hover">
                       {uploadingServiceImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
                       {uploadingServiceImage ? "Uploading imageâ€¦" : "Choose image"}
                       <input
@@ -1021,7 +1076,7 @@ export default function AdminDashboardPage() {
                         updated[selectedServiceIndex].imageAlt = e.target.value;
                         setServicesData(updated);
                       }}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-[#059669]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-brand-accent"
                     />
                   </div>
                 </div>
@@ -1052,7 +1107,7 @@ export default function AdminDashboardPage() {
                     updated[selectedServiceIndex].shortSummary = e.target.value;
                     setServicesData(updated);
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                 />
               </div>
 
@@ -1068,7 +1123,7 @@ export default function AdminDashboardPage() {
                     updated[selectedServiceIndex].fullDescription = e.target.value;
                     setServicesData(updated);
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                 />
               </div>
 
@@ -1088,7 +1143,7 @@ export default function AdminDashboardPage() {
                     setServicesData(updated);
                   }}
                   placeholder="Preventive maintenance scheduling\nRapid response support"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                 />
               </div>
 
@@ -1096,7 +1151,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowAdvancedService((prev) => !prev)}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#0F172A] px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-brand-primary px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors"
                 >
                   <ChevronDown
                     className={`w-4 h-4 transition-transform ${
@@ -1128,7 +1183,7 @@ export default function AdminDashboardPage() {
                           updated[selectedServiceIndex].metaTitle = e.target.value;
                           setServicesData(updated);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                       />
                     </div>
                     <div>
@@ -1143,7 +1198,7 @@ export default function AdminDashboardPage() {
                           updated[selectedServiceIndex].metaDescription = e.target.value;
                           setServicesData(updated);
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                       />
                     </div>
                   </div>
@@ -1164,7 +1219,7 @@ export default function AdminDashboardPage() {
                           ];
                           setServicesData(updated);
                         }}
-                        className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#059669] hover:text-[#047857]"
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:border-brand-accent hover:text-brand-accent-hover"
                       >
                         <Plus className="h-3.5 w-3.5" /> Add detail
                       </button>
@@ -1227,7 +1282,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingServices}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-white font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingServices ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1241,12 +1296,12 @@ export default function AdminDashboardPage() {
               </>
             ) : (
               <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                <h2 className="text-lg font-bold text-[#0F172A]">No services have been added yet.</h2>
+                <h2 className="text-lg font-bold text-brand-primary">No services have been added yet.</h2>
                 <p className="mt-2 text-sm text-slate-500">Start with a service name, description, and image. You can add sub-service details too.</p>
                 <button
                   type="button"
                   onClick={handleAddService}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0F172A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#047857]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-accent-hover"
                 >
                   <Plus className="h-4 w-4" /> Create the first service
                 </button>
@@ -1259,7 +1314,7 @@ export default function AdminDashboardPage() {
         {activeTab === "settings" && settingsData && (
           <div className="space-y-6">
             <div>
-              <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
+              <h1 className="text-2xl font-extrabold text-brand-primary font-heading">
                 Site Settings & Identity
               </h1>
               <p className="text-xs text-slate-500 mt-1">
@@ -1271,6 +1326,130 @@ export default function AdminDashboardPage() {
               onSubmit={handleSaveSettings}
               className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6"
             >
+              {/* Brand Logo & Wordmark Editor */}
+              <div className="rounded-2xl border border-slate-200 bg-surface-subtle p-6 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-accent-light text-brand-accent-hover text-[11px] font-bold border border-brand-accent/20">
+                      <Sparkles className="w-3 h-3" />
+                      <span>Company Logo</span>
+                    </div>
+                    <h2 className="text-base font-bold text-brand-primary mt-1.5">
+                      Brand Logo &amp; Wordmark
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      This logo appears in the top navigation header and footer across all pages.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSiteImagesData((prev) => ({
+                          ...prev,
+                          headerLogo: "",
+                        }))
+                      }
+                      title="Use the built-in precision vector SVG wordmark"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Use Vector SVG</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSiteImagesData((prev) => ({
+                          ...prev,
+                          headerLogo: defaultSiteImages.headerLogo,
+                        }))
+                      }
+                      title="Reset to default brand image"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset Image</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Previews: Light (Navbar) and Dark (Footer/Hero) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-slate-200 bg-white p-4 flex flex-col items-center justify-center space-y-2">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                      Navbar Preview (Light Background)
+                    </span>
+                    <div className="h-16 w-full flex items-center justify-center">
+                      <Logo
+                        src={siteImagesData.headerLogo}
+                        className="h-12 w-full max-w-[260px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-slate-800 bg-brand-primary p-4 flex flex-col items-center justify-center space-y-2">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300">
+                      Dark Background Preview
+                    </span>
+                    <div className="h-16 w-full flex items-center justify-center">
+                      <Logo
+                        src={siteImagesData.headerLogo}
+                        light={true}
+                        className="h-12 w-full max-w-[260px]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Upload & Path Controls */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1">
+                  <div className="sm:col-span-8">
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Logo Path or Image URL
+                    </label>
+                    <input
+                      type="text"
+                      value={siteImagesData.headerLogo || ""}
+                      onChange={(e) =>
+                        setSiteImagesData((prev) => ({
+                          ...prev,
+                          headerLogo: e.target.value,
+                        }))
+                      }
+                      placeholder="Leave blank for Vector SVG, or enter /images/... or https://..."
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-mono text-slate-800 outline-none focus:border-brand-accent bg-white"
+                    />
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      {siteImagesData.headerLogo?.trim()
+                        ? `Currently using custom image: ${siteImagesData.headerLogo}`
+                        : "Currently using built-in vector SVG logo"}
+                    </p>
+                  </div>
+
+                  <div className="sm:col-span-4 flex flex-col justify-end">
+                    <label className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-primary-hover transition-colors cursor-pointer shadow-sm">
+                      {uploadingImageSlot === "headerLogo" ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <UploadCloud className="w-4 h-4" />
+                      )}
+                      <span>
+                        {uploadingImageSlot === "headerLogo"
+                          ? "Uploading..."
+                          : "Upload Logo File"}
+                      </span>
+                      <input
+                        type="file"
+                        accept=".svg,.png,.jpg,.jpeg,.webp,image/*"
+                        className="hidden"
+                        onChange={(e) => handleSiteImageUpload("headerLogo", e)}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
@@ -1285,7 +1464,7 @@ export default function AdminDashboardPage() {
                         companyName: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                   />
                 </div>
 
@@ -1302,7 +1481,7 @@ export default function AdminDashboardPage() {
                         publicEmail: e.target.value,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                   />
                 </div>
               </div>
@@ -1320,7 +1499,7 @@ export default function AdminDashboardPage() {
                       tagline: e.target.value,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                 />
               </div>
 
@@ -1337,12 +1516,12 @@ export default function AdminDashboardPage() {
                       businessHours: e.target.value,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-[#059669]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-brand-accent"
                 />
               </div>
 
               <div className="pt-2 border-t border-slate-100">
-                <h3 className="text-sm font-bold text-[#0F172A] mb-3">
+                <h3 className="text-sm font-bold text-brand-primary mb-3">
                   Melbourne Office Address
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
@@ -1414,7 +1593,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingSettings}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-white font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingSettings ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1425,6 +1604,126 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
             </form>
+
+            {/* Color Palette Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-accent-light text-brand-accent-hover text-[11px] font-bold border border-brand-accent/20">
+                    <Palette className="w-3 h-3" />
+                    <span>Theme Customization</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-brand-primary mt-1.5 font-heading">
+                    Color Palette &amp; Theme
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Choose an overarching color system for the customer website. Changes update headers, accents, buttons, and tints instantly.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleSaveTheme("default")}
+                  disabled={savingTheme}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-surface-subtle hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-sm disabled:opacity-50"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Reset to Original</span>
+                </button>
+              </div>
+
+              {/* Swatch Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {Object.values(PALETTES).map((palette: ThemePalette) => {
+                  const isSelected = selectedThemeId === palette.id;
+                  const isCurrentActive = activeThemeId === palette.id;
+
+                  // 5 Main colors: primary, accent, hover, bright, light
+                  const swatchColors = [
+                    palette.tokens["brand-primary"],
+                    palette.tokens["brand-accent"],
+                    palette.tokens["brand-accent-hover"],
+                    palette.tokens["brand-accent-bright"],
+                    palette.tokens["brand-accent-light"],
+                  ];
+
+                  return (
+                    <div
+                      key={palette.id}
+                      onClick={() => setSelectedThemeId(palette.id)}
+                      className={`cursor-pointer rounded-2xl border p-5 transition-all text-left relative ${
+                        isSelected
+                          ? "border-brand-accent ring-2 ring-brand-accent/20 bg-brand-accent-light/10 shadow-md"
+                          : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold text-brand-primary">
+                            {palette.name}
+                          </h3>
+                          {palette.id === "default" && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                              Locked
+                            </span>
+                          )}
+                          {isCurrentActive && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-accent text-white shadow-xs">
+                              Active Live
+                            </span>
+                          )}
+                        </div>
+                        <input
+                          type="radio"
+                          name="themeSelect"
+                          checked={isSelected}
+                          onChange={() => setSelectedThemeId(palette.id)}
+                          className="h-4 w-4 text-brand-accent focus:ring-brand-accent border-slate-300"
+                        />
+                      </div>
+
+                      {/* 5 Swatches preview */}
+                      <div className="flex items-center gap-1.5 h-8 rounded-xl overflow-hidden p-1 bg-surface-subtle border border-slate-100">
+                        {swatchColors.map((col, idx) => (
+                          <div
+                            key={idx}
+                            title={col}
+                            className="flex-1 h-full rounded-md shadow-xs border border-black/5"
+                            style={{ backgroundColor: col }}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                        <span>{palette.tokens["brand-primary"]}</span>
+                        <span>{palette.tokens["brand-accent"]}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Apply Button */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs text-slate-500">
+                  Selected palette: <strong className="text-brand-primary font-bold">{PALETTES[selectedThemeId]?.name || selectedThemeId}</strong>
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => handleSaveTheme()}
+                  disabled={savingTheme || selectedThemeId === activeThemeId}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+                >
+                  {savingTheme ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  <span>Apply Palette</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1433,7 +1732,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-extrabold text-[#0F172A] font-heading">
+                <h1 className="text-2xl font-extrabold text-brand-primary font-heading">
                   Home Page &amp; Hero Stats
                 </h1>
                 <p className="text-xs text-slate-500 mt-1">
@@ -1450,7 +1749,7 @@ export default function AdminDashboardPage() {
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                   <div>
-                    <h2 className="text-lg font-extrabold text-[#0F172A] font-heading">
+                    <h2 className="text-lg font-extrabold text-brand-primary font-heading">
                       Hero Stats Bar (Optional)
                     </h2>
                     <p className="text-xs text-slate-500 mt-0.5">
@@ -1469,12 +1768,12 @@ export default function AdminDashboardPage() {
                       }
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors border ${
                         heroMetricsData.enabled
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                          ? "bg-brand-accent-light text-brand-accent-hover border-brand-accent/30"
                           : "bg-slate-100 text-slate-600 border-slate-300"
                       }`}
                     >
                       {heroMetricsData.enabled ? (
-                        <Eye className="w-4 h-4 text-[#059669]" />
+                        <Eye className="w-4 h-4 text-brand-accent" />
                       ) : (
                         <EyeOff className="w-4 h-4 text-slate-500" />
                       )}
@@ -1510,7 +1809,7 @@ export default function AdminDashboardPage() {
                           ],
                         }))
                       }
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white bg-[#0F172A] hover:bg-[#047857] transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white bg-brand-primary hover:bg-brand-accent-hover transition-colors"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add Stat</span>
@@ -1542,10 +1841,10 @@ export default function AdminDashboardPage() {
                             items[idx] = { ...items[idx], visible: !items[idx].visible };
                             setHeroMetricsData({ ...heroMetricsData, items });
                           }}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 hover:text-[#0F172A]"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 hover:text-brand-primary"
                         >
                           {metric.visible ? (
-                            <Eye className="w-3.5 h-3.5 text-[#059669]" />
+                            <Eye className="w-3.5 h-3.5 text-brand-accent" />
                           ) : (
                             <EyeOff className="w-3.5 h-3.5 text-slate-400" />
                           )}
@@ -1597,7 +1896,7 @@ export default function AdminDashboardPage() {
                           items[idx] = { ...items[idx], stat: e.target.value };
                           setHeroMetricsData({ ...heroMetricsData, items });
                         }}
-                        className="w-full px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-base font-extrabold text-[#0F172A]"
+                        className="w-full px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-base font-extrabold text-brand-primary"
                       />
 
                       <input
@@ -1695,7 +1994,7 @@ export default function AdminDashboardPage() {
                       key={idx}
                       className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs"
                     >
-                      <span className="font-mono text-[10px] font-bold text-emerald-600 block">
+                      <span className="font-mono text-[10px] font-bold text-brand-accent block">
                         Step {step.step}
                       </span>
                       <input
@@ -1727,7 +2026,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={savingHome}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-white font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50"
                   >
                     {savingHome ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1748,7 +2047,7 @@ export default function AdminDashboardPage() {
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
                 <div>
-                  <h2 className="text-xl font-extrabold text-[#0F172A] font-heading">
+                  <h2 className="text-xl font-extrabold text-brand-primary font-heading">
                     Website Images Manager
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
@@ -1756,7 +2055,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setActiveTab("services")}
-                      className="text-[#059669] font-bold hover:underline"
+                      className="text-brand-accent font-bold hover:underline"
                     >
                       Services Editor
                     </button>
@@ -1766,7 +2065,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={savingImages}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-xs hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-accent text-brand-primary font-bold text-xs hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50"
                 >
                   {savingImages ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -1792,7 +2091,7 @@ export default function AdminDashboardPage() {
                     },
                     {
                       key: "bentoCt",
-                      label: "Modality 1: CT & Radiotherapy",
+                      label: "Modality 1: CT Diagnostic Systems",
                       location: "Homepage Multi-Modality Grid",
                     },
                     {
@@ -1832,12 +2131,12 @@ export default function AdminDashboardPage() {
                   return (
                     <div
                       key={slot.key}
-                      className="rounded-2xl border border-slate-200 bg-[#F8FAFC] p-4 flex flex-col justify-between space-y-4"
+                      className="rounded-2xl border border-slate-200 bg-surface-subtle p-4 flex flex-col justify-between space-y-4"
                     >
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <h3 className="text-sm font-bold text-[#0F172A]">
+                            <h3 className="text-sm font-bold text-brand-primary">
                               {slot.label}
                             </h3>
                             <p className="text-[11px] text-slate-500">
@@ -1859,19 +2158,19 @@ export default function AdminDashboardPage() {
                           </button>
                         </div>
 
-                        <div className="relative h-40 w-full rounded-xl overflow-hidden border border-slate-200 bg-white">
-                          <Image
-                            src={currentUrl}
-                            alt={slot.label}
-                            fill
-                            unoptimized
-                            className={
-                              slot.key === "headerLogo"
-                                ? "object-contain p-3"
-                                : "object-cover"
-                            }
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                          />
+                        <div className="relative h-40 w-full rounded-xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-3">
+                          {slot.key === "headerLogo" ? (
+                            <Logo src={currentUrl} className="h-16 w-full max-w-[260px]" />
+                          ) : (
+                            <Image
+                              src={currentUrl}
+                              alt={slot.label}
+                              fill
+                              unoptimized
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                          )}
                         </div>
                       </div>
 
@@ -1885,22 +2184,22 @@ export default function AdminDashboardPage() {
                               [slot.key]: e.target.value,
                             }))
                           }
-                          placeholder="/images/client/..."
+                          placeholder={slot.key === "headerLogo" ? "Leave blank for Vector SVG, or enter path/URL" : "/images/client/..."}
                           className="w-full px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-[11px] font-mono text-slate-700"
                         />
 
-                        <label className="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-[#0F172A] text-white text-xs font-bold hover:bg-[#020617] transition-colors cursor-pointer">
+                        <label className="w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-primary-hover transition-colors cursor-pointer">
                           {isUploading ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
                           ) : (
-                            <UploadCloud className="w-3.5 h-3.5 text-[#34D399]" />
+                            <UploadCloud className="w-3.5 h-3.5 text-brand-accent-on-dark" />
                           )}
                           <span>
                             {isUploading ? "Uploading..." : "Upload New Image"}
                           </span>
                           <input
                             type="file"
-                            accept="image/jpeg,image/png,image/webp"
+                            accept={slot.key === "headerLogo" ? ".svg,.png,.jpg,.jpeg,.webp,image/*" : "image/jpeg,image/png,image/webp"}
                             className="hidden"
                             disabled={isUploading}
                             onChange={(e) => handleSiteImageUpload(slot.key, e)}

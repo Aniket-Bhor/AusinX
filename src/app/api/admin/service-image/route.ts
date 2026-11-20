@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { NextResponse } from "next/server";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import { getAdminStorageBucket } from "@/lib/firebase-admin";
@@ -8,20 +10,19 @@ const allowedTypes = new Map([
   ["image/jpeg", { extension: "jpg", signature: (bytes: Buffer) => bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff }],
   ["image/png", { extension: "png", signature: (bytes: Buffer) => bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) }],
   ["image/webp", { extension: "webp", signature: (bytes: Buffer) => bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP" }],
+  ["image/svg+xml", {
+    extension: "svg",
+    signature: (bytes: Buffer) => {
+      const text = bytes.toString("utf8", 0, Math.min(bytes.length, 512)).trim().toLowerCase();
+      return text.includes("<svg") || text.startsWith("<?xml");
+    }
+  }],
 ]);
 
 export async function POST(request: Request) {
   const admin = await getCurrentAdmin();
   if (!admin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const bucket = getAdminStorageBucket();
-  if (!bucket) {
-    return NextResponse.json(
-      { error: "Firebase Storage is not configured. Set FIREBASE_STORAGE_BUCKET in the server environment." },
-      { status: 503 }
-    );
   }
 
   try {
@@ -49,31 +50,46 @@ export async function POST(request: Request) {
     const bytes = Buffer.from(await file.arrayBuffer());
     if (!imageType || !imageType.signature(bytes)) {
       return NextResponse.json(
-        { error: "Use a valid JPG, PNG, or WebP image." },
+        { error: "Use a valid SVG, JPG, PNG, or WebP image." },
         { status: 400 }
       );
     }
 
-    const objectPath = `${folderPrefix}/${randomUUID()}.${imageType.extension}`;
-    const downloadToken = randomUUID();
-    const imageFile = bucket.file(objectPath);
-    await imageFile.save(bytes, {
-      resumable: false,
-      metadata: {
-        contentType: file.type,
+    const bucket = getAdminStorageBucket();
+    if (bucket) {
+      const objectPath = `${folderPrefix}/${randomUUID()}.${imageType.extension}`;
+      const downloadToken = randomUUID();
+      const imageFile = bucket.file(objectPath);
+      await imageFile.save(bytes, {
+        resumable: false,
         metadata: {
-          firebaseStorageDownloadTokens: downloadToken,
-          uploadedBy: admin.email,
+          contentType: file.type,
+          metadata: {
+            firebaseStorageDownloadTokens: downloadToken,
+            uploadedBy: admin.email,
+          },
         },
-      },
-    });
+      });
 
-    const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(objectPath)}?alt=media&token=${downloadToken}`;
+      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(objectPath)}?alt=media&token=${downloadToken}`;
+      return NextResponse.json({ imageUrl });
+    }
+
+    // Local fallback when Firebase Storage is not configured
+    const uploadDir = path.resolve(process.cwd(), "public", "images", "uploads");
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    const filename = `${randomUUID()}.${imageType.extension}`;
+    const filePath = path.join(uploadDir, filename);
+    fs.writeFileSync(filePath, bytes);
+
+    const imageUrl = `/images/uploads/${filename}`;
     return NextResponse.json({ imageUrl });
   } catch (error) {
-    console.error("[Admin Service Image] Upload failed:", error);
+    console.error("[Admin Image Upload] Upload failed:", error);
     return NextResponse.json(
-      { error: "Image upload failed. Check the Firebase Storage bucket and service-account permissions." },
+      { error: "Image upload failed. Check the server permissions." },
       { status: 500 }
     );
   }

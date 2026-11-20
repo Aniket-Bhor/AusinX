@@ -16,7 +16,7 @@ import { defaultHeroMetrics, type HeroMetricsConfig } from "@/lib/site-images";
 
 const metricColorMap = {
   red: "text-[#EF4444]",
-  emerald: "text-[#10B981]",
+  emerald: "text-brand-accent-bright",
   amber: "text-[#F59E0B]",
 };
 
@@ -33,9 +33,9 @@ export default function HeroClient({
     ? (heroMetrics.items || []).filter((item) => item.visible !== false && item.stat?.trim())
     : [];
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#020617] text-white pt-10 pb-20 sm:pt-14 sm:pb-28">
+    <section className="relative overflow-hidden bg-gradient-to-b from-brand-primary via-brand-primary-light to-brand-primary-hover text-white pt-10 pb-20 sm:pt-14 sm:pb-28">
       {/* Glowing Background Radial Effects */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-[38rem] w-[38rem] rounded-full bg-[#059669]/20 blur-[130px] animate-orb" />
+      <div className="pointer-events-none absolute -top-40 -left-40 h-[38rem] w-[38rem] rounded-full bg-brand-accent/20 blur-[130px] animate-orb" />
       <div className="pointer-events-none absolute top-1/3 -right-40 h-[35rem] w-[35rem] rounded-full bg-[#F59E0B]/15 blur-[140px] animate-orb-delayed" />
 
       {/* Subtle grid pattern overlay */}
@@ -50,14 +50,14 @@ export default function HeroClient({
             <div className="space-y-4">
               <h1 className="motion-pop text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.08] font-heading">
                 High-Performance <br />
-                <span className="bg-gradient-to-r from-[#34D399] via-[#FBBF24] to-white bg-clip-text text-transparent animate-gradient-text">
-                  Biomedical &amp; Clinical
+                <span className="bg-gradient-to-r from-brand-accent-on-dark via-[#FBBF24] to-white bg-clip-text text-transparent animate-gradient-text">
+                  Industrial &amp; Biomedical
                 </span>{" "}
                 Engineering
               </h1>
 
               <p className="motion-pop motion-pop-delay-1 text-base sm:text-lg text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Keeping radiotherapy, diagnostic imaging, and critical healthcare systems operating with zero compromise.
+                Keeping diagnostic imaging, medical equipment, and critical healthcare systems operating with zero compromise.
               </p>
             </div>
 
@@ -65,11 +65,11 @@ export default function HeroClient({
             <div className="motion-pop motion-pop-delay-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
                 href="/contact"
-                className="btn-shine w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#059669] to-[#047857] hover:from-[#047857] hover:to-[#065F46] px-7 py-4 text-base font-bold text-white shadow-[0_10px_35px_rgba(5,150,105,0.45)] transition-all duration-300 hover:scale-105 active:scale-95 group"
+                className="btn-shine w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-brand-accent to-brand-accent-hover hover:from-brand-accent-hover hover:to-brand-primary-muted px-7 py-4 text-base font-bold text-white shadow-[0_10px_35px_color-mix(in_srgb,var(--brand-accent)_45%,transparent)] transition-all duration-300 hover:scale-105 active:scale-95 group"
               >
-                <MessageSquare className="h-5 w-5 text-emerald-200" />
+                <MessageSquare className="h-5 w-5 text-brand-accent-light" />
                 <span>Talk to our team</span>
-                <ArrowRight className="h-4 w-4 text-emerald-200 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-brand-accent-light group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
@@ -77,14 +77,14 @@ export default function HeroClient({
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 px-6 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:-translate-y-0.5 group"
               >
                 <span>Explore Modalities</span>
-                <ArrowRight className="h-4 w-4 text-[#34D399] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-brand-accent-on-dark group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
             {/* Trust Badges */}
             <div className="motion-pop motion-pop-delay-3 flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-4 text-xs font-medium text-slate-300">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[#34D399]" />
+                <CheckCircle2 className="h-4 w-4 text-brand-accent-on-dark" />
                 <span>OEM-Trained Engineers</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -107,15 +107,15 @@ export default function HeroClient({
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.95]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/85 via-[#0F172A]/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/85 via-brand-primary/20 to-transparent" />
 
               {/* Bottom Overlay Info Banner */}
               <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 rounded-2xl glass-card-dark p-4 shadow-xl border border-white/10">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#34D399] block">
-                  Diagnostic Imaging &amp; Oncology
+                <span className="text-[10px] uppercase font-bold tracking-widest text-brand-accent-on-dark block">
+                  Medical Imaging &amp; Industrial Equipment
                 </span>
                 <p className="text-sm font-semibold text-white mt-0.5">
-                  Radiotherapy Linacs, CT Suites, C-Arms &amp; X-Ray
+                  CT Suites, C-Arms, X-Ray &amp; Industrial Systems
                 </p>
               </div>
             </div>
@@ -127,15 +127,14 @@ export default function HeroClient({
         {/* Bottom High-Impact Metrics Ribbon (Optional & Editable in Admin) */}
         {visibleMetrics.length > 0 && (
           <div
-            className={`mt-16 sm:mt-20 pt-8 border-t border-white/10 grid gap-6 text-center ${
-              visibleMetrics.length === 1
+            className={`mt-16 sm:mt-20 pt-8 border-t border-white/10 grid gap-6 text-center ${visibleMetrics.length === 1
                 ? "grid-cols-1 max-w-sm mx-auto"
                 : visibleMetrics.length === 2
-                ? "grid-cols-2 max-w-2xl mx-auto"
-                : visibleMetrics.length === 3
-                ? "grid-cols-1 sm:grid-cols-3"
-                : "grid-cols-2 md:grid-cols-4"
-            }`}
+                  ? "grid-cols-2 max-w-2xl mx-auto"
+                  : visibleMetrics.length === 3
+                    ? "grid-cols-1 sm:grid-cols-3"
+                    : "grid-cols-2 md:grid-cols-4"
+              }`}
           >
             {visibleMetrics.map((metric) => (
               <div
@@ -143,9 +142,8 @@ export default function HeroClient({
                 className="group p-4 rounded-2xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/10"
               >
                 <div
-                  className={`text-3xl sm:text-4xl font-extrabold font-heading tracking-tight group-hover:scale-105 transition-transform ${
-                    metricColorMap[metric.color] || "text-[#10B981]"
-                  }`}
+                  className={`text-3xl sm:text-4xl font-extrabold font-heading tracking-tight group-hover:scale-105 transition-transform ${metricColorMap[metric.color] || "text-brand-accent-bright"
+                    }`}
                 >
                   {metric.stat}
                 </div>

@@ -25,6 +25,7 @@
 *.pem
 *.xlsx
 .data/
+public/images/uploads/
 
 # debug
 npm-debug.log*

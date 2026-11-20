@@ -25,17 +25,17 @@ export default async function WhyChooseUs() {
 
           {/* Left Column: Heading, Value Proposition & Real Visual Card */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#059669] text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-accent-light border border-brand-accent/20 text-brand-accent text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Trust &amp; Engineering Accountability</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight leading-[1.12] font-heading">
-              Why Australian Clinics Trust AusinX
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-primary tracking-tight leading-[1.12] font-heading">
+              Why Businesses &amp; Clinics Trust AusinX
             </h2>
 
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-              Downtime in clinical and radiation oncology environments has direct consequences for patient scheduling and treatment efficacy. We eliminate risk with proactive engineering.
+              Downtime in biomedical and industrial environments has direct consequences for operations and patient care. We eliminate risk with proactive engineering.
             </p>
 
             {/* Embedded Visual Feature Card */}
@@ -48,9 +48,9 @@ export default async function WhyChooseUs() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/90 via-brand-primary/30 to-transparent" />
                 <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#34D399]">
+                  <div className="flex items-center gap-2 text-xs font-bold text-brand-accent-on-dark">
                     <CheckCircle2 className="w-4 h-4" /> Direct Senior Engineer Accountability
                   </div>
                   <p className="text-xs text-slate-200 mt-0.5">
@@ -68,18 +68,18 @@ export default async function WhyChooseUs() {
               return (
                 <Reveal key={point.title} delay={index * 90} direction="scale">
                   <div
-                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-emerald-300 hover:bg-white hover:shadow-[0_16px_40px_rgba(7,153,154,0.14)] hover:-translate-y-1.5 transition-all duration-300 space-y-3"
+                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-brand-accent/40 hover:bg-white hover:shadow-[0_16px_40px_color-mix(in_srgb,var(--brand-accent)_14%,transparent)] hover:-translate-y-1.5 transition-all duration-300 space-y-3"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-12 h-12 rounded-2xl bg-[#0F172A] text-[#34D399] group-hover:bg-[#059669] group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">
+                      <div className="w-12 h-12 rounded-2xl bg-brand-primary text-brand-accent-on-dark group-hover:bg-brand-accent group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-[#059669] transition-colors">
+                      <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-brand-accent transition-colors">
                         0{index + 1}
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-[#0F172A] font-heading group-hover:text-[#059669] transition-colors">
+                    <h3 className="text-lg font-bold text-brand-primary font-heading group-hover:text-brand-accent transition-colors">
                       {point.title}
                     </h3>
 

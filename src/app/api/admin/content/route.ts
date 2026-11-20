@@ -21,6 +21,7 @@ const editableSections = new Set([
   "lifecycle",
   "siteImages",
   "heroMetrics",
+  "theme",
 ]);
 
 const initialDefaults: Record<string, unknown> = {
@@ -30,6 +31,7 @@ const initialDefaults: Record<string, unknown> = {
   lifecycle: initialLifecycleSteps,
   siteImages: defaultSiteImages,
   heroMetrics: defaultHeroMetrics,
+  theme: { themeId: "default" },
 };
 
 export async function GET(request: Request) {
@@ -194,6 +196,14 @@ export async function PUT(request: Request) {
     } else if (section === "siteImages") {
       revalidateTag("site-images", { expire: 0 });
     } else if (section === "heroMetrics") {
+      revalidateTag("hero-metrics", { expire: 0 });
+    } else if (section === "theme") {
+      revalidateTag("site-theme", { expire: 0 });
+      revalidateTag("services", { expire: 0 });
+      revalidateTag("site-settings", { expire: 0 });
+      revalidateTag("about-copy", { expire: 0 });
+      revalidateTag("lifecycle-steps", { expire: 0 });
+      revalidateTag("site-images", { expire: 0 });
       revalidateTag("hero-metrics", { expire: 0 });
     }
 

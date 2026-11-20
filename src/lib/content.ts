@@ -1,5 +1,6 @@
 import { cacheTag } from "next/cache";
 import { getLocalContentSection } from "@/lib/local-content-storage";
+import { PALETTES, type ThemePalette } from "@/lib/themes";
 import {
   defaultHeroMetrics,
   defaultSiteImages,
@@ -10,6 +11,10 @@ import {
 
 export type { HeroMetricItem, HeroMetricsConfig, SiteImages };
 export { defaultHeroMetrics, defaultSiteImages };
+
+export interface SiteThemeConfig {
+  themeId: string;
+}
 
 export interface SubService {
   title: string;
@@ -90,7 +95,7 @@ export const siteSettings: SiteSettings = {
 
 export const aboutCopy = {
   intro: [
-    "AusinX is a proudly Australian-owned and operated company providing a full range of services for medical equipment, healthcare products and industrial products. We support organisations across the entire equipment lifecycle, from the first planning conversation through to safe, compliant disposal.",
+    "AusinX provides a comprehensive, full-lifecycle range of engineering services for medical equipment, healthcare technology, and industrial products. We support organisations across the entire equipment lifecycle, from the first planning conversation through to safe, compliant disposal.",
     "Our team delivers complete, end-to-end solutions: planning, decommissioning, disposal, installation and commissioning. Whether you are fitting out a new clinical space, upgrading ageing technology or retiring equipment at end of life, we manage the detail so your teams can stay focused on patient care.",
     "We are committed to reliable parts supply, dependable logistics and exceptional service for the healthcare sector. We understand that downtime in a clinical and industrial environment has real consequences, so we work to keep your equipment available, accurate and performing as it should.",
   ],
@@ -176,12 +181,12 @@ export const servicesData: ServiceDetail[] = [
     navTitle: "Installation & Commissioning",
     contactValue: "Installation & Commissioning",
     title: "Installation & Commissioning",
-    shortSummary: "Careful planning, installation and commissioning, delivered to a high standard and handed over ready for use. Specialised in radiotherapy equipment and diagnostic equipment (CT/MRI).",
-    fullDescription: "Careful planning, installation and commissioning, delivered to a high standard and handed over ready for use. Specialised in radiotherapy equipment and diagnostic equipment (CT/MRI).",
+    shortSummary: "Careful planning, installation and commissioning, delivered to a high standard and handed over ready for use. Specialised in medical imaging equipment and industrial systems.",
+    fullDescription: "Careful planning, installation and commissioning, delivered to a high standard and handed over ready for use. Specialised in medical imaging equipment and industrial systems.",
     keyHighlights: [
-      "Specialised in Radiotherapy equipment",
+      "Specialised in Medical Imaging equipment",
       "Diagnostic equipment expertise (CT/MRI)",
-      "Strict compliance with Australian clinical standards",
+      "Strict compliance with Australian standards",
       "Full lifecycle support from planning to disposal",
     ],
     subServices: [
@@ -194,10 +199,10 @@ export const servicesData: ServiceDetail[] = [
         description: "Support at both ends of the lifecycle, from the first plan to safe, compliant retirement of equipment.",
       },
     ],
-    image: "/images/client/specialist-linac.jpeg",
-    imageAlt: "Radiotherapy linear accelerator and oncology gantry installation",
-    metaTitle: "Installation & Commissioning | Radiotherapy & CT/MRI Specialists | AusinX Solutions",
-    metaDescription: "Precision installation, commissioning, planning, and compliant decommissioning for radiotherapy equipment and diagnostic systems (CT/MRI) across Australia.",
+    image: "/images/client/imaging-suite.jpeg",
+    imageAlt: "Medical imaging suite installation and commissioning",
+    metaTitle: "Installation & Commissioning | Medical Imaging & Industrial Specialists | AusinX Solutions",
+    metaDescription: "Precision installation, commissioning, planning, and compliant decommissioning for medical imaging and industrial systems across Australia.",
   },
   {
     slug: "parts-logistics",
@@ -300,10 +305,10 @@ export async function getAboutCopy(): Promise<typeof aboutCopy> {
 }
 
 const clientServiceImages: Record<string, { image: string; imageAlt: string }> = {
-  "service-maintenance": { image: "/images/client/biomedical-service.jpeg", imageAlt: "Biomedical engineer servicing clinical equipment" },
-  "installation-commissioning": { image: "/images/client/specialist-linac.jpeg", imageAlt: "Radiotherapy linear accelerator and oncology gantry installation" },
-  "parts-logistics": { image: "/images/client/parts-logistics.jpeg", imageAlt: "AusinX medical spare parts warehouse and logistics facility" },
-  calibration: { image: "/images/client/calibration-lab.jpeg", imageAlt: "Precision calibration test bench and electronic diagnostic instrumentation" },
+  "service-maintenance": { image: "/images/client/service-maintenance-new.jpeg", imageAlt: "Biomedical engineering service workbench with diagnostic equipment" },
+  "installation-commissioning": { image: "/images/client/imaging-suite.jpeg", imageAlt: "Medical imaging suite installation and commissioning" },
+  "parts-logistics": { image: "/images/client/parts-no-faces.jpeg", imageAlt: "AusinX parts warehouse with organized shelving and components" },
+  calibration: { image: "/images/client/calibration-new.jpeg", imageAlt: "Precision calibration laboratory with measurement instruments" },
 };
 
 function normalizeServiceImages(services: ServiceDetail[]): ServiceDetail[] {
@@ -468,5 +473,33 @@ export async function getHeroMetrics(): Promise<HeroMetricsConfig> {
     // Fallback to default hero metrics
   }
   return defaultHeroMetrics;
+}
+
+export async function getTheme(): Promise<ThemePalette> {
+  "use cache";
+  cacheTag("site-theme");
+
+  const local = getLocalContentSection("theme") as { themeId?: string } | null;
+  if (local && typeof local === "object" && typeof local.themeId === "string") {
+    if (PALETTES[local.themeId]) {
+      return PALETTES[local.themeId];
+    }
+  }
+
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/theme.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data.themeId === "string" && PALETTES[data.themeId]) {
+        return PALETTES[data.themeId];
+      }
+    }
+  } catch {
+    // Fallback to default
+  }
+
+  return PALETTES.default;
 }
 

@@ -38,9 +38,9 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-brand-primary flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-4">
-        <div className="w-16 h-16 rounded-full bg-white p-1 mx-auto shadow-lg flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-surface p-1 mx-auto shadow-lg flex items-center justify-center">
           <Image
             src="/images/client/ausinx-logo-cropped.png"
             alt="AusinX Solutions"
@@ -62,12 +62,12 @@ export default function AdminLoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="bg-[#0F172A] py-8 px-6 sm:px-10 shadow-2xl rounded-3xl border border-slate-700 space-y-6">
-          <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-start gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+        <div className="bg-brand-primary py-8 px-6 sm:px-10 shadow-2xl rounded-3xl border border-slate-700 space-y-6">
+          <div className="p-3.5 rounded-xl bg-brand-accent/10 border border-brand-accent/20 text-xs text-brand-accent-on-dark flex items-start gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-brand-accent-bright shrink-0 mt-0.5" />
             <div className="leading-relaxed">
               <strong>Authorized Personnel Only</strong>
-              <p className="text-emerald-200/80 mt-0.5">
+              <p className="text-brand-accent-on-dark/80 mt-0.5">
                 Restricted to AusinX management team (Sudhir, Shibu, Bhagwan).
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Asuinx@admin or staff email"
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-brand-primary border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-brand-accent focus:ring-1 focus:ring-brand-accent outline-none"
                 />
               </div>
             </div>
@@ -122,8 +122,8 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#0F172A] border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-[#059669] focus:ring-1 focus:ring-[#059669] outline-none"
+                  placeholder="••••••••••••"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-brand-primary border border-slate-600 text-white placeholder-slate-500 text-sm focus:border-brand-accent focus:ring-1 focus:ring-brand-accent outline-none"
                 />
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-md disabled:opacity-50 mt-2"
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-brand-primary font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50 mt-2"
             >
               {loading ? (
                 <>

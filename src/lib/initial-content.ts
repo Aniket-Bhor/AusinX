@@ -1,6 +1,6 @@
 export const initialSiteSettings = {
   companyName: "AusinX Solutions Pty Ltd",
-  tagline: "Biomedical & Industrial Equipment Solutions",
+  tagline: "Industrial & Biomedical Engineering Solutions",
   taglineReviewNote: "Australian-owned and operated partner across the full equipment lifecycle.",
   heroSupportingText: "Australian-owned and operated. We support medical equipment, healthcare products and industrial products through their full lifecycle: planning, decommissioning, disposal, installation and commissioning.",
   address: {
@@ -22,9 +22,9 @@ export const initialSiteSettings = {
 
 export const initialAboutCopy = {
   intro: [
-    "AusinX is a proudly Australian-owned and operated company providing a full range of services for medical equipment, healthcare products and industrial products. We support organisations across the entire equipment lifecycle, from the first planning conversation through to safe, compliant disposal.",
+    "AusinX provides a comprehensive, full-lifecycle range of engineering services for medical equipment, healthcare technology, and industrial products. We support organisations across the entire equipment lifecycle, from the first planning conversation through to safe, compliant disposal.",
     "Our team delivers complete, end-to-end solutions: planning, decommissioning, disposal, installation and commissioning. Whether you are fitting out a new clinical space, upgrading ageing technology or retiring equipment at end of life, we manage the detail so your teams can stay focused on patient care.",
-    "We are committed to reliable parts supply, dependable logistics and exceptional service for the healthcare sector. We understand that downtime in a clinical and industrial environment has real consequences, so we work to keep your equipment available, accurate and performing as it should.",
+    "We are committed to reliable parts supply, dependable logistics and exceptional service for the biomedical and industrial sectors. We understand that downtime in a biomedical and industrial environment has real consequences, so we work to keep your equipment available, accurate and performing as it should.",
   ],
   whyChooseUs: [
     {
@@ -50,17 +50,17 @@ export const initialLifecycleSteps = [
   {
     step: "01",
     title: "Planning & Sourcing",
-    description: "Collaborative consultation and technical evaluation to align equipment specifications with clinical workflows and facility standards.",
+    description: "Collaborative consultation and technical evaluation to align equipment specifications with operational workflows and facility standards.",
   },
   {
     step: "02",
     title: "Installation & Commissioning",
-    description: "Expert engineering installation delivered on schedule, compliant with strict Australian healthcare standards and ready for clinical use.",
+    description: "Expert engineering installation delivered on schedule, compliant with strict Australian healthcare and industrial standards and ready for operational use.",
   },
   {
     step: "03",
     title: "Service & Maintenance",
-    description: "Scheduled preventive maintenance, proactive equipment analysis, and rapid emergency repairs to maximize clinical uptime.",
+    description: "Scheduled preventive maintenance, proactive equipment analysis, and rapid emergency repairs to maximize equipment uptime.",
   },
   {
     step: "04",
@@ -80,8 +80,8 @@ export const initialServicesData = [
     navTitle: "Service & Maintenance",
     contactValue: "Service & Maintenance",
     title: "Service & Maintenance Support",
-    shortSummary: "Responsive, skilled support that keeps essential equipment running and minimises disruption to clinical operations. Reduce downtime to hospital and clinical departments.",
-    fullDescription: "Responsive, skilled support that keeps essential equipment running and minimises disruption to clinical operations. Reduce downtime to hospital and clinical departments. Service and maintenance support: preventive maintenance, proactive analysis of equipment, remote support for quick response.",
+    shortSummary: "Responsive, skilled support that keeps essential equipment running and minimises disruption to operations. Reduce downtime across hospital and industrial departments.",
+    fullDescription: "Responsive, skilled support that keeps essential equipment running and minimises disruption to operations. Reduce downtime across hospital and industrial departments. Service and maintenance support: preventive maintenance, proactive analysis of equipment, remote support for quick response.",
     keyHighlights: [
       "Preventive maintenance scheduling",
       "Proactive analysis of equipment",
@@ -102,8 +102,8 @@ export const initialServicesData = [
         description: "Direct line to trained engineers who can diagnose issues remotely or arrange rapid on-site attendance.",
       },
     ],
-    image: "/images/client/biomedical-service.jpeg",
-    imageAlt: "Biomedical engineer servicing clinical equipment",
+    image: "/images/client/service-maintenance-new.jpeg",
+    imageAlt: "Biomedical engineering service workbench with diagnostic equipment",
     metaTitle: "Medical Equipment Service & Maintenance | AusinX Solutions",
     metaDescription: "Preventive maintenance, repairs and technical support for medical equipment across Australia. Minimise downtime with AusinX.",
   },
@@ -112,32 +112,36 @@ export const initialServicesData = [
     navTitle: "Installation & Commissioning",
     contactValue: "Installation & Commissioning",
     title: "Installation & Commissioning",
-    shortSummary: "Turnkey delivery, mechanical anchoring, electrical verification, and OEM-standard commissioning for clinical imaging suites and medical modalities.",
-    fullDescription: "From initial room readiness and pre-installation site surveys through to physical delivery, mechanical anchoring, electrical hookup, radiation shielding alignment, and final calibration. AusinX ensures every piece of healthcare equipment meets strict Australian standards.",
+    shortSummary: "Turnkey delivery, mechanical anchoring, electrical verification, and OEM-standard commissioning for medical imaging suites and industrial modalities.",
+    fullDescription: "Comprehensive support throughout the equipment lifecycle, from initial planning and installation, ongoing maintenance and safe decommissioning. AusinX specialises in medical and industrial equipment — from site readiness and pre-installation site surveys through to physical delivery, mechanical anchoring, electrical hookup, and final calibration, ensuring every piece of equipment meets strict Australian standards.",
     keyHighlights: [
       "Site readiness inspection and pre-installation reviews",
-      "Mechanical rigging, gantry positioning, and seismic anchoring",
+      "Mechanical rigging, positioning, and anchoring",
       "OEM protocol verification and functional safety signoff",
-      "Clinical handoff and operational verification",
+      "Clinical and industrial handoff and operational verification",
     ],
     subServices: [
       {
         title: "Pre-Installation Planning",
-        description: "Site visits and architectural reviews to verify structural, electrical, and shielding requirements before delivery.",
+        description: "Site visits and reviews to verify structural, electrical, and technical requirements before delivery.",
       },
       {
         title: "Rigging & Delivery",
-        description: "Specialist logistics and careful handling of sensitive medical electronics through hospital corridors and cleanrooms.",
+        description: "Specialist logistics and careful handling of sensitive medical and industrial electronics.",
       },
       {
         title: "OEM Calibration & Sign-Off",
-        description: "Comprehensive commissioning tests according to manufacturer and Australian healthcare compliance standards.",
+        description: "Comprehensive commissioning tests according to manufacturer and Australian compliance standards.",
+      },
+      {
+        title: "Planning, Commissioning & Disposal",
+        description: "Comprehensive support throughout the equipment lifecycle, from initial planning and installation, ongoing maintenance and safe decommissioning.",
       },
     ],
-    image: "/images/client/specialist-linac.jpeg",
-    imageAlt: "Radiotherapy linear accelerator and oncology gantry installation",
+    image: "/images/client/imaging-suite.jpeg",
+    imageAlt: "Medical imaging suite installation and commissioning",
     metaTitle: "Medical Equipment Installation & Commissioning | AusinX",
-    metaDescription: "Professional installation and commissioning for medical equipment and clinical facilities across Australia.",
+    metaDescription: "Professional installation and commissioning for medical and industrial equipment across Australia. Specialised in medical imaging and industrial equipment.",
   },
   {
     slug: "parts-logistics",
@@ -162,8 +166,8 @@ export const initialServicesData = [
         description: "Predictable, recurring supply for high-turnover accessories, filters, electrodes, and probes.",
       },
     ],
-    image: "/images/client/parts-logistics.jpeg",
-    imageAlt: "AusinX medical spare parts warehouse and logistics facility",
+    image: "/images/client/parts-no-faces.jpeg",
+    imageAlt: "AusinX parts warehouse with organized shelving and components",
     metaTitle: "Medical Spare Parts & Logistics Supply | AusinX Solutions",
     metaDescription: "Dependable supply and express logistics for genuine medical equipment parts across Australia.",
   },
@@ -190,8 +194,8 @@ export const initialServicesData = [
         description: "Ultrasound probe acoustic and electronic verification using standardized tissue-mimicking phantoms.",
       },
     ],
-    image: "/images/client/calibration-lab.jpeg",
-    imageAlt: "Precision calibration test bench and electronic diagnostic instrumentation",
+    image: "/images/client/calibration-new.jpeg",
+    imageAlt: "Precision calibration laboratory with measurement instruments",
     metaTitle: "Medical Equipment Calibration & AS/NZS 3551 Testing | AusinX",
     metaDescription: "Precision biomedical calibration, electrical safety testing, and compliance documentation by certified AusinX engineers.",
   },

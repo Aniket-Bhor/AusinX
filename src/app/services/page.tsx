@@ -43,15 +43,15 @@ export default async function ServicesPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Services Header Banner */}
-      <section className="bg-[#F8FAFC] text-[#0F172A] py-16 sm:py-24 border-b border-slate-200">
+      <section className="bg-surface-subtle text-brand-primary py-16 sm:py-24 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white text-[#047857] text-xs font-semibold border border-[#CEE8E5]">
-              <ShieldCheck className="w-4 h-4 text-[#059669]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white text-brand-accent-hover text-xs font-semibold border border-brand-accent/20">
+              <ShieldCheck className="w-4 h-4 text-brand-accent" />
               <span>Australian Healthcare & Industrial Engineering</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#0F172A] tracking-tight leading-tight font-heading">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-brand-primary tracking-tight leading-tight font-heading">
               Services for the full equipment lifecycle
             </h1>
 
@@ -78,9 +78,8 @@ export default async function ServicesPage() {
                 >
                   {/* Service Visual */}
                   <div
-                    className={`lg:col-span-5 relative min-h-[320px] lg:min-h-[420px] w-full bg-slate-100 ${
-                      isEven ? "lg:order-last" : ""
-                    }`}
+                    className={`lg:col-span-5 relative min-h-[320px] lg:min-h-[420px] w-full bg-slate-100 ${isEven ? "lg:order-last" : ""
+                      }`}
                   >
 
                     <Image
@@ -90,9 +89,9 @@ export default async function ServicesPage() {
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 42vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/20 via-transparent to-transparent lg:hidden" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/20 via-transparent to-transparent lg:hidden" />
                     <div className="absolute top-4 left-4">
-                      <div className="w-12 h-12 rounded-xl bg-white/95 text-[#047857] flex items-center justify-center shadow-lg">
+                      <div className="w-12 h-12 rounded-xl bg-white/95 text-brand-accent-hover flex items-center justify-center shadow-lg">
                         <Icon className="w-6 h-6" />
                       </div>
                     </div>
@@ -102,12 +101,12 @@ export default async function ServicesPage() {
                   <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-between space-y-6">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                        <span className="text-xs font-bold uppercase tracking-wider text-brand-accent-hover bg-brand-accent-light px-2.5 py-1 rounded-md border border-brand-accent/20">
                           Pillar 0{index + 1}
                         </span>
                       </div>
 
-                      <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] font-heading">
+                      <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-primary font-heading">
                         {service.title}
                       </h2>
 
@@ -124,11 +123,11 @@ export default async function ServicesPage() {
                           {service.subServices.map((sub) => (
                             <div
                               key={sub.title}
-                              className="p-3.5 rounded-xl bg-[#F1F5F9] border border-slate-200/80 space-y-1"
+                              className="p-3.5 rounded-xl bg-bg-tint border border-slate-200/80 space-y-1"
                             >
                               <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-[#059669] shrink-0" />
-                                <strong className="text-sm text-[#0F172A] font-semibold">
+                                <CheckCircle2 className="w-4 h-4 text-brand-accent shrink-0" />
+                                <strong className="text-sm text-brand-primary font-semibold">
                                   {sub.title}
                                 </strong>
                               </div>
@@ -145,15 +144,15 @@ export default async function ServicesPage() {
                     <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                       <Link
                         href={`/services/${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F172A] text-white font-bold text-sm hover:bg-[#020617] transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-brand-primary text-white font-bold text-sm hover:bg-brand-primary-hover transition-colors shadow-sm"
                       >
                         <span>Detailed Specifications</span>
-                        <ArrowRight className="w-4 h-4 text-[#059669]" />
+                        <ArrowRight className="w-4 h-4 text-brand-accent" />
                       </Link>
 
                       <Link
                         href={`/contact?service=${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#059669] text-[#0F172A] font-bold text-sm hover:bg-[#047857] transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent text-brand-primary font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-sm"
                       >
                         <span>Make an Enquiry</span>
                       </Link>
@@ -167,13 +166,13 @@ export default async function ServicesPage() {
       </section>
 
       {/* Equipment Lifecycle Strip Overview */}
-      <section className="py-16 bg-[#F8FAFC] text-[#0F172A] border-y border-slate-200/80">
+      <section className="py-16 bg-surface-subtle text-brand-primary border-y border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#047857] bg-white px-3 py-1 rounded-full border border-[#CEE8E5] inline-block mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-accent-hover bg-white px-3 py-1 rounded-full border border-brand-accent/20 inline-block mb-3">
               Full Lifecycle Support
             </span>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-[#0F172A] font-heading">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-brand-primary font-heading">
               Lifecycle Integration for Healthcare Facilities
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -187,10 +186,10 @@ export default async function ServicesPage() {
                 key={step.step}
                 className="p-5 rounded-2xl bg-white border border-slate-200 space-y-2"
               >
-                <span className="text-xs font-mono font-bold text-emerald-400">
+                <span className="text-xs font-mono font-bold text-brand-accent-on-dark">
                   Step {step.step}
                 </span>
-                <h3 className="text-base font-bold text-[#0F172A] font-heading">
+                <h3 className="text-base font-bold text-brand-primary font-heading">
                   {step.title}
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">

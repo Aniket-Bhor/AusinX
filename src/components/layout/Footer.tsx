@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import type { SiteSettings } from "@/lib/content";
 import CurrentYear from "@/components/layout/CurrentYear";
+import Logo from "@/components/ui/Logo";
 
 interface ServiceNavItem {
   slug: string;
@@ -12,39 +12,36 @@ interface ServiceNavItem {
 export default function Footer({
   services,
   siteSettings,
-  logoUrl = "/images/client/ausinx-logo-brand-clean.png",
+  logoUrl,
 }: {
   services: ServiceNavItem[];
   siteSettings: SiteSettings;
   logoUrl?: string;
 }) {
   return (
-    <footer className="border-t border-slate-200 bg-[#F7FAFA] text-slate-600">
+    <footer className="border-t border-slate-200 bg-surface-subtle text-slate-600">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="space-y-4 lg:col-span-2">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <span className="relative block h-[88px] w-[250px]">
-              <Image src={logoUrl} alt="AusinX Biomedical and Industrial Engineering Solutions" fill sizes="250px" className="object-contain" />
-            </span>
+          <Link href="/" aria-label="AusinX home" className="inline-flex items-center">
+            <Logo src={logoUrl} className="h-14 w-[240px] sm:w-[260px]" />
           </Link>
-          <p className="max-w-md text-sm leading-7 text-slate-600">AusinX is a proudly Australian-owned and operated company supporting medical and industrial equipment across its full lifecycle.</p>
-          <span className="inline-flex rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">Australian owned and operated</span>
+          <p className="max-w-md text-sm leading-7 text-slate-600">Specialist engineering partner delivering complete lifecycle solutions, precision calibration, and responsive maintenance for medical and industrial equipment.</p>
         </div>
 
         <div>
-          <h2 className="mb-4 text-sm font-semibold text-[#0F172A]">Services</h2>
+          <h2 className="mb-4 text-sm font-semibold text-brand-primary">Services</h2>
           <ul className="space-y-3 text-sm">
-            {services.map(({ slug, navTitle }) => <li key={slug}><Link href={`/services/${slug}`} className="transition-colors hover:text-[#059669]">{navTitle}</Link></li>)}
-            <li><Link href="/services" className="font-medium text-[#059669] hover:underline">All services</Link></li>
+            {services.map(({ slug, navTitle }) => <li key={slug}><Link href={`/services/${slug}`} className="transition-colors hover:text-brand-accent">{navTitle}</Link></li>)}
+            <li><Link href="/services" className="font-medium text-brand-accent hover:underline">All services</Link></li>
           </ul>
         </div>
 
         <div>
-          <h2 className="mb-4 text-sm font-semibold text-[#0F172A]">Contact</h2>
+          <h2 className="mb-4 text-sm font-semibold text-brand-primary">Contact</h2>
           <ul className="space-y-3 text-sm">
-            <li className="flex gap-2.5"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#059669]" /><span>{siteSettings.address.formatted}</span></li>
-            <li><a href={`mailto:${siteSettings.publicEmail}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-[#059669]"><Mail className="h-4 w-4 text-[#059669]" />{siteSettings.publicEmail}</a></li>
-            {siteSettings.phones.slice(0, 2).map((phone) => <li key={phone.raw}><a href={`tel:${phone.raw}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-[#059669]"><Phone className="h-4 w-4 text-[#059669]" />{phone.display}</a></li>)}
+            <li className="flex gap-2.5"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" /><span>{siteSettings.address.formatted}</span></li>
+            <li><a href={`mailto:${siteSettings.publicEmail}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-brand-accent"><Mail className="h-4 w-4 text-brand-accent" />{siteSettings.publicEmail}</a></li>
+            {siteSettings.phones.slice(0, 2).map((phone) => <li key={phone.raw}><a href={`tel:${phone.raw}`} className="inline-flex items-center gap-2.5 transition-colors hover:text-brand-accent"><Phone className="h-4 w-4 text-brand-accent" />{phone.display}</a></li>)}
           </ul>
         </div>
       </div>
@@ -56,12 +53,12 @@ export default function Footer({
               href="https://thefifthelements.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-slate-700 hover:text-[#059669] transition-colors"
+              className="font-medium text-slate-700 hover:text-brand-accent transition-colors"
             >
               thefifthelements.com
             </a>
           </span>
-          <div className="flex gap-5"><Link href="/about" className="hover:text-[#059669]">About</Link><Link href="/contact" className="hover:text-[#059669]">Contact</Link><Link href="/privacy" className="hover:text-[#059669]">Privacy policy</Link></div>
+          <div className="flex gap-5"><Link href="/about" className="hover:text-brand-accent">About</Link><Link href="/contact" className="hover:text-brand-accent">Contact</Link><Link href="/privacy" className="hover:text-brand-accent">Privacy policy</Link></div>
         </div>
       </div>
     </footer>

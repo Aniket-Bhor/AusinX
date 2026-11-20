@@ -3,7 +3,8 @@ import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/seo/JsonLd";
 import LayoutClientWrapper from "@/components/layout/LayoutClientWrapper";
-import { getServices, getSiteImages, getSiteSettings } from "@/lib/content";
+import { getServices, getSiteImages, getSiteSettings, getTheme } from "@/lib/content";
+import { getPaletteCss } from "@/lib/themes";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | AusinX Solutions",
   },
   description:
-    "AusinX is a proudly Australian-owned and operated engineering company providing full lifecycle service, installation, parts supply, and precision calibration for radiotherapy, diagnostic imaging (CT/MRI), and critical biomedical equipment.",
+    "AusinX provides full lifecycle service, installation, parts supply, and precision calibration for medical equipment, diagnostic imaging (CT/MRI), and industrial electronics across Australia.",
   metadataBase: new URL("https://www.ausinx.com.au"),
   alternates: {
     canonical: "https://www.ausinx.com.au",
@@ -72,11 +73,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const theme = await getTheme();
+  const themeCss = getPaletteCss(theme);
+
   return (
     <html
       lang="en"
@@ -85,8 +89,9 @@ export default function RootLayout({
     >
       <head>
         <JsonLd />
+        {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
       </head>
-      <body className="min-h-full flex flex-col bg-white text-[#0F172A]">
+      <body className="min-h-full flex flex-col bg-surface text-brand-primary">
         <SiteChrome>{children}</SiteChrome>
       </body>
     </html>

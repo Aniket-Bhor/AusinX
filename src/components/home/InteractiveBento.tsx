@@ -8,16 +8,16 @@ import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
 
 const getModalities = (siteImages: SiteImages) => [
   {
-    title: "Computed Tomography & Radiotherapy",
+    title: "Computed Tomography (CT) Systems",
     category: "Diagnostic Imaging",
     description:
-      "Full-scope preventive maintenance, mechanical gantry overhauls, detector calibration, and radiation safety verification.",
+      "Full-scope preventive maintenance, mechanical gantry overhauls, detector calibration, and imaging precision verification.",
     image: siteImages.bentoCt,
     imageAlt: "Modern CT Diagnostic Suite maintained by AusinX",
     pills: [
       { label: "OEM Calibrated", type: "neutral" },
       { label: "Emergency Breakdown", type: "accent" },
-      { label: "Shielding Verification", type: "neutral" },
+      { label: "Precision Imaging QA", type: "neutral" },
     ],
   },
   {
@@ -68,20 +68,20 @@ export default function InteractiveBento({
 }) {
   const modalities = getModalities(siteImages);
   return (
-    <section className="py-20 sm:py-24 bg-[#F8FAFC]">
+    <section className="py-20 sm:py-24 bg-surface-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
         <div className="max-w-3xl space-y-3 mb-14 text-center mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#059669] text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-accent-light border border-brand-accent/20 text-brand-accent text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Multi-Modality Engineering Excellence</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight font-heading">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-primary tracking-tight font-heading">
             Built for High-Consequence Healthcare
           </h2>
           <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            Specialist engineering capabilities across Australiaâ€™s most demanding radiotherapy, diagnostic, and clinical environments.
+            Specialist engineering capabilities across Australia&apos;s most demanding diagnostic, medical, and industrial environments.
           </p>
         </div>
 
@@ -90,7 +90,7 @@ export default function InteractiveBento({
           {modalities.map((item, index) => (
             <Reveal key={item.title} delay={index * 110} direction="scale">
               <div
-                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_rgba(7,153,154,0.18)] hover:border-emerald-300/80 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
+                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_color-mix(in_srgb,var(--brand-accent)_18%,transparent)] hover:border-brand-accent/40 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
               >
                 {/* Image Section */}
                 <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
@@ -101,11 +101,11 @@ export default function InteractiveBento({
                     className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/90 via-brand-primary/30 to-transparent" />
 
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#0F172A] text-xs font-bold uppercase tracking-wider shadow-sm transition-transform duration-300 group-hover:scale-105 inline-block">
+                    <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-brand-primary text-xs font-bold uppercase tracking-wider shadow-sm transition-transform duration-300 group-hover:scale-105 inline-block">
                       {item.category}
                     </span>
                   </div>
@@ -127,7 +127,7 @@ export default function InteractiveBento({
                     <span
                       key={pill.label}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-transform duration-200 group-hover:translate-y-[-1px] ${pill.type === "accent"
-                          ? "bg-emerald-50 text-[#059669] border border-emerald-100"
+                          ? "bg-brand-accent-light text-brand-accent border border-brand-accent/20"
                           : "bg-slate-100 text-slate-700"
                         }`}
                     >
