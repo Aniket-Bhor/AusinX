@@ -65,8 +65,30 @@ export default function AdminDashboardPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "enquiries" | "services" | "images" | "settings" | "home"
+    "enquiries" | "home" | "services" | "images" | "theme" | "settings"
   >("enquiries");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Warn before leaving page with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  const switchTab = (tab: "enquiries" | "home" | "services" | "images" | "theme" | "settings") => {
+    if (hasUnsavedChanges && activeTab !== tab) {
+      const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to switch tabs without saving?");
+      if (!confirmLeave) return;
+      setHasUnsavedChanges(false);
+    }
+    setActiveTab(tab);
+  };
 
   // Notifications / feedback
   const [feedback, setFeedback] = useState<{
@@ -278,9 +300,10 @@ export default function AdminDashboardPage() {
       ]);
 
       if (resSettings.ok && resImages.ok) {
-        showFeedback("success", "Site settings and brand logo updated successfully.");
+        setHasUnsavedChanges(false);
+        showFeedback("success", "Business info and logo saved successfully. The website has been updated.");
       } else {
-        showFeedback("error", "Failed to save site settings.");
+        showFeedback("error", "Failed to save business info. Please try again.");
       }
     } catch {
       showFeedback("error", "Network error saving site settings.");
@@ -306,7 +329,8 @@ export default function AdminDashboardPage() {
       if (res.ok) {
         setSelectedThemeId(targetThemeId);
         setActiveThemeId(targetThemeId);
-        showFeedback("success", `Palette applied successfully: ${PALETTES[targetThemeId]?.name || targetThemeId}`);
+        setHasUnsavedChanges(false);
+        showFeedback("success", `Color theme "${PALETTES[targetThemeId]?.name || targetThemeId}" is now active on your website.`);
       } else {
         const result = await res.json().catch(() => null);
         showFeedback("error", result?.error || "Failed to save theme palette.");
@@ -332,7 +356,8 @@ export default function AdminDashboardPage() {
         }),
       });
       if (res.ok) {
-        showFeedback("success", "Services are live on the customer website.");
+        setHasUnsavedChanges(false);
+        showFeedback("success", "Services updated successfully. They are live on your website.");
       } else {
         const result = await res.json().catch(() => null);
         showFeedback("error", result?.error || "Failed to save services.");
@@ -433,7 +458,8 @@ export default function AdminDashboardPage() {
           body: JSON.stringify({ section: "heroMetrics", data: heroMetricsData }),
         }),
       ]);
-      showFeedback("success", "Home, Hero Stats & Lifecycle saved to live site.");
+      showFeedback("success", "Home page settings, stats, and workflow steps saved successfully.");
+      setHasUnsavedChanges(false);
     } catch {
       showFeedback("error", "Error saving home sections.");
     } finally {
@@ -489,7 +515,8 @@ export default function AdminDashboardPage() {
         }),
       });
       if (res.ok) {
-        showFeedback("success", "Website images published to live site.");
+        setHasUnsavedChanges(false);
+        showFeedback("success", "All website images saved successfully.");
       } else {
         const result = await res.json().catch(() => null);
         showFeedback("error", result?.error || "Failed to save website images.");
@@ -568,72 +595,38 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider overflow-x-auto">
-          <button
-            onClick={() => setActiveTab("enquiries")}
-            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-              activeTab === "enquiries"
-                ? "border-brand-accent text-brand-accent-on-dark"
-                : "border-transparent text-slate-400 hover:text-white"
-            }`}
-          >
-            <Inbox className="w-4 h-4" />
-            <span>Enquiries</span>
-            {enquiries.filter((e) => e.status === "new").length > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#EF4444] text-white text-[10px] font-black">
-                {enquiries.filter((e) => e.status === "new").length}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => setActiveTab("home")}
-            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-              activeTab === "home"
-                ? "border-brand-accent text-brand-accent-on-dark"
-                : "border-transparent text-slate-400 hover:text-white"
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>Home &amp; Stats</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("services")}
-            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-              activeTab === "services"
-                ? "border-brand-accent text-brand-accent-on-dark"
-                : "border-transparent text-slate-400 hover:text-white"
-            }`}
-          >
-            <Wrench className="w-4 h-4" />
-            <span>Services</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("images")}
-            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-              activeTab === "images"
-                ? "border-brand-accent text-brand-accent-on-dark"
-                : "border-transparent text-slate-400 hover:text-white"
-            }`}
-          >
-            <ImageIcon className="w-4 h-4" />
-            <span>Images</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("settings")}
-            className={`py-3 px-3 sm:px-4 border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-              activeTab === "settings"
-                ? "border-brand-accent text-brand-accent-on-dark"
-                : "border-transparent text-slate-400 hover:text-white"
-            }`}
-          >
-            <Settings className="w-4 h-4" />
-            <span>Company Info &amp; Logo</span>
-          </button>
+        {/* Mobile Top Navigation */}
+        <div className="lg:hidden max-w-7xl mx-auto px-4 flex space-x-1 border-t border-slate-800 text-xs font-bold tracking-wider overflow-x-auto">
+          {[
+            { id: "enquiries", label: "Enquiries", icon: Inbox, badge: enquiries.filter((e) => e.status === "new").length },
+            { id: "home", label: "Home Page", icon: Layers },
+            { id: "services", label: "Services", icon: Wrench },
+            { id: "images", label: "Images", icon: ImageIcon },
+            { id: "theme", label: "Colors & Theme", icon: Palette },
+            { id: "settings", label: "Business Info", icon: Building },
+          ].map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => switchTab(item.id as any)}
+                className={`py-3 px-3 border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap text-xs font-semibold ${
+                  isActive
+                    ? "border-brand-accent text-brand-accent-on-dark"
+                    : "border-transparent text-slate-400 hover:text-white"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{item.label}</span>
+                {item.badge ? (
+                  <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-[#EF4444] text-white text-[10px] font-black">
+                    {item.badge}
+                  </span>
+                ) : null}
+              </button>
+            );
+          })}
         </div>
       </header>
 
@@ -657,13 +650,105 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col lg:flex-row gap-8 items-start">
+        {/* Left Desktop Sidebar */}
+        <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-white rounded-3xl p-4 border border-slate-200/90 shadow-sm sticky top-24 space-y-6">
+          <div className="space-y-1">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 px-3 block mb-2">
+              Website Management
+            </span>
+            {[
+              { id: "enquiries", label: "Enquiries", icon: Inbox, desc: "Customer messages", badge: enquiries.filter((e) => e.status === "new").length },
+              { id: "home", label: "Home Page", icon: Layers, desc: "Hero, stats & steps" },
+              { id: "services", label: "Services", icon: Wrench, desc: "Capabilities & scope" },
+              { id: "images", label: "Images", icon: ImageIcon, desc: "Photos & banners" },
+              { id: "theme", label: "Colors & Theme", icon: Palette, desc: "12 live palettes" },
+              { id: "settings", label: "Business Info", icon: Building, desc: "Contact, hours & logo" },
+            ].map((nav) => {
+              const Icon = nav.icon;
+              const isActive = activeTab === nav.id;
+              return (
+                <button
+                  key={nav.id}
+                  type="button"
+                  onClick={() => switchTab(nav.id as any)}
+                  className={`w-full text-left p-3 rounded-2xl flex items-center justify-between transition-all ${
+                    isActive
+                      ? "bg-brand-primary text-white shadow-md font-bold"
+                      : "text-slate-700 hover:bg-slate-100 hover:text-brand-primary font-medium"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                      isActive ? "bg-brand-accent text-white" : "bg-surface-subtle text-slate-600"
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm leading-tight">{nav.label}</div>
+                      <div className={`text-[11px] leading-tight ${isActive ? "text-slate-300" : "text-slate-400"}`}>
+                        {nav.desc}
+                      </div>
+                    </div>
+                  </div>
+                  {nav.badge ? (
+                    <span className="px-2 py-0.5 rounded-full bg-[#EF4444] text-white text-[11px] font-black">
+                      {nav.badge}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-brand-accent-light border border-brand-accent/20 text-xs text-brand-accent-hover space-y-1">
+            <div className="font-bold flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
+              <span>Client Helper</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              Edit any section, click <strong>Save changes</strong>, and your website updates immediately.
+            </p>
+          </div>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="flex-1 w-full min-w-0 space-y-6">
+          {/* Welcome / Help strip on Dashboard */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-brand-accent-light text-brand-accent flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-brand-primary">
+                  Tip: Edit a section, press Save changes, and your website updates immediately.
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  {hasUnsavedChanges ? (
+                    <span className="text-[#EF4444] font-bold">● You have unsaved changes in this tab</span>
+                  ) : (
+                    "All changes are saved and live on your public site"
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/"
+              target="_blank"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-200 bg-surface-subtle hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors shadow-2xs self-start sm:self-auto"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+              <span>Preview Live Site</span>
+            </Link>
+          </div>
         {/* Quick Overview Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <button
             type="button"
             onClick={() => {
-              setActiveTab("enquiries");
+              switchTab("enquiries");
               setEnquiryFilter("new");
             }}
             className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
@@ -683,7 +768,7 @@ export default function AdminDashboardPage() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("home")}
+            onClick={() => switchTab("home")}
             className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -707,7 +792,7 @@ export default function AdminDashboardPage() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("services")}
+            onClick={() => switchTab("services")}
             className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -725,7 +810,7 @@ export default function AdminDashboardPage() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("images")}
+            onClick={() => switchTab("images")}
             className="text-left rounded-2xl bg-white border border-slate-200 p-4 shadow-sm hover:border-brand-accent transition-all"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -1289,7 +1374,7 @@ export default function AdminDashboardPage() {
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  <span>Save & Publish Services</span>
+                  <span>Save changes</span>
                 </button>
               </div>
             </form>
@@ -1600,130 +1685,10 @@ export default function AdminDashboardPage() {
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  <span>Save Site Settings</span>
+                  <span>Save changes</span>
                 </button>
               </div>
             </form>
-
-            {/* Color Palette Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-accent-light text-brand-accent-hover text-[11px] font-bold border border-brand-accent/20">
-                    <Palette className="w-3 h-3" />
-                    <span>Theme Customization</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-brand-primary mt-1.5 font-heading">
-                    Color Palette &amp; Theme
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Choose an overarching color system for the customer website. Changes update headers, accents, buttons, and tints instantly.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleSaveTheme("default")}
-                  disabled={savingTheme}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-surface-subtle hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-sm disabled:opacity-50"
-                >
-                  <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Reset to Original</span>
-                </button>
-              </div>
-
-              {/* Swatch Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Object.values(PALETTES).map((palette: ThemePalette) => {
-                  const isSelected = selectedThemeId === palette.id;
-                  const isCurrentActive = activeThemeId === palette.id;
-
-                  // 5 Main colors: primary, accent, hover, bright, light
-                  const swatchColors = [
-                    palette.tokens["brand-primary"],
-                    palette.tokens["brand-accent"],
-                    palette.tokens["brand-accent-hover"],
-                    palette.tokens["brand-accent-bright"],
-                    palette.tokens["brand-accent-light"],
-                  ];
-
-                  return (
-                    <div
-                      key={palette.id}
-                      onClick={() => setSelectedThemeId(palette.id)}
-                      className={`cursor-pointer rounded-2xl border p-5 transition-all text-left relative ${
-                        isSelected
-                          ? "border-brand-accent ring-2 ring-brand-accent/20 bg-brand-accent-light/10 shadow-md"
-                          : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-brand-primary">
-                            {palette.name}
-                          </h3>
-                          {palette.id === "default" && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                              Locked
-                            </span>
-                          )}
-                          {isCurrentActive && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-accent text-white shadow-xs">
-                              Active Live
-                            </span>
-                          )}
-                        </div>
-                        <input
-                          type="radio"
-                          name="themeSelect"
-                          checked={isSelected}
-                          onChange={() => setSelectedThemeId(palette.id)}
-                          className="h-4 w-4 text-brand-accent focus:ring-brand-accent border-slate-300"
-                        />
-                      </div>
-
-                      {/* 5 Swatches preview */}
-                      <div className="flex items-center gap-1.5 h-8 rounded-xl overflow-hidden p-1 bg-surface-subtle border border-slate-100">
-                        {swatchColors.map((col, idx) => (
-                          <div
-                            key={idx}
-                            title={col}
-                            className="flex-1 h-full rounded-md shadow-xs border border-black/5"
-                            style={{ backgroundColor: col }}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-                        <span>{palette.tokens["brand-primary"]}</span>
-                        <span>{palette.tokens["brand-accent"]}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Apply Button */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs text-slate-500">
-                  Selected palette: <strong className="text-brand-primary font-bold">{PALETTES[selectedThemeId]?.name || selectedThemeId}</strong>
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() => handleSaveTheme()}
-                  disabled={savingTheme || selectedThemeId === activeThemeId}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50 cursor-pointer"
-                >
-                  {savingTheme ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Save className="w-4 h-4" />
-                  )}
-                  <span>Apply Palette</span>
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -2033,11 +1998,146 @@ export default function AdminDashboardPage() {
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
-                    <span>Save Home &amp; Stats</span>
+                    <span>Save changes</span>
                   </button>
                 </div>
               </div>
             </form>
+          </div>
+        )}
+
+
+        {/* TAB: COLORS & THEME */}
+        {activeTab === "theme" && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-extrabold text-brand-primary font-heading">
+                Colors &amp; Theme
+              </h1>
+              <p className="text-xs text-slate-500 mt-1">
+                Choose an overarching color system for your website. Changing the palette instantly updates the headers, accents, buttons, and tints across the entire public site.
+              </p>
+            </div>
+
+{/* Color Palette Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-accent-light text-brand-accent-hover text-[11px] font-bold border border-brand-accent/20">
+                    <Palette className="w-3 h-3" />
+                    <span>Theme Customization</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-brand-primary mt-1.5 font-heading">
+                    Color Palette &amp; Theme
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Choose an overarching color system for the customer website. Changes update headers, accents, buttons, and tints instantly.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleSaveTheme("default")}
+                  disabled={savingTheme}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-surface-subtle hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-sm disabled:opacity-50"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Reset to Original</span>
+                </button>
+              </div>
+
+              {/* Swatch Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {Object.values(PALETTES).map((palette: ThemePalette) => {
+                  const isSelected = selectedThemeId === palette.id;
+                  const isCurrentActive = activeThemeId === palette.id;
+
+                  // 5 Main colors: primary, accent, hover, bright, light
+                  const swatchColors = [
+                    palette.tokens["brand-primary"],
+                    palette.tokens["brand-accent"],
+                    palette.tokens["brand-accent-hover"],
+                    palette.tokens["brand-accent-bright"],
+                    palette.tokens["brand-accent-light"],
+                  ];
+
+                  return (
+                    <div
+                      key={palette.id}
+                      onClick={() => setSelectedThemeId(palette.id)}
+                      className={`cursor-pointer rounded-2xl border p-5 transition-all text-left relative ${
+                        isSelected
+                          ? "border-brand-accent ring-2 ring-brand-accent/20 bg-brand-accent-light/10 shadow-md"
+                          : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold text-brand-primary">
+                            {palette.name}
+                          </h3>
+                          {palette.id === "default" && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                              Locked
+                            </span>
+                          )}
+                          {isCurrentActive && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-accent text-white shadow-xs">
+                              Active Live
+                            </span>
+                          )}
+                        </div>
+                        <input
+                          type="radio"
+                          name="themeSelect"
+                          checked={isSelected}
+                          onChange={() => setSelectedThemeId(palette.id)}
+                          className="h-4 w-4 text-brand-accent focus:ring-brand-accent border-slate-300"
+                        />
+                      </div>
+
+                      {/* 5 Swatches preview */}
+                      <div className="flex items-center gap-1.5 h-8 rounded-xl overflow-hidden p-1 bg-surface-subtle border border-slate-100">
+                        {swatchColors.map((col, idx) => (
+                          <div
+                            key={idx}
+                            title={col}
+                            className="flex-1 h-full rounded-md shadow-xs border border-black/5"
+                            style={{ backgroundColor: col }}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                        <span>{palette.tokens["brand-primary"]}</span>
+                        <span>{palette.tokens["brand-accent"]}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Apply Button */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs text-slate-500">
+                  Selected palette: <strong className="text-brand-primary font-bold">{PALETTES[selectedThemeId]?.name || selectedThemeId}</strong>
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => handleSaveTheme()}
+                  disabled={savingTheme || selectedThemeId === activeThemeId}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+                >
+                  {savingTheme ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  <span>Apply Palette</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -2054,7 +2154,7 @@ export default function AdminDashboardPage() {
                     Upload or update images for every section across the website. Service-specific images can also be uploaded in the{" "}
                     <button
                       type="button"
-                      onClick={() => setActiveTab("services")}
+                      onClick={() => switchTab("services")}
                       className="text-brand-accent font-bold hover:underline"
                     >
                       Services Editor
@@ -2072,7 +2172,7 @@ export default function AdminDashboardPage() {
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  <span>Save Website Images</span>
+                  <span>Save changes</span>
                 </button>
               </div>
 
@@ -2195,7 +2295,7 @@ export default function AdminDashboardPage() {
                             <UploadCloud className="w-3.5 h-3.5 text-brand-accent-on-dark" />
                           )}
                           <span>
-                            {isUploading ? "Uploading..." : "Upload New Image"}
+                            {isUploading ? "Uploading..." : "Replace image"}
                           </span>
                           <input
                             type="file"
@@ -2213,7 +2313,8 @@ export default function AdminDashboardPage() {
             </div>
           </form>
         )}
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
