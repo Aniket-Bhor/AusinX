@@ -93,10 +93,10 @@ export default function InteractiveBento({
         {/* Equalized 2x2 Grid (2 per row on desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {modalities.map((item, index) => (
-            <Reveal key={item.title} delay={index * 110} direction="scale">
+            <Reveal key={item.title} delay={index * 80} direction="scale">
               <Link
                 href={`/services/${item.slug}`}
-                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_color-mix(in_srgb,var(--brand-accent)_18%,transparent)] hover:border-brand-accent/40 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
+                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:glow-md hover:border-brand-accent/40 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] flex flex-col justify-between block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
               >
                 {/* Image Section */}
                 <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
@@ -134,11 +134,10 @@ export default function InteractiveBento({
                     {item.pills.map((pill) => (
                       <span
                         key={pill.label}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-transform duration-200 group-hover:translate-y-[-1px] ${
-                          pill.type === "accent"
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-transform duration-200 group-hover:translate-y-[-1px] ${pill.type === "accent"
                             ? "bg-brand-accent-light text-brand-accent border border-brand-accent/20"
                             : "bg-slate-100 text-slate-700"
-                        }`}
+                          }`}
                       >
                         {pill.label}
                       </span>

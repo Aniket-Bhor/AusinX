@@ -11,6 +11,7 @@ import {
   Clock,
   MessageSquare,
 } from "lucide-react";
+import CountUp from "@/components/ui/CountUp";
 import type { SiteSettings } from "@/lib/content";
 import { defaultHeroMetrics, type HeroMetricsConfig } from "@/lib/site-images";
 
@@ -65,7 +66,7 @@ export default function HeroClient({
             <div className="motion-pop motion-pop-delay-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
                 href="/contact"
-                className="btn-shine w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-brand-accent to-brand-accent-hover hover:from-brand-accent-hover hover:to-brand-primary-muted px-7 py-4 text-base font-bold text-white shadow-[0_10px_35px_color-mix(in_srgb,var(--brand-accent)_45%,transparent)] transition-all duration-300 hover:scale-105 active:scale-95 group"
+                className="btn-shine w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-brand-accent to-brand-accent-hover hover:from-brand-accent-hover hover:to-brand-primary-muted px-7 py-4 text-base font-bold text-white glow-cta hover:glow-cta transition-all duration-300 hover:scale-105 active:scale-95 group"
               >
                 <MessageSquare className="h-5 w-5 text-brand-accent-light" />
                 <span>Talk to our team</span>
@@ -105,7 +106,7 @@ export default function HeroClient({
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.95]"
+                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.95] motion-image-enter"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/85 via-brand-primary/20 to-transparent" />
 
@@ -145,7 +146,7 @@ export default function HeroClient({
                   className={`text-3xl sm:text-4xl font-extrabold font-heading tracking-tight group-hover:scale-105 transition-transform ${metricColorMap[metric.color] || "text-brand-accent-bright"
                     }`}
                 >
-                  {metric.stat}
+                  <CountUp value={metric.stat} />
                 </div>
                 <div className="text-sm font-semibold text-white mt-1">
                   {metric.label}

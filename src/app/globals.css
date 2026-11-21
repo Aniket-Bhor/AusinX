@@ -271,6 +271,47 @@ body {
   box-shadow: 0 0 40px -10px color-mix(in srgb, var(--brand-accent) 35%, transparent);
 }
 
+/* Dynamic Theme Glow Utilities */
+.glow-sm {
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--brand-accent) 14%, transparent);
+}
+.hover\:glow-sm {
+  transition: box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover\:glow-sm:hover {
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--brand-accent) 14%, transparent) !important;
+}
+
+.glow-md {
+  box-shadow: 0 20px 45px color-mix(in srgb, var(--brand-accent) 18%, transparent);
+}
+.hover\:glow-md {
+  transition: box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover\:glow-md:hover {
+  box-shadow: 0 20px 45px color-mix(in srgb, var(--brand-accent) 18%, transparent) !important;
+}
+
+.glow-lg {
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--brand-accent) 25%, transparent);
+}
+.hover\:glow-lg {
+  transition: box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover\:glow-lg:hover {
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--brand-accent) 25%, transparent) !important;
+}
+
+.glow-cta {
+  box-shadow: 0 10px 35px color-mix(in srgb, var(--brand-accent) 45%, transparent);
+}
+.hover\:glow-cta {
+  transition: box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover\:glow-cta:hover {
+  box-shadow: 0 14px 42px color-mix(in srgb, var(--brand-accent) 55%, transparent) !important;
+}
+
 @keyframes image-settle {
   from {
     opacity: 0;
@@ -394,6 +435,49 @@ body {
   transform: translateX(120%) skewX(-20deg);
 }
 
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-enter {
+  animation: page-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes image-scale-down {
+  from {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.motion-image-enter {
+  animation: image-scale-down 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Sequential highlight for LifecycleStrip steps */
+[data-highlighted-step="0"] .step-card-0,
+[data-highlighted-step="1"] .step-card-1,
+[data-highlighted-step="2"] .step-card-2,
+[data-highlighted-step="3"] .step-card-3,
+[data-highlighted-step="4"] .step-card-4 {
+  border-color: var(--brand-accent-on-dark) !important;
+  background-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 0 25px color-mix(in srgb, var(--brand-accent) 45%, transparent) !important;
+  transform: translateY(-4px) scale(1.02);
+}
+
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
 
   main a,
@@ -401,26 +485,21 @@ body {
     transition-property: color, background-color, border-color, box-shadow, transform;
     transition-duration: 220ms;
   }
-
-  main a:hover img,
-  main button:hover img {
-    transform: scale(1.025);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  ::before,
-  ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .soft-reveal,
+  .soft-reveal.reveal-pending,
+  .soft-reveal.reveal-pending.reveal-left,
+  .soft-reveal.reveal-pending.reveal-right,
+  .soft-reveal.reveal-pending.reveal-scale,
+  .motion-pop,
+  .motion-image {
+    opacity: 1 !important;
+    transform: none;
+    animation: none;
   }
 
-  .soft-reveal,
-  .motion-pop,
-  .motion-image,
   .animate-orb,
   .animate-orb-delayed,
   .animate-gradient-text,
@@ -428,10 +507,9 @@ body {
   .animate-float-delayed,
   .pulse-beacon,
   .pulse-beacon-red,
-  .btn-shine::after {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
+  .btn-shine::after,
+  .animate-page-enter,
+  .motion-image-enter {
     animation: none !important;
   }
 }

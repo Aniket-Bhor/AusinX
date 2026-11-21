@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import type { SiteSettings } from "@/lib/content";
 
 interface LayoutClientWrapperProps {
@@ -32,12 +33,13 @@ export default function LayoutClientWrapper({
 
   return (
     <>
+      <ScrollProgressBar />
       <Header
         services={serviceNav}
         siteSettings={siteSettings}
         logoUrl={headerLogo}
       />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 animate-page-enter">{children}</main>
       <Footer
         services={serviceNav}
         siteSettings={siteSettings}

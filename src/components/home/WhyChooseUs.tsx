@@ -45,7 +45,7 @@ export default async function WhyChooseUs() {
                   src={siteImages.whyChooseUsImage}
                   alt="Senior AusinX biomedical service engineer conducting clinical equipment inspection"
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 motion-image-enter"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/90 via-brand-primary/30 to-transparent" />
@@ -66,9 +66,9 @@ export default async function WhyChooseUs() {
             {aboutCopy.whyChooseUs.map((point, index) => {
               const Icon = icons[index] || ShieldCheck;
               return (
-                <Reveal key={point.title} delay={index * 90} direction="scale">
+                <Reveal key={point.title} delay={index * 80} direction="scale">
                   <div
-                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-brand-accent/40 hover:bg-white hover:shadow-[0_16px_40px_color-mix(in_srgb,var(--brand-accent)_14%,transparent)] hover:-translate-y-1.5 transition-all duration-300 space-y-3"
+                    className="group relative h-full p-6 rounded-3xl bg-slate-50/80 border border-slate-200/90 hover:border-brand-accent/40 hover:bg-white hover:glow-sm hover:-translate-y-1.5 hover:scale-[1.03] transition-all duration-300 space-y-3"
                   >
                     <div className="flex items-center justify-between">
                       <div className="w-12 h-12 rounded-2xl bg-brand-primary text-brand-accent-on-dark group-hover:bg-brand-accent group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">

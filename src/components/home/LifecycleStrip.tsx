@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { getLifecycleSteps } from "@/lib/content";
 import Reveal from "@/components/ui/Reveal";
+import LifecycleGrid from "./LifecycleGrid";
 
 const icons = [ClipboardList, Cpu, Wrench, PackageCheck, Trash2];
 
@@ -36,13 +37,13 @@ export default async function LifecycleStrip() {
         </div>
 
         {/* 5-Step Connected Workflow */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <LifecycleGrid>
           {steps.map((step, index) => {
             const Icon = icons[index] || Wrench;
             return (
-              <Reveal key={step.step} delay={index * 90} className="h-full">
+              <Reveal key={step.step} delay={index * 80} className="h-full">
                 <div
-                  className="group relative h-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-6 transition-all duration-300 hover:-translate-y-2 hover:border-brand-accent-on-dark hover:bg-white/10 hover:shadow-[0_20px_40px_color-mix(in_srgb,var(--brand-accent)_25%,transparent)] flex flex-col justify-between"
+                  className={`step-card-${index} group relative h-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-6 transition-all duration-300 hover:-translate-y-2 hover:scale-[1.03] hover:border-brand-accent-on-dark hover:bg-white/10 hover:glow-lg flex flex-col justify-between`}
                 >
                   <div>
                     <div className="mb-5 flex items-center justify-between">
@@ -68,7 +69,7 @@ export default async function LifecycleStrip() {
               </Reveal>
             );
           })}
-        </div>
+        </LifecycleGrid>
 
       </div>
     </section>
