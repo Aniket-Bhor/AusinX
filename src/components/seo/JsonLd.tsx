@@ -15,7 +15,7 @@ export default async function JsonLd() {
     legalName: "AusinX Solutions Pty Ltd",
     url: "https://www.ausinx.com.au",
     logo: "https://www.ausinx.com.au/images/client/ausinx-logo.jpeg",
-    image: "https://www.ausinx.com.au/images/client/imaging-suite.jpeg",
+    image: "https://www.ausinx.com.au/images/client/imaging-suite.webp",
 
     description:
       "Proudly Australian-owned and operated engineering company providing full lifecycle services for medical equipment, healthcare products and industrial electronics: service, maintenance, installation, commissioning, parts supply, and calibration.",

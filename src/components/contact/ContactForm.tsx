@@ -45,6 +45,12 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const [touched, setTouched] = useState<{
+    fullName?: boolean;
+    email?: boolean;
+    phone?: boolean;
+  }>({});
+
   const [formData, setFormData] = useState({
     fullName: "",
     organisation: "",
@@ -55,6 +61,61 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
     consent: false,
     websiteHoneypot: "",
   });
+
+  const validateFullName = (val: string): string | null => {
+    const trimmed = val.trim();
+    if (!trimmed) return "Please enter your full name.";
+    if (trimmed.length < 2) return "Full name must be at least 2 characters.";
+    return null;
+  };
+
+  const validateEmail = (val: string): string | null => {
+    const trimmed = val.trim();
+    if (!trimmed) return "Please enter your email address.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailRegex.test(trimmed)) {
+      return "Please enter a valid email address (e.g. name@hospital.com.au).";
+    }
+    return null;
+  };
+
+  const validatePhone = (val: string): string | null => {
+    const trimmed = val.trim();
+    if (!trimmed) return "Please enter your contact phone number.";
+    const cleaned = trimmed.replace(/[\s\-\(\)]/g, "");
+    const auPhoneRegex = /^(?:\+?61|0)[2-478]\d{8}$/;
+    if (!auPhoneRegex.test(cleaned)) {
+      return "Please enter a valid Australian phone number (e.g. 04XX XXX XXX or 02 XXXX XXXX).";
+    }
+    return null;
+  };
+
+  const fieldErrors = useMemo(() => {
+    return {
+      fullName: touched.fullName ? validateFullName(formData.fullName) : null,
+      email: touched.email ? validateEmail(formData.email) : null,
+      phone: touched.phone ? validatePhone(formData.phone) : null,
+    };
+  }, [formData.fullName, formData.email, formData.phone, touched]);
+
+  const handleBlur = (field: "fullName" | "email" | "phone") => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleClear = () => {
+    setFormData({
+      fullName: "",
+      organisation: "",
+      email: "",
+      phone: "",
+      serviceInterest: defaultService,
+      message: "",
+      consent: false,
+      websiteHoneypot: "",
+    });
+    setTouched({});
+    setErrorMessage(null);
+  };
 
   // Pre-select service from URL query parameter (?service=...)
   useEffect(() => {
@@ -84,6 +145,16 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+
+    const nameErr = validateFullName(formData.fullName);
+    const emailErr = validateEmail(formData.email);
+    const phoneErr = validatePhone(formData.phone);
+
+    if (nameErr || emailErr || phoneErr) {
+      setTouched({ fullName: true, email: true, phone: true });
+      setErrorMessage(nameErr || emailErr || phoneErr || "Please review the highlighted fields.");
+      return;
+    }
 
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
       setErrorMessage("Please complete all required fields.");
@@ -211,9 +282,19 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 required
                 value={formData.fullName}
                 onChange={handleChange}
+                onBlur={() => handleBlur("fullName")}
                 placeholder="e.g. Dr. Jane Smith"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none transition-all ${fieldErrors.fullName
+                    ? "border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                    : "border-slate-300 focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20"
+                  }`}
               />
+              {fieldErrors.fullName && (
+                <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-medium" role="alert">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{fieldErrors.fullName}</span>
+                </p>
+              )}
             </div>
 
             <div>
@@ -251,9 +332,19 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 required
                 value={formData.email}
                 onChange={handleChange}
+                onBlur={() => handleBlur("email")}
                 placeholder="name@hospital.com.au"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none transition-all ${fieldErrors.email
+                    ? "border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                    : "border-slate-300 focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20"
+                  }`}
               />
+              {fieldErrors.email && (
+                <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-medium" role="alert">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{fieldErrors.email}</span>
+                </p>
+              )}
             </div>
 
             <div>
@@ -270,9 +361,19 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                 required
                 value={formData.phone}
                 onChange={handleChange}
+                onBlur={() => handleBlur("phone")}
                 placeholder="04XX XXX XXX"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none transition-all ${fieldErrors.phone
+                    ? "border-red-400 bg-red-50/20 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                    : "border-slate-300 focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20"
+                  }`}
               />
+              {fieldErrors.phone && (
+                <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-medium" role="alert">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{fieldErrors.phone}</span>
+                </p>
+              )}
             </div>
           </div>
 
@@ -295,7 +396,6 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
                   {service.navTitle}
                 </option>
               ))}
-              <option value="Other">Other Technical Enquiry</option>
               <option value="Other">Other Technical Enquiry</option>
             </select>
           </div>
@@ -325,7 +425,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
               <ShieldCheck className="w-4 h-4 text-brand-accent shrink-0" />
               <span>Protected by server-side verification & anti-spam shield</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">AusinX Secure</span>
+            <span className="text-[10px] text-slate-500 font-mono">AusinX Secure</span>
           </div>
 
           <div className="flex items-start gap-2.5 pt-1">
@@ -347,23 +447,33 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
             </label>
           </div>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-accent text-brand-primary font-bold text-sm hover:bg-brand-accent-hover transition-all shadow-md active:scale-[0.99] disabled:opacity-50"
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Submitting Enquiry...</span>
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                <span>Submit Service Enquiry</span>
-              </>
-            )}
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-accent text-brand-primary font-bold text-sm hover:bg-brand-accent-hover transition-all shadow-md active:scale-[0.99] disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Submitting Enquiry...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  <span>Submit Service Enquiry</span>
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleClear}
+              disabled={submitting}
+              className="w-full sm:w-auto px-5 py-3.5 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold text-sm transition-all shadow-sm active:scale-[0.99] disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
+            >
+              Clear
+            </button>
+          </div>
         </form>
       )}
     </div>

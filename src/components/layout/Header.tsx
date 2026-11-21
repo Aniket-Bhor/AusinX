@@ -31,9 +31,9 @@ export default function Header({
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 text-slate-900 shadow-[0_5px_24px_rgba(15,41,57,0.045)] backdrop-blur-xl">
-        <div className="mx-auto flex h-[100px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-[68px] md:h-[100px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" aria-label="AusinX home" className="flex h-full items-center">
-            <Logo src={logoUrl} className="h-14 w-[230px] sm:w-[270px] lg:w-[290px]" />
+            <Logo src={logoUrl} className="h-10 md:h-14 w-[190px] sm:w-[240px] lg:w-[290px]" />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
@@ -64,7 +64,7 @@ export default function Header({
         </div>
       </header>
 
-      {menuOpen && <div className="fixed inset-x-0 bottom-0 top-[100px] z-40 overflow-y-auto border-t border-slate-200 bg-white px-5 py-6 shadow-xl md:hidden">
+      {menuOpen && <div className="fixed inset-x-0 bottom-0 top-[68px] md:top-[100px] z-40 overflow-y-auto border-t border-slate-200 bg-white px-5 py-6 shadow-xl md:hidden">
         <nav className="mx-auto flex max-w-lg flex-col gap-1" aria-label="Mobile navigation">
           <Link href="/" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-medium text-slate-800 hover:bg-slate-50">Home</Link>
           <Link href="/services" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-medium text-slate-800 hover:bg-slate-50">Services overview</Link>

@@ -74,7 +74,7 @@ export default async function WhyChooseUs() {
                       <div className="w-12 h-12 rounded-2xl bg-brand-primary text-brand-accent-on-dark group-hover:bg-brand-accent group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 flex items-center justify-center font-bold shadow-md">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-brand-accent transition-colors">
+                      <span className="font-mono text-xs font-bold text-slate-500 group-hover:text-brand-accent transition-colors">
                         0{index + 1}
                       </span>
                     </div>

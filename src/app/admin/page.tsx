@@ -32,9 +32,11 @@ import {
   ChevronDown,
   Sparkles,
   Palette,
+  Type,
 } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import { PALETTES, type ThemePalette } from "@/lib/themes";
+import { FONT_PRESETS, type FontPreset } from "@/lib/fonts";
 import {
   defaultHeroMetrics,
   defaultSiteImages,
@@ -131,6 +133,11 @@ export default function AdminDashboardPage() {
   const [activeThemeId, setActiveThemeId] = useState<string>("default");
   const [savingTheme, setSavingTheme] = useState(false);
 
+  // Font Switcher state
+  const [selectedFontId, setSelectedFontId] = useState<string>("default");
+  const [activeFontId, setActiveFontId] = useState<string>("default");
+  const [savingFont, setSavingFont] = useState(false);
+
   const showFeedback = (type: "success" | "error", message: string) => {
     setFeedback({ type, message });
     setTimeout(() => setFeedback(null), 4000);
@@ -180,7 +187,7 @@ export default function AdminDashboardPage() {
   // Load Content from RTDB
   const loadContent = async () => {
     try {
-      const [resSettings, resServices, resAbout, resLifecycle, resImages, resMetrics, resTheme] =
+      const [resSettings, resServices, resAbout, resLifecycle, resImages, resMetrics, resTheme, resFont] =
         await Promise.all([
           fetch("/api/admin/content?section=siteSettings"),
           fetch("/api/admin/content?section=services"),
@@ -189,6 +196,7 @@ export default function AdminDashboardPage() {
           fetch("/api/admin/content?section=siteImages"),
           fetch("/api/admin/content?section=heroMetrics"),
           fetch("/api/admin/content?section=theme"),
+          fetch("/api/admin/content?section=font"),
         ]);
 
       const sData = await resSettings.json();
@@ -198,6 +206,7 @@ export default function AdminDashboardPage() {
       const iData = await resImages.json();
       const mData = await resMetrics.json();
       const tData = await resTheme.json();
+      const fData = await resFont.json();
 
       if (sData.data) setSettingsData(sData.data);
       if (srvData.data) {
@@ -225,6 +234,10 @@ export default function AdminDashboardPage() {
       if (tData.data && typeof tData.data === "object" && typeof tData.data.themeId === "string") {
         setSelectedThemeId(tData.data.themeId);
         setActiveThemeId(tData.data.themeId);
+      }
+      if (fData.data && typeof fData.data === "object" && typeof fData.data.fontId === "string") {
+        setSelectedFontId(fData.data.fontId);
+        setActiveFontId(fData.data.fontId);
       }
     } catch (e) {
       console.error(e);
@@ -342,6 +355,36 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Save Font Preset
+  const handleSaveFont = async (fontIdToApply?: string) => {
+    const targetFontId = fontIdToApply || selectedFontId;
+    setSavingFont(true);
+    try {
+      const res = await fetch("/api/admin/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section: "font",
+          data: { fontId: targetFontId },
+        }),
+      });
+
+      if (res.ok) {
+        setSelectedFontId(targetFontId);
+        setActiveFontId(targetFontId);
+        setHasUnsavedChanges(false);
+        showFeedback("success", `Font style "${FONT_PRESETS[targetFontId]?.name || targetFontId}" is now active on your website.`);
+      } else {
+        const result = await res.json().catch(() => null);
+        showFeedback("error", result?.error || "Failed to save font style.");
+      }
+    } catch {
+      showFeedback("error", "Network error saving font style.");
+    } finally {
+      setSavingFont(false);
+    }
+  };
+
   // Save Services
   const handleSaveServices = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -386,7 +429,7 @@ export default function AdminDashboardPage() {
       fullDescription: "",
       keyHighlights: [],
       subServices: [],
-      image: "/images/client/imaging-suite.jpeg",
+      image: "/images/client/imaging-suite.webp",
       imageAlt: "New service image",
       metaTitle: "New Service | AusinX Solutions",
       metaDescription: "",
@@ -2138,6 +2181,122 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
             </div>
+
+            {/* Fonts Card */}
+            <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-accent-light text-brand-accent-hover text-[11px] font-bold border border-brand-accent/20">
+                    <Type className="w-3 h-3" />
+                    <span>Typography Style</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-brand-primary mt-1.5 font-heading">
+                    Website Font Pairings
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Currently active font: <strong className="text-brand-accent font-bold">{FONT_PRESETS[activeFontId]?.name || activeFontId}</strong> ({FONT_PRESETS[activeFontId]?.headingName} + {FONT_PRESETS[activeFontId]?.bodyName})
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleSaveFont("default")}
+                  disabled={savingFont}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-surface-subtle hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Reset to Original</span>
+                </button>
+              </div>
+
+              {/* Font Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Object.values(FONT_PRESETS).map((fontPreset: FontPreset) => {
+                  const isSelected = selectedFontId === fontPreset.id;
+                  const isCurrentActive = activeFontId === fontPreset.id;
+
+                  return (
+                    <div
+                      key={fontPreset.id}
+                      onClick={() => setSelectedFontId(fontPreset.id)}
+                      className={`cursor-pointer rounded-2xl border p-5 transition-all text-left relative flex flex-col justify-between space-y-3 ${
+                        isSelected
+                          ? "border-brand-accent ring-2 ring-brand-accent/20 bg-brand-accent-light/10 shadow-md"
+                          : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold text-brand-primary">
+                            {fontPreset.name}
+                          </h3>
+                          {fontPreset.id === "default" && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                              Locked
+                            </span>
+                          )}
+                          {isCurrentActive && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-accent text-white shadow-xs">
+                              Active Live
+                            </span>
+                          )}
+                        </div>
+                        <input
+                          type="radio"
+                          name="fontSelect"
+                          checked={isSelected}
+                          onChange={() => setSelectedFontId(fontPreset.id)}
+                          className="h-4 w-4 text-brand-accent focus:ring-brand-accent border-slate-300"
+                        />
+                      </div>
+
+                      {/* Font Details & Sample Line */}
+                      <div className="p-3.5 rounded-xl bg-surface-subtle border border-slate-100 space-y-2">
+                        <div className="text-[11px] text-slate-500 flex items-center justify-between font-mono">
+                          <span>{fontPreset.headingName}</span>
+                          <span className="text-slate-400">+</span>
+                          <span>{fontPreset.bodyName}</span>
+                        </div>
+                        <div
+                          className="text-base font-bold text-brand-primary tracking-tight leading-snug"
+                          style={{ fontFamily: fontPreset.headingVariable }}
+                        >
+                          Quality care you can trust
+                        </div>
+                        <div
+                          className="text-xs text-slate-600 leading-relaxed"
+                          style={{ fontFamily: fontPreset.bodyVariable }}
+                        >
+                          Precision medical equipment servicing, calibration &amp; supply.
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Apply Font Button */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs text-slate-500">
+                  Selected font: <strong className="text-brand-primary font-bold">{FONT_PRESETS[selectedFontId]?.name || selectedFontId}</strong>
+                  {selectedFontId === activeFontId && " (currently active)"}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => handleSaveFont()}
+                  disabled={savingFont || selectedFontId === activeFontId}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-accent text-white font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-md disabled:opacity-50 cursor-pointer"
+                >
+                  {savingFont ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  <span>Apply Font</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -2185,6 +2344,12 @@ export default function AdminDashboardPage() {
                       location: "Top Navbar & Site Footer",
                     },
                     {
+                      key: "tabIcon",
+                      label: "Browser Tab Icon",
+                      location: "Browser Tab & Bookmarks",
+                      helper: "Square image, at least 256x256. Leave empty to use your header logo.",
+                    },
+                    {
                       key: "heroImage",
                       label: "Home Hero Showcase",
                       location: "Homepage Top Banner",
@@ -2224,10 +2389,14 @@ export default function AdminDashboardPage() {
                       label: "Contact Page Support Desk",
                       location: "Contact Page Information Card",
                     },
-                  ] as { key: keyof SiteImages; label: string; location: string }[]
+                  ] as { key: keyof SiteImages; label: string; location: string; helper?: string }[]
                 ).map((slot) => {
-                  const currentUrl = siteImagesData[slot.key] || defaultSiteImages[slot.key];
+                  const currentUrl = siteImagesData[slot.key] ?? defaultSiteImages[slot.key] ?? "";
                   const isUploading = uploadingImageSlot === slot.key;
+                  const isTabIcon = slot.key === "tabIcon";
+                  const previewUrl = isTabIcon && !currentUrl
+                    ? siteImagesData.headerLogo || defaultSiteImages.headerLogo
+                    : currentUrl;
                   return (
                     <div
                       key={slot.key}
@@ -2248,7 +2417,7 @@ export default function AdminDashboardPage() {
                             onClick={() =>
                               setSiteImagesData((prev) => ({
                                 ...prev,
-                                [slot.key]: defaultSiteImages[slot.key],
+                                [slot.key]: defaultSiteImages[slot.key] || "",
                               }))
                             }
                             title="Reset to default image"
@@ -2258,18 +2427,45 @@ export default function AdminDashboardPage() {
                           </button>
                         </div>
 
+                        {slot.helper && (
+                          <p className="text-[11px] text-slate-600 bg-white/70 p-2 rounded-lg border border-slate-200/60 leading-relaxed">
+                            {slot.helper}
+                          </p>
+                        )}
+
                         <div className="relative h-40 w-full rounded-xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center p-3">
                           {slot.key === "headerLogo" ? (
                             <Logo src={currentUrl} className="h-16 w-full max-w-[260px]" />
-                          ) : (
+                          ) : isTabIcon ? (
+                            <div className="flex flex-col items-center justify-center gap-1.5 text-center">
+                              {previewUrl ? (
+                                <img
+                                  src={previewUrl}
+                                  alt={slot.label}
+                                  className="h-16 w-16 object-contain rounded-lg p-1 border border-slate-200 bg-slate-50"
+                                />
+                              ) : (
+                                <div className="h-16 w-16 rounded-lg bg-slate-100 flex items-center justify-center text-xs text-slate-400 font-mono">
+                                  Icon
+                                </div>
+                              )}
+                              {!currentUrl && (
+                                <span className="text-[10px] text-brand-accent font-semibold">
+                                  (Auto using Header Logo)
+                                </span>
+                              )}
+                            </div>
+                          ) : previewUrl ? (
                             <Image
-                              src={currentUrl}
+                              src={previewUrl}
                               alt={slot.label}
                               fill
                               unoptimized
                               className="object-cover"
                               sizes="(max-width: 768px) 100vw, 33vw"
                             />
+                          ) : (
+                            <span className="text-xs text-slate-400">No image set</span>
                           )}
                         </div>
                       </div>
@@ -2284,7 +2480,13 @@ export default function AdminDashboardPage() {
                               [slot.key]: e.target.value,
                             }))
                           }
-                          placeholder={slot.key === "headerLogo" ? "Leave blank for Vector SVG, or enter path/URL" : "/images/client/..."}
+                          placeholder={
+                            isTabIcon
+                              ? "Leave empty to use header logo, or /images/..."
+                              : slot.key === "headerLogo"
+                              ? "Leave blank for Vector SVG, or enter path/URL"
+                              : "/images/client/..."
+                          }
                           className="w-full px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-[11px] font-mono text-slate-700"
                         />
 
@@ -2299,7 +2501,11 @@ export default function AdminDashboardPage() {
                           </span>
                           <input
                             type="file"
-                            accept={slot.key === "headerLogo" ? ".svg,.png,.jpg,.jpeg,.webp,image/*" : "image/jpeg,image/png,image/webp"}
+                            accept={
+                              slot.key === "headerLogo" || isTabIcon
+                                ? ".svg,.png,.jpg,.jpeg,.webp,image/*"
+                                : "image/jpeg,image/png,image/webp"
+                            }
                             className="hidden"
                             disabled={isUploading}
                             onChange={(e) => handleSiteImageUpload(slot.key, e)}

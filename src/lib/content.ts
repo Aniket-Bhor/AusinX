@@ -1,6 +1,7 @@
 import { cacheTag } from "next/cache";
 import { getLocalContentSection } from "@/lib/local-content-storage";
 import { PALETTES, type ThemePalette } from "@/lib/themes";
+import { FONT_PRESETS, type FontPreset } from "@/lib/fonts";
 import {
   defaultHeroMetrics,
   defaultSiteImages,
@@ -14,6 +15,10 @@ export { defaultHeroMetrics, defaultSiteImages };
 
 export interface SiteThemeConfig {
   themeId: string;
+}
+
+export interface SiteFontConfig {
+  fontId: string;
 }
 
 export interface SubService {
@@ -199,7 +204,7 @@ export const servicesData: ServiceDetail[] = [
         description: "Support at both ends of the lifecycle, from the first plan to safe, compliant retirement of equipment.",
       },
     ],
-    image: "/images/client/imaging-suite.jpeg",
+    image: "/images/client/imaging-suite.webp",
     imageAlt: "Medical imaging suite installation and commissioning",
     metaTitle: "Installation & Commissioning | Medical Imaging & Industrial Specialists | AusinX Solutions",
     metaDescription: "Precision installation, commissioning, planning, and compliant decommissioning for medical imaging and industrial systems across Australia.",
@@ -223,7 +228,7 @@ export const servicesData: ServiceDetail[] = [
         description: "Reliable sourcing and supply of equipment and parts delivered when and where your healthcare team needs them.",
       },
     ],
-    image: "/images/client/parts-logistics.jpeg",
+    image: "/images/client/parts-logistics.webp",
     imageAlt: "AusinX medical spare parts warehouse and logistics facility",
     metaTitle: "Medical Equipment Parts Supply & Logistics | AusinX Solutions",
     metaDescription: "Reliable biomedical parts sourcing and coordinated healthcare logistics to ensure critical components arrive on schedule when and where needed.",
@@ -247,7 +252,7 @@ export const servicesData: ServiceDetail[] = [
         description: "Precise, documented calibration that supports the accuracy and safety of your equipment.",
       },
     ],
-    image: "/images/client/calibration-lab.jpeg",
+    image: "/images/client/calibration-lab.webp",
     imageAlt: "Precision calibration test bench and electronic diagnostic instrumentation",
     metaTitle: "Biomedical Precision Calibration Services | AusinX Solutions",
     metaDescription: "Documented precision calibration support for medical and industrial electronics equipment, ensuring high clinical accuracy and safety compliance.",
@@ -305,10 +310,10 @@ export async function getAboutCopy(): Promise<typeof aboutCopy> {
 }
 
 const clientServiceImages: Record<string, { image: string; imageAlt: string }> = {
-  "service-maintenance": { image: "/images/client/service-maintenance-new.jpeg", imageAlt: "Biomedical engineering service workbench with diagnostic equipment" },
-  "installation-commissioning": { image: "/images/client/imaging-suite.jpeg", imageAlt: "Medical imaging suite installation and commissioning" },
-  "parts-logistics": { image: "/images/client/parts-no-faces.jpeg", imageAlt: "AusinX parts warehouse with organized shelving and components" },
-  calibration: { image: "/images/client/calibration-new.jpeg", imageAlt: "Precision calibration laboratory with measurement instruments" },
+  "service-maintenance": { image: "/images/client/service-maintenance-new.webp", imageAlt: "Biomedical engineering service workbench with diagnostic equipment" },
+  "installation-commissioning": { image: "/images/client/imaging-suite.webp", imageAlt: "Medical imaging suite installation and commissioning" },
+  "parts-logistics": { image: "/images/client/parts-no-faces.webp", imageAlt: "AusinX parts warehouse with organized shelving and components" },
+  calibration: { image: "/images/client/calibration-new.webp", imageAlt: "Precision calibration laboratory with measurement instruments" },
 };
 
 function normalizeServiceImages(services: ServiceDetail[]): ServiceDetail[] {
@@ -321,7 +326,7 @@ function normalizeServiceImages(services: ServiceDetail[]): ServiceDetail[] {
       ...service,
       ...(needsDefault && defaultImage ? defaultImage : {}),
       image: needsDefault
-        ? defaultImage?.image || "/images/client/imaging-suite.jpeg"
+        ? defaultImage?.image || "/images/client/imaging-suite.webp"
         : service.image,
       navTitle: service.navTitle || service.title || "Service",
       contactValue: service.contactValue || service.navTitle || service.title || "Service",
@@ -413,7 +418,7 @@ export async function getSiteImages(): Promise<SiteImages> {
     const merged: SiteImages = { ...defaultSiteImages };
     (Object.keys(defaultSiteImages) as (keyof SiteImages)[]).forEach((key) => {
       const val = local[key];
-      if (typeof val === "string" && val.trim().length > 0) {
+      if (typeof val === "string") {
         merged[key] = val.trim();
       }
     });
@@ -430,7 +435,7 @@ export async function getSiteImages(): Promise<SiteImages> {
         const merged: SiteImages = { ...defaultSiteImages };
         (Object.keys(defaultSiteImages) as (keyof SiteImages)[]).forEach((key) => {
           const val = data[key];
-          if (typeof val === "string" && val.trim().length > 0) {
+          if (typeof val === "string") {
             merged[key] = val.trim();
           }
         });
@@ -502,4 +507,33 @@ export async function getTheme(): Promise<ThemePalette> {
 
   return PALETTES.default;
 }
+
+export async function getFont(): Promise<FontPreset> {
+  "use cache";
+  cacheTag("site-font");
+
+  const local = getLocalContentSection("font") as { fontId?: string } | null;
+  if (local && typeof local === "object" && typeof local.fontId === "string") {
+    if (FONT_PRESETS[local.fontId]) {
+      return FONT_PRESETS[local.fontId];
+    }
+  }
+
+  try {
+    const res = await fetch(`${RTDB_BASE}/content/font.json`, {
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data.fontId === "string" && FONT_PRESETS[data.fontId]) {
+        return FONT_PRESETS[data.fontId];
+      }
+    }
+  } catch {
+    // Fallback to default
+  }
+
+  return FONT_PRESETS.default;
+}
+
 

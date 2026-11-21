@@ -145,7 +145,7 @@ export default async function AboutPage() {
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary text-xs font-mono font-bold text-brand-accent-on-dark">
                   {step}
                 </span>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
                   Value Standard
                 </span>
               </div>

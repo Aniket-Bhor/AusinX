@@ -257,7 +257,7 @@ export default async function ServiceDetailPage({
                     {siteSettings.publicEmail}
                   </a>
                 </div>
-                <div className="flex items-center gap-2 text-slate-400">
+                <div className="flex items-center gap-2 text-slate-500">
                   <Clock className="w-4 h-4 text-brand-accent-bright shrink-0" />
                   <span>Mon – Fri: 09:00 AM – 5:00 PM</span>
                 </div>
@@ -276,7 +276,7 @@ export default async function ServiceDetailPage({
 
             {/* Other Pillars List */}
             <div className="bg-surface rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 Our Services
               </h4>
               <div className="space-y-1">

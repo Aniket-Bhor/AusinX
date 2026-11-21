@@ -1,5 +1,6 @@
 export interface SiteImages {
   headerLogo: string;
+  tabIcon?: string;
   heroImage: string;
   bentoCt: string;
   bentoCArm: string;
@@ -12,14 +13,15 @@ export interface SiteImages {
 
 export const defaultSiteImages: SiteImages = {
   headerLogo: "/images/client/ausinx-logo-new.png",
-  heroImage: "/images/client/imaging-suite.jpeg",
+  tabIcon: "",
+  heroImage: "/images/client/imaging-suite.webp",
   bentoCt: "/images/client/ct-suite.jpeg",
   bentoCArm: "/images/client/c-arm.jpeg",
   bentoMonitor: "/images/client/patient-monitor.jpeg",
   bentoUltrasound: "/images/client/ultrasound-care.jpeg",
   whyChooseUsImage: "/images/client/precision-calibration.jpeg",
-  aboutImage: "/images/client/engineering-workshop.jpeg",
-  contactImage: "/images/client/contact-support.jpeg",
+  aboutImage: "/images/client/engineering-workshop.webp",
+  contactImage: "/images/client/contact-support.webp",
 };
 
 export interface HeroMetricItem {

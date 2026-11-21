@@ -45,7 +45,7 @@ export default async function ContactPage() {
           <div id="support" className="scroll-mt-28 lg:col-span-7">
             <Suspense
               fallback={
-                <div className="bg-surface rounded-3xl p-10 border border-slate-200 text-center text-slate-400 text-sm">
+                <div className="bg-surface rounded-3xl p-10 border border-slate-200 text-center text-slate-500 text-sm">
                   Loading enquiry form...
                 </div>
               }

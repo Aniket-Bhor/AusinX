@@ -1,147 +1,115 @@
 ================================================================================
-ADMIN PANEL EDITABILITY AUDIT - AusinX Solutions
+           AUSINX WEBSITE - CLIENT EDITABILITY GUIDE & AUDIT
 ================================================================================
 
-1. EDITABLE (SUMMARY BY PAGE / COMPONENT)
---------------------------------------------------------------------------------
-- Header: Controlled by "Settings" tab (Brand Logo) and "Services" tab (Nav Items & Slugs).
-- Home Page: Controlled by "Home & Stats" tab (Hero Metrics, Lifecycle Steps, Why Choose Us points), "Settings" tab (Tagline, Hero text), and "Site Images" slots (Hero, Bento CT, C-Arm, Monitor, Ultrasound, Why Choose Us).
-- Services List Page (/services): Controlled by "Services" tab (All service items, titles, summaries, highlights, images, slugs) and "Home & Stats" tab (Lifecycle steps).
-- Service Detail Page (/services/[slug]): Controlled by "Services" tab (All detailed copy, capabilities, bullets, images, metadata) and "Settings" tab (Phone numbers, public email).
-- About Page (/about): Controlled by "Home & Stats" tab (Why Choose Us points at bottom) and "Settings" tab (About Image slot).
-- Contact Page (/contact): Controlled by "Settings" tab (Address, phones, email, business hours, contact image) and "Services" tab (Service enquiry dropdown values).
-- Footer: Controlled by "Settings" tab (Logo, Address, Email, Phone lines) and "Services" tab (Dynamic service links).
-- JSON-LD Schema: Automatically generated using "Settings" tab (Company name, phones, email, address) and "Services" tab (Offer catalog items).
-- Theme System: Controlled by "Settings" tab -> "Color Palette & Theme" card (12 switchable palettes + Reset to Original).
+This document gives you a clear, plain-language breakdown of what you can currently
+edit from your Admin Panel, what is currently fixed in the code, and recommended
+additions.
 
 --------------------------------------------------------------------------------
-2. NOT EDITABLE (FULL DETAIL OF HARDCODED ELEMENTS)
+1. WHAT YOU CAN EDIT RIGHT NOW (BY ADMIN TAB)
 --------------------------------------------------------------------------------
-[Header]
-- Navigation links label "Home" | Value: "Home" | src/components/layout/Header.tsx
-- Navigation links label "Services" | Value: "Services" | src/components/layout/Header.tsx
-- Navigation dropdown footer link | Value: "View all services →" | src/components/layout/Header.tsx
-- Navigation links label "About Us" | Value: "About Us" | src/components/layout/Header.tsx
-- Header CTA Button label | Value: "Talk to our team" | src/components/layout/Header.tsx
-- Header CTA Button URL | Value: "/contact" | src/components/layout/Header.tsx
+
+[Enquiries]
+- View, filter, review, and archive customer messages sent from the Contact form.
 
 [Home Page]
-- Hero badge / sub-headline | Value: "High-Performance Industrial & Biomedical Engineering" | src/components/home/HeroClient.tsx
-- Hero description paragraph | Value: "Keeping diagnostic imaging, medical equipment..." | src/components/home/HeroClient.tsx (Note: siteSettings.heroSupportingText is stored in DB but not bound in HeroClient.tsx)
-- Hero CTA button 1 label & link | Value: "Talk to our team" -> "/contact" | src/components/home/HeroClient.tsx
-- Hero CTA button 2 label & link | Value: "Explore Modalities" -> "/services" | src/components/home/HeroClient.tsx
-- Hero trust badges | Value: "OEM-Trained Engineers", "Under 2-Hour Response" | src/components/home/HeroClient.tsx
-- Hero image overlay label & text | Value: "Medical Imaging & Industrial Equipment", "CT Suites, C-Arms, X-Ray & Industrial Systems" | src/components/home/HeroClient.tsx
-- Bento section badge | Value: "Multi-Modality Engineering Excellence" | src/components/home/InteractiveBento.tsx
-- Bento section main title | Value: "Precision Healthcare & Industrial Modalities" | src/components/home/InteractiveBento.tsx
-- Bento section subtitle | Value: "Specialized engineering teams delivering rapid..." | src/components/home/InteractiveBento.tsx
-- Bento 4 modality titles, descriptions & pills | Values: CT, C-Arm, Patient Monitors, Ultrasound (titles, pill labels, categories) | src/components/home/InteractiveBento.tsx
-- Lifecycle section badge | Value: "Complete Lifecycle Governance" | src/components/home/LifecycleStrip.tsx
-- Lifecycle section title | Value: "One Single Partner Through Every Phase" | src/components/home/LifecycleStrip.tsx
-- Lifecycle section subtitle | Value: "From initial equipment planning to certified retirement..." | src/components/home/LifecycleStrip.tsx
-- Why Choose Us badge | Value: "Trust & Engineering Accountability" | src/components/home/WhyChooseUs.tsx
-- Why Choose Us section title | Value: "Why Businesses & Clinics Trust AusinX" | src/components/home/WhyChooseUs.tsx
-- Why Choose Us section description | Value: "Downtime in biomedical and industrial environments..." | src/components/home/WhyChooseUs.tsx
-- Why Choose Us image card overlay badge & text | Value: "Direct Senior Engineer Accountability", "No offshore call centres..." | src/components/home/WhyChooseUs.tsx
+- Hero Stats Bar: Turn on/off the numbers strip below the main banner (e.g. 24/7, 99.8%).
+- Hero Stats Numbers & Labels: Edit the statistic, title, and description for each metric.
+- 5-Stage Lifecycle Workflow: Edit titles and descriptions for each step of the process.
+- Why Choose Us Points: Edit the 4 value points explaining why clinics trust AusinX.
 
-[Services Overview Page (/services)]
-- Header badge | Value: "Australian Healthcare & Industrial Engineering" | src/app/services/page.tsx
-- Header main heading | Value: "Services for the full equipment lifecycle" | src/app/services/page.tsx
-- Header intro paragraph | Value: "AusinX provides a full range of services for medical equipment..." | src/app/services/page.tsx
-- Service card CTA buttons | Value: "Explore Full Scope & Capabilities →", "Enquire Directly" | src/app/services/page.tsx
-- Service card guarantee badges | Value: "Immediate Engineer Access", "AS/NZS 3551 Compliant" | src/app/services/page.tsx
-- Bottom Lifecycle banner title & subtitle | Value: "Complete Lifecycle Engineering Governance", "One accountable technical partner..." | src/app/services/page.tsx
+[Services]
+- Add new services or remove existing ones.
+- Service Titles, Short Summaries, and Detailed Descriptions.
+- Service Scope & Capabilities: Add, reorder, or edit sub-services with checkmarks.
+- Operational Commitments: Edit the key highlight bullet points.
+- Service Images: Upload custom photos for each specific service page.
+- URL Slugs & Web Addresses (e.g. /services/service-maintenance).
 
-[Service Detail Page (/services/[slug])]
-- Engineering Service category badge | Value: "Engineering Service" | src/app/services/[slug]/page.tsx
-- Capabilities block title & subtitle | Value: "Service Capabilities & Scope", "Client copy from brief Section 7.3 used verbatim." | src/app/services/[slug]/page.tsx
-- Commitments block title | Value: "Operational Commitments" | src/app/services/[slug]/page.tsx
-- Sticky Sidebar title & description | Value: "Direct Engineering Line", "Talk to Our Engineers", "Contact our engineers directly for service agreements..." | src/app/services/[slug]/page.tsx
-- Sticky Sidebar button label | Value: "Enquire for This Service" | src/app/services/[slug]/page.tsx
-- Sticky Sidebar other services title | Value: "Our Services" | src/app/services/[slug]/page.tsx
+[Images]
+- Header & Footer Brand Logo (upload image or use built-in vector logo).
+- Homepage Hero Banner Image.
+- 4 Equipment Showcase Photos (CT Systems, C-Arms, Patient Monitors, Ultrasound).
+- Feature Photo on the "Why Choose Us" section.
+- About Us Page Workshop Photo.
+- Contact Us Page Support Desk Photo.
 
-[About Page (/about)]
-- Header badge | Value: "About AusinX Solutions" | src/app/about/page.tsx
-- Header main title | Value: "Specialist Industrial & Biomedical Engineering Solutions" | src/app/about/page.tsx
-- Header intro paragraph | Value: "Supporting organisations across the entire equipment lifecycle..." | src/app/about/page.tsx
-- Header image overlay text | Value: "Across the equipment lifecycle", "Practical engineering support for healthcare and industry." | src/app/about/page.tsx
-- Highlights row items | Values: "National coverage", "Equipment lifecycle", "Safety and compliance" | src/app/about/page.tsx
-- Mission & Values cards (3 cards) | Values: "01 Our Mission: Zero Downtime", "02 Technical Transparency", "03 End-to-End Accountability" | src/app/about/page.tsx
-- Engineering Scope cards (4 cards) | Values: "Diagnostic Imaging & Medical Modalities", "Predictive Preventive Maintenance", "AS/NZS 3551 Electrical Safety & QA", "Industrial & Power Electronics" | src/app/about/page.tsx
-- Operational Standards section title & 4 cards | Values: "How AusinX Delivers Engineering Certainty", AS/NZS 3551, Senior Access, Technical Depth, Spares | src/app/about/page.tsx
+[Colors & Theme]
+- Switch between 12 distinct professionally designed color palettes (Emerald, Cobalt, 
+  Slate, Indigo, Terracotta, Crimson, Golden Bronze, Rosewood, Amethyst, Graphite, 
+  Olive Grove, Deep Aqua).
+- Instantly changes header tints, buttons, badges, and accents across the whole site.
+- One-click "Reset to Original" button.
 
-[Contact Page (/contact)]
-- Header badge | Value: "Contact & Support" | src/app/contact/page.tsx
-- Header title | Value: "Get in Touch with Our Engineering Team" | src/app/contact/page.tsx
-- Header subtitle | Value: "Enquire about medical equipment servicing, installation..." | src/app/contact/page.tsx
-- Image banner overlay | Value: "Engineering support, made accessible" | src/app/contact/page.tsx
-- Sidebar desk title & subtitle | Value: "Direct Engineering Desk", "Company Contact Information" | src/app/contact/page.tsx
-- Footer note on contact card | Value: "Australian-owned and operated engineering support" | src/app/contact/page.tsx
-- Contact Form labels, placeholders & submit button | Values: "Full Name", "Work Email", "Phone", "Organisation", "Service Required", "Message", "Urgent checkbox", "Submit Engineering Enquiry" | src/components/contact/ContactForm.tsx
+[Business Info]
+- Official Company Name (appears in header, footer, and copyright).
+- Company Tagline.
+- Public Contact Email.
+- Primary Phone Number (used for one-click calling buttons).
+- Secondary Phone Number.
+- Operating / Business Hours.
+- Physical Office Address (Street, City, State, Postcode).
 
-[Privacy Page (/privacy)]
-- All legal policy text (Sections 1 through 6) | Values: Full privacy policy copy and last updated date | src/app/privacy/page.tsx
-- Return button | Value: "← Return to Homepage" | src/app/privacy/page.tsx
-
-[404 Page (/not-found)]
-- Heading & error description | Values: "404", "Page Not Found", "The page you are looking for does not exist..." | src/app/not-found.tsx
-- Navigation buttons | Values: "Return Home", "Contact Support" | src/app/not-found.tsx
-
-[Footer]
-- Company description blurb | Value: "Specialist engineering partner delivering complete lifecycle solutions..." | src/components/layout/Footer.tsx
-- Column headings | Values: "Services", "Contact" | src/components/layout/Footer.tsx
-- Copyright & developer credit | Value: "© [Year] AusinX – All rights reserved | Designed By thefifthelements.com" | src/components/layout/Footer.tsx
-- Bottom footer navigation links | Values: "About", "Contact", "Privacy policy" | src/components/layout/Footer.tsx
-
-[SEO / Metadata / Schema]
-- Root layout title template & meta description | Values: "AusinX Solutions | Biomedical & Industrial...", canonical, openGraph, twitter | src/app/layout.tsx
-- Page-level SEO metadata for /, /about, /services, /contact, /privacy | Values: Hardcoded titles & descriptions | src/app/*/page.tsx
-- OpenGraph share images | Values: "/images/client/imaging-suite.jpeg" | src/app/layout.tsx & page files
-- JSON-LD Geo Coordinates & Opening Hours | Values: Lat -37.8437, Lng 144.9785, Mon-Fri 09:00-17:00 | src/components/seo/JsonLd.tsx
-- JSON-LD description | Value: "Proudly Australian-owned and operated engineering company..." | src/components/seo/JsonLd.tsx
 
 --------------------------------------------------------------------------------
-3. PARTLY EDITABLE ITEMS & WHAT'S MISSING
+2. WHAT IS CURRENTLY FIXED / CANNOT BE EDITED IN ADMIN
 --------------------------------------------------------------------------------
-- Services Pillar:
-  * Editable: Title, Nav Title, Contact Form Value, Short Summary, Full Description, Key Highlights, Sub-Services list, Image, Image Alt, Meta Title, Meta Description.
-  * Missing: Icon selection (fixed to iconMap based on slug), Card guarantee badges ("Immediate Engineer Access", etc.).
 
-- Home Hero Section:
-  * Editable: Stats Bar numbers, labels, descriptions, and toggle. Hero Image upload.
-  * Missing: Hero main headline, subtitle copy, and CTA button labels/targets.
+The following text and elements are currently hardcoded in the website template.
+To change them, a quick update in the code file is required:
 
-- Bento Grid Section:
-  * Editable: 4 Modality slot images (bentoCt, bentoCArm, bentoMonitor, bentoUltrasound).
-  * Missing: Modality titles, descriptions, categories, and feature pills.
+* Header:
+  - Top navigation menu labels ("Home", "Services", "About Us").
+  - "Talk to our team" button text and its target link (/contact).
 
-- Why Choose Us Section:
-  * Editable: 4 Value proposition point titles and descriptions. Image upload slot.
-  * Missing: Section heading, intro text, and image overlay badge.
+* Home Page:
+  - Main hero headline ("High-Performance Industrial & Biomedical Engineering").
+  - Hero sub-paragraph below the main headline.
+  - Hero action buttons ("Talk to our team", "Explore Modalities").
+  - "OEM-Trained Engineers" and "Under 2-Hour Response" trust badges.
+  - Modality titles and feature pills on the 4 equipment showcase cards (the photos 
+    ARE editable, but the card text is fixed).
 
-- Header & Footer:
-  * Editable: Logo image, dynamic service links, phone numbers, email address, physical address.
-  * Missing: Nav links menu (About, Contact, Home), footer blurb, copyright statement, developer credit link, social media links.
+* About Us Page:
+  - Main headline and introduction story.
+  - "Our Mission: Zero Downtime", "Technical Transparency", and "End-to-End Accountability" cards.
+  - "Technical Standards & Modality Capabilities" 4 cards.
+  - "How AusinX Delivers Engineering Certainty" 4 standard cards.
 
-- Contact Page:
-  * Editable: Phone lines, email, address, business hours, service dropdown options, side image.
-  * Missing: Form field labels, validation messages, form confirmation message, page title and intro copy.
+* Contact Us Page:
+  - Page title and introductory sentence.
+  - Enquiry form field labels ("Full Name", "Work Email", "Message", etc.).
 
-- Site Settings & Branding:
-  * Editable: Company Name, Tagline, Public Email, Street Address, Phone list, Business Hours, Header Logo, Color Palette (12 themes).
-  * Missing: Social media links (LinkedIn, Twitter, Facebook), Google Maps embed URL / coordinates, Favicon / Apple touch icon upload.
+* Privacy Policy Page:
+  - The complete legal privacy policy text and sections.
+
+* Footer:
+  - Short company introductory paragraph.
+  - Copyright line and developer credit link.
+
+* Search Engine Optimization (SEO):
+  - Page meta titles and descriptions shown on Google search results.
+  - Social media share preview cards (OpenGraph / Twitter).
+
 
 --------------------------------------------------------------------------------
-4. SUGGESTED ADDITIONS RANKED BY CLIENT VALUE
+3. TOP 5 RECOMMENDED ADDITIONS FOR CLIENT CONVENIENCE
 --------------------------------------------------------------------------------
-1. Global & Page-Level SEO Metadata Editor: Allow editing page titles, meta descriptions, and OG social share cards for Home, About, Contact, and Services.
-2. Home Hero Headline & CTA Customizer: Bind the hero headline, subtitle, and CTA button text/links to admin siteSettings so marketing campaigns can be updated anytime.
-3. Privacy Policy & Legal Terms Editor: A WYSIWYG or markdown editor in Admin to customize and review the draft Privacy Policy without code deploys.
-4. Social Media & External Links Manager: Admin inputs for LinkedIn company page, Twitter, and custom footer links.
-5. Footer Blurb & Copyright Customizer: Let the client edit the footer company overview paragraph and copyright statement.
-6. Interactive Bento Modalities Manager: Allow custom titles, categories, and descriptive pills for the 4 homepage equipment showcase cards.
-7. About Page Mission & Capabilities Editor: Allow editing the Mission/Values cards and Modality Capabilities on the About page.
-8. Favicon & Web App Icon Uploader: Allow uploading custom browser favicon and apple-touch-icon alongside the existing header logo editor.
-9. Contact Form Email Recipients & Auto-Responder: Specify which staff email receives website enquiry notifications and customize the user confirmation message.
-10. Operating Hours & Emergency Line Settings: Configurable 24/7 emergency service line toggle and weekday business hours display in Header/Footer.
+
+1. Homepage Hero Headline & Subtitle Editor:
+   - Edit the big homepage headline and introductory text directly from the Home Page tab.
+
+2. SEO & Google Search Preview Manager:
+   - Edit page titles, search descriptions, and social share cards for each page without code.
+
+3. Privacy Policy & Legal Terms Editor:
+   - Easily update company legal policies, terms, or compliance notices from the admin panel.
+
+4. Social Media Links:
+   - Add fields in "Business Info" for LinkedIn, Twitter, or Facebook profiles to display in footer.
+
+5. Footer Text & Copyright Editor:
+   - Customize the footer description and copyright notice at any time.
+
 ================================================================================

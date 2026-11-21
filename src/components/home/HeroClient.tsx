@@ -22,7 +22,7 @@ const metricColorMap = {
 
 export default function HeroClient({
   siteSettings,
-  heroImage = "/images/client/imaging-suite.jpeg",
+  heroImage = "/images/client/imaging-suite.webp",
   heroMetrics = defaultHeroMetrics,
 }: {
   siteSettings: SiteSettings;
@@ -128,12 +128,12 @@ export default function HeroClient({
         {visibleMetrics.length > 0 && (
           <div
             className={`mt-16 sm:mt-20 pt-8 border-t border-white/10 grid gap-6 text-center ${visibleMetrics.length === 1
-                ? "grid-cols-1 max-w-sm mx-auto"
-                : visibleMetrics.length === 2
-                  ? "grid-cols-2 max-w-2xl mx-auto"
-                  : visibleMetrics.length === 3
-                    ? "grid-cols-1 sm:grid-cols-3"
-                    : "grid-cols-2 md:grid-cols-4"
+              ? "grid-cols-1 max-w-sm mx-auto"
+              : visibleMetrics.length === 2
+                ? "grid-cols-2 max-w-2xl mx-auto"
+                : visibleMetrics.length === 3
+                  ? "grid-cols-1 sm:grid-cols-3"
+                  : "grid-cols-2 md:grid-cols-4"
               }`}
           >
             {visibleMetrics.map((metric) => (

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/firebase-admin";
 import {
@@ -22,6 +22,7 @@ const editableSections = new Set([
   "siteImages",
   "heroMetrics",
   "theme",
+  "font",
 ]);
 
 const initialDefaults: Record<string, unknown> = {
@@ -32,6 +33,7 @@ const initialDefaults: Record<string, unknown> = {
   siteImages: defaultSiteImages,
   heroMetrics: defaultHeroMetrics,
   theme: { themeId: "default" },
+  font: { fontId: "default" },
 };
 
 export async function GET(request: Request) {
@@ -152,7 +154,7 @@ export async function PUT(request: Request) {
         image:
           typeof service.image === "string" && service.image.trim()
             ? service.image.trim()
-            : "/images/client/imaging-suite.jpeg",
+            : "/images/client/imaging-suite.webp",
         imageAlt:
           typeof service.imageAlt === "string" && service.imageAlt.trim()
             ? service.imageAlt.trim()
@@ -195,10 +197,19 @@ export async function PUT(request: Request) {
       revalidateTag("lifecycle-steps", { expire: 0 });
     } else if (section === "siteImages") {
       revalidateTag("site-images", { expire: 0 });
+      revalidatePath("/", "layout");
     } else if (section === "heroMetrics") {
       revalidateTag("hero-metrics", { expire: 0 });
     } else if (section === "theme") {
       revalidateTag("site-theme", { expire: 0 });
+      revalidateTag("services", { expire: 0 });
+      revalidateTag("site-settings", { expire: 0 });
+      revalidateTag("about-copy", { expire: 0 });
+      revalidateTag("lifecycle-steps", { expire: 0 });
+      revalidateTag("site-images", { expire: 0 });
+      revalidateTag("hero-metrics", { expire: 0 });
+    } else if (section === "font") {
+      revalidateTag("site-font", { expire: 0 });
       revalidateTag("services", { expire: 0 });
       revalidateTag("site-settings", { expire: 0 });
       revalidateTag("about-copy", { expire: 0 });

@@ -2,13 +2,15 @@
 
 import React from "react";
 import Image from "next/image";
-import { Sparkles } from "lucide-react";
+import Link from "next/link";
+import { Sparkles, ArrowRight } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
 import { defaultSiteImages, type SiteImages } from "@/lib/site-images";
 
 const getModalities = (siteImages: SiteImages) => [
   {
     title: "Computed Tomography (CT) Systems",
+    slug: "service-maintenance",
     category: "Diagnostic Imaging",
     description:
       "Full-scope preventive maintenance, mechanical gantry overhauls, detector calibration, and imaging precision verification.",
@@ -22,6 +24,7 @@ const getModalities = (siteImages: SiteImages) => [
   },
   {
     title: "C-Arm & Mobile X-Ray",
+    slug: "installation-commissioning",
     category: "Surgical & Fluoroscopy",
     description:
       "High-uptime operating theatre readiness, image intensifier calibration, and mechanical articulation testing.",
@@ -35,6 +38,7 @@ const getModalities = (siteImages: SiteImages) => [
   },
   {
     title: "Patient Monitors & Ventilators",
+    slug: "calibration",
     category: "Telemetry & ICU",
     description:
       "Multiparameter telemetry systems, ICU ventilators, vital sign monitors, and clinical alert accuracy testing.",
@@ -48,6 +52,7 @@ const getModalities = (siteImages: SiteImages) => [
   },
   {
     title: "Ultrasound Transducers & Consoles",
+    slug: "parts-logistics",
     category: "Point of Care",
     description:
       "Transducer acoustic lens inspection, probe phantom validation, and diagnostic console electronic servicing.",
@@ -89,8 +94,9 @@ export default function InteractiveBento({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {modalities.map((item, index) => (
             <Reveal key={item.title} delay={index * 110} direction="scale">
-              <div
-                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_color-mix(in_srgb,var(--brand-accent)_18%,transparent)] hover:border-brand-accent/40 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between"
+              <Link
+                href={`/services/${item.slug}`}
+                className="group relative h-full overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(15,41,57,0.05)] hover:shadow-[0_20px_45px_color-mix(in_srgb,var(--brand-accent)_18%,transparent)] hover:border-brand-accent/40 transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2"
               >
                 {/* Image Section */}
                 <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900">
@@ -98,6 +104,7 @@ export default function InteractiveBento({
                     src={item.image}
                     alt={item.imageAlt}
                     fill
+                    loading="lazy"
                     className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
@@ -121,21 +128,28 @@ export default function InteractiveBento({
                   </div>
                 </div>
 
-                {/* Bottom Capability Tags (Equal Padding & Height) */}
-                <div className="p-5 sm:p-6 bg-white flex flex-wrap items-center gap-2 border-t border-slate-100">
-                  {item.pills.map((pill) => (
-                    <span
-                      key={pill.label}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-transform duration-200 group-hover:translate-y-[-1px] ${pill.type === "accent"
-                          ? "bg-brand-accent-light text-brand-accent border border-brand-accent/20"
-                          : "bg-slate-100 text-slate-700"
+                {/* Bottom Capability Tags & Learn More Cue */}
+                <div className="p-5 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-slate-100">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {item.pills.map((pill) => (
+                      <span
+                        key={pill.label}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-transform duration-200 group-hover:translate-y-[-1px] ${
+                          pill.type === "accent"
+                            ? "bg-brand-accent-light text-brand-accent border border-brand-accent/20"
+                            : "bg-slate-100 text-slate-700"
                         }`}
-                    >
-                      {pill.label}
-                    </span>
-                  ))}
+                      >
+                        {pill.label}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-accent group-hover:text-brand-accent-hover transition-colors shrink-0">
+                    <span>Learn more</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
                 </div>
-              </div>
+              </Link>
             </Reveal>
           ))}
         </div>
