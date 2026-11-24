@@ -46,6 +46,15 @@ yarn-error.log*
 # vercel
 .vercel
 
+# python / scripts
+__pycache__/
+*.pyc
+
+# temporary local assets
+/extra/
+/review_images/
+/image.png
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   Mail,
 } from "lucide-react";
-import { getLifecycleSteps, getServices } from "@/lib/content";
+import { getServices } from "@/lib/content";
 
 export const metadata: Metadata = {
 
@@ -35,10 +35,7 @@ const iconMap = {
 };
 
 export default async function ServicesPage() {
-  const [servicesData, lifecycleSteps] = await Promise.all([
-    getServices(),
-    getLifecycleSteps(),
-  ]);
+  const servicesData = await getServices();
 
   return (
     <div className="bg-white min-h-screen">
@@ -149,13 +146,6 @@ export default async function ServicesPage() {
                         <span>Detailed Specifications</span>
                         <ArrowRight className="w-4 h-4 text-brand-accent" />
                       </Link>
-
-                      <Link
-                        href={`/contact?service=${service.slug}`}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent text-brand-primary font-bold text-sm hover:bg-brand-accent-hover transition-colors shadow-sm"
-                      >
-                        <span>Make an Enquiry</span>
-                      </Link>
                     </div>
                   </div>
                 </div>
@@ -164,43 +154,6 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* Equipment Lifecycle Strip Overview */}
-      <section className="py-16 bg-surface-subtle text-brand-primary border-y border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-accent-hover bg-white px-3 py-1 rounded-full border border-brand-accent/20 inline-block mb-3">
-              Full Lifecycle Support
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-brand-primary font-heading">
-              Lifecycle Integration for Healthcare Facilities
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              From the first planning conversation through to safe, compliant disposal.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {lifecycleSteps.map((step) => (
-              <div
-                key={step.step}
-                className="p-5 rounded-2xl bg-white border border-slate-200 space-y-2"
-              >
-                <span className="text-xs font-mono font-bold text-brand-accent-on-dark">
-                  Step {step.step}
-                </span>
-                <h3 className="text-base font-bold text-brand-primary font-heading">
-                  {step.title}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

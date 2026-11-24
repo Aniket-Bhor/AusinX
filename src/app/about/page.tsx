@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { getSiteImages } from "@/lib/content";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
+import AboutValueCards from "@/components/about/AboutValueCards";
 
 const engineeringStandards = [
   {
@@ -96,16 +97,38 @@ export default async function AboutPage() {
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mb-14 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           {[
-            { label: "National coverage", Icon: MapPinned },
-            { label: "Equipment lifecycle", Icon: Settings2 },
-            { label: "Safety and compliance", Icon: ComplianceIcon },
-          ].map(({ label, Icon }) => (
+            {
+              label: "National coverage",
+              Icon: MapPinned,
+              image: siteImages.aboutNationalCoverage || "/extra/1about_us.png",
+            },
+            {
+              label: "Equipment lifecycle",
+              Icon: Settings2,
+              image: siteImages.aboutEquipmentLifecycle || "/extra/2about_us.png",
+            },
+            {
+              label: "Safety and compliance",
+              Icon: ComplianceIcon,
+              image: siteImages.aboutSafetyCompliance || "/extra/3about_us.png",
+            },
+          ].map(({ label, Icon, image }) => (
             <div
               key={label}
               className="group flex min-h-24 items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md hover:border-brand-accent/40 cursor-default"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-accent-light text-brand-accent transition-all duration-300 group-hover:bg-brand-accent group-hover:text-white group-hover:rotate-12 group-hover:scale-110 shadow-sm">
-                <Icon className="h-6 w-6 transition-transform duration-300" />
+              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-accent-light text-brand-accent transition-all duration-300 group-hover:bg-brand-accent group-hover:text-white group-hover:scale-105 shadow-sm overflow-hidden border border-slate-200/60">
+                {image ? (
+                  <Image
+                    src={image}
+                    alt={label}
+                    fill
+                    sizes="56px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <Icon className="h-6 w-6 transition-transform duration-300" />
+                )}
               </div>
               <span className="text-base font-bold leading-snug text-brand-primary">
                 {label}
@@ -114,50 +137,14 @@ export default async function AboutPage() {
           ))}
         </div>
 
-        {/* Dedicated Company Mission & Values (Unique to About Page) */}
-        <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {[
-            {
-              step: "01",
-              title: "Our Mission: Zero Downtime",
-              desc: "Delivering proactive engineering frameworks, precision calibrations, and rapid response models that keep essential healthcare technology and industrial systems operational without disruption.",
-            },
-            {
-              step: "02",
-              title: "Technical Transparency",
-              desc: "Every diagnostic assessment, board-level repair, and safety sign-off is backed by comprehensive AS/NZS 3551 test documentation and direct communication with certified senior field engineers.",
-            },
-            {
-              step: "03",
-              title: "End-to-End Accountability",
-              desc: "From initial pre-installation site surveys through to scheduled servicing, genuine parts replenishment, and compliant decommissioning, we provide complete lifecycle continuity.",
-            },
-          ].map(({ step, title, desc }, index) => (
-            <article
-              key={title}
-              className={`rounded-2xl border p-6 sm:p-7 space-y-3 transition-all ${
-                index === 0
-                  ? "border-brand-accent/40 bg-brand-accent-light/50 shadow-sm"
-                  : "border-slate-200 bg-white shadow-sm hover:border-slate-300"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary text-xs font-mono font-bold text-brand-accent-on-dark">
-                  {step}
-                </span>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                  Value Standard
-                </span>
-              </div>
-              <h3 className="text-base font-bold text-brand-primary font-heading">
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed text-slate-600">
-                {desc}
-              </p>
-            </article>
-          ))}
-        </div>
+        {/* Dedicated Company Mission & Values with Interactive Flip Animation */}
+        <AboutValueCards
+          images={{
+            nationalCoverage: siteImages.aboutNationalCoverage || "/extra/1about_us.png",
+            equipmentLifecycle: siteImages.aboutEquipmentLifecycle || "/extra/2about_us.png",
+            safetyCompliance: siteImages.aboutSafetyCompliance || "/extra/3about_us.png",
+          }}
+        />
 
         {/* Technical Standards & Modality Expertise (Unique to About Page) */}
         <div className="mb-16 rounded-3xl bg-surface-subtle p-6 sm:mb-16 sm:p-10 border border-slate-200/80">

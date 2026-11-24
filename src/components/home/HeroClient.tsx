@@ -12,7 +12,8 @@ import {
   MessageSquare,
 } from "lucide-react";
 import CountUp from "@/components/ui/CountUp";
-import type { SiteSettings } from "@/lib/content";
+import HeroWindowSlider from "./HeroWindowSlider";
+import type { SiteSettings, SiteImages } from "@/lib/content";
 import { defaultHeroMetrics, type HeroMetricsConfig } from "@/lib/site-images";
 
 const metricColorMap = {
@@ -24,10 +25,12 @@ const metricColorMap = {
 export default function HeroClient({
   siteSettings,
   heroImage = "/images/client/imaging-suite.webp",
+  siteImages,
   heroMetrics = defaultHeroMetrics,
 }: {
   siteSettings: SiteSettings;
   heroImage?: string;
+  siteImages?: SiteImages;
   heroMetrics?: HeroMetricsConfig;
 }) {
   const visibleMetrics = heroMetrics.enabled
@@ -95,32 +98,9 @@ export default function HeroClient({
             </div>
           </div>
 
-          {/* Right Column: Visual Image Showcase */}
+          {/* Right Column: Visual Image Showcase with Sliding Window Animation */}
           <div className="motion-image lg:col-span-6 relative mx-auto w-full max-w-lg lg:max-w-none">
-
-            {/* Main Image Container */}
-            <div className="relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-[2.5rem] border border-white/15 bg-slate-900 shadow-[0_25px_60px_rgba(0,0,0,0.45)] group">
-              <Image
-                src={heroImage}
-                alt="Modern hospital imaging suite maintained by AusinX"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.95] motion-image-enter"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/85 via-brand-primary/20 to-transparent" />
-
-              {/* Bottom Overlay Info Banner */}
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 rounded-2xl glass-card-dark p-4 shadow-xl border border-white/10">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-brand-accent-on-dark block">
-                  Medical Imaging &amp; Industrial Equipment
-                </span>
-                <p className="text-sm font-semibold text-white mt-0.5">
-                  CT Suites, C-Arms, X-Ray &amp; Industrial Systems
-                </p>
-              </div>
-            </div>
-
+            <HeroWindowSlider siteImages={siteImages} />
           </div>
 
         </div>

@@ -12,6 +12,7 @@ export default async function Hero() {
     <HeroClient
       siteSettings={siteSettings}
       heroImage={siteImages.heroImage}
+      siteImages={siteImages}
       heroMetrics={heroMetrics}
     />
   );
