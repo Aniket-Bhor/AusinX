@@ -1,8 +1,8 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 
-const SESSION_COOKIE_NAME = "ausinx_admin_session";
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+export const SESSION_COOKIE_NAME = "ausinx_admin_session";
+export const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 function getSecretKey(): string {
   return (
@@ -53,9 +53,3 @@ export async function getCurrentAdmin() {
   if (!sessionCookie) return null;
   return verifySession(sessionCookie);
 }
-
-export function isAllowedStaffEmail(email: string): boolean {
-  return Boolean(email && email.trim().length > 0);
-}
-
-export { SESSION_COOKIE_NAME, SESSION_MAX_AGE };

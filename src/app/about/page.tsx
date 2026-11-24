@@ -1,23 +1,17 @@
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import {
-  CheckCircle2,
   ShieldCheck,
-  HeartPulse,
-  Settings2,
-  ShieldCheck as ComplianceIcon,
-  MapPinned,
   FileCheck2,
   Users2,
   Cpu,
   PackageCheck,
-  Sparkles,
 } from "lucide-react";
 import { getSiteImages } from "@/lib/content";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import AboutValueCards from "@/components/about/AboutValueCards";
+import AboutPillarBadges from "@/components/about/AboutPillarBadges";
 
 const engineeringStandards = [
   {
@@ -95,47 +89,8 @@ export default async function AboutPage() {
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="mb-14 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          {[
-            {
-              label: "National coverage",
-              Icon: MapPinned,
-              image: siteImages.aboutNationalCoverage || "/extra/1about_us.png",
-            },
-            {
-              label: "Equipment lifecycle",
-              Icon: Settings2,
-              image: siteImages.aboutEquipmentLifecycle || "/extra/2about_us.png",
-            },
-            {
-              label: "Safety and compliance",
-              Icon: ComplianceIcon,
-              image: siteImages.aboutSafetyCompliance || "/extra/3about_us.png",
-            },
-          ].map(({ label, Icon, image }) => (
-            <div
-              key={label}
-              className="group flex min-h-24 items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md hover:border-brand-accent/40 cursor-default"
-            >
-              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-accent-light text-brand-accent transition-all duration-300 group-hover:bg-brand-accent group-hover:text-white group-hover:scale-105 shadow-sm overflow-hidden border border-slate-200/60">
-                {image ? (
-                  <Image
-                    src={image}
-                    alt={label}
-                    fill
-                    sizes="56px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                ) : (
-                  <Icon className="h-6 w-6 transition-transform duration-300" />
-                )}
-              </div>
-              <span className="text-base font-bold leading-snug text-brand-primary">
-                {label}
-              </span>
-            </div>
-          ))}
-        </div>
+        {/* Animated Theme-Matched Pillar Badges */}
+        <AboutPillarBadges />
 
         {/* Dedicated Company Mission & Values with Interactive Flip Animation */}
         <AboutValueCards

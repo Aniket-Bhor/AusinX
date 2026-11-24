@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminDb } from "@/lib/firebase-admin";
-import { saveLocalEnquiry } from "@/lib/local-storage";
+import { saveLocalEnquiry, type StoredEnquiry } from "@/lib/local-storage";
 
 const contactSchema = z.object({
   fullName: z
@@ -50,14 +50,13 @@ export async function POST(request: Request) {
 
     // 2. Honeypot check (anti-spam)
     if (data.websiteHoneypot && data.websiteHoneypot.trim().length > 0) {
-      // Silently discard spam submission while reporting success to bots
       return NextResponse.json({
         success: true,
         message: "Enquiry received successfully.",
       });
     }
 
-    const enquiryRecord = {
+    const enquiryRecord: Omit<StoredEnquiry, "id"> = {
       fullName: data.fullName.trim(),
       organisation: data.organisation.trim(),
       email: data.email.trim(),
@@ -66,7 +65,7 @@ export async function POST(request: Request) {
       message: data.message.trim(),
       createdAt: new Date().toISOString(),
       timestamp: Date.now(),
-      status: "new", // "new" | "in_review" | "contacted" | "archived"
+      status: "new",
     };
 
     // 3. Save to Firebase Realtime Database (or persistent local store if DB credentials not yet in environment)
@@ -84,12 +83,10 @@ export async function POST(request: Request) {
         savedToFirebase = true;
       } catch (dbError) {
         console.error("[Contact API] Failed to write to Firebase RTDB, saving locally:", dbError);
-        saveLocalEnquiry(enquiryRecord as any);
+        saveLocalEnquiry(enquiryRecord);
       }
     } else {
-      // Graceful local persistence when running in dev/standalone environment
-      console.warn("[Contact API] Firebase Admin DB not configured. Saved enquiry to local persistent store.");
-      saveLocalEnquiry(enquiryRecord as any);
+      saveLocalEnquiry(enquiryRecord);
     }
 
     // 4. Optional Resend Email Dispatch (silent skip if no key)
@@ -116,7 +113,6 @@ export async function POST(request: Request) {
           }),
         });
       } catch (emailError) {
-        // Silently skip email delivery errors as per decisions
         console.warn("[Contact API] Optional email dispatch skipped or failed:", emailError);
       }
     }

@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Inbox,
-  Settings,
   Wrench,
   Layers,
   LogOut,
@@ -20,7 +19,6 @@ import {
   Trash2,
   Save,
   Loader2,
-  ShieldCheck,
   RefreshCw,
   Plus,
   UploadCloud,
@@ -169,28 +167,6 @@ export default function AdminDashboardPage() {
     setTimeout(() => setFeedback(null), 4000);
   };
 
-  // Check Auth Session
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const res = await fetch("/api/admin/session");
-        const data = await res.json();
-        if (!res.ok || !data.authenticated) {
-          router.push("/admin/login");
-        } else {
-          setUser(data.user);
-          loadEnquiries();
-          loadContent();
-        }
-      } catch {
-        router.push("/admin/login");
-      } finally {
-        setLoading(false);
-      }
-    }
-    checkAuth();
-  }, [router]);
-
   // Load Enquiries
   const loadEnquiries = async () => {
     setLoadingEnquiries(true);
@@ -269,6 +245,29 @@ export default function AdminDashboardPage() {
       console.error(e);
     }
   };
+
+  // Check Auth Session
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch("/api/admin/session");
+        const data = await res.json();
+        if (!res.ok || !data.authenticated) {
+          router.push("/admin/login");
+        } else {
+          setUser(data.user);
+          loadEnquiries();
+          loadContent();
+        }
+      } catch {
+        router.push("/admin/login");
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
   // Handle Logout
   const handleLogout = async () => {

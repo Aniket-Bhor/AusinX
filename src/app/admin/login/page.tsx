@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { ShieldCheck, Lock, Mail, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 
 export default function AdminLoginPage() {
@@ -28,7 +29,7 @@ export default function AdminLoginPage() {
       if (!res.ok || !data.success) {
         setError(data.error || "Login failed. Please check your credentials.");
       } else {
-        window.location.href = "/admin";
+        router.push("/admin");
       }
     } catch {
       setError("Network error connecting to login service.");
@@ -148,12 +149,7 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="pt-2 text-center">
-            <a
-              href="/"
-              className="text-xs text-slate-400 hover:text-white transition-colors"
-            >
-              â† Return to Public Website
-            </a>
+            <Link href="/" className="text-xs text-slate-400 hover:text-white transition-colors">← Return to Public Website</Link>
           </div>
         </div>
       </div>

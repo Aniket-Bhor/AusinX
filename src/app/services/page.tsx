@@ -10,7 +10,6 @@ import {
   ArrowRight,
   CheckCircle2,
   ShieldCheck,
-  Mail,
 } from "lucide-react";
 import { getServices } from "@/lib/content";
 

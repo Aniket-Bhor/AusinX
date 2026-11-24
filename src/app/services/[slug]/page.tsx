@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  ShieldCheck,
   Wrench,
   Cpu,
   Package,

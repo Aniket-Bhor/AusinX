@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ChevronDown, Menu, Phone, X } from "lucide-react";
-import type { SiteSettings } from "@/lib/content";
 import Logo from "@/components/ui/Logo";
 
 interface ServiceNavItem {
@@ -14,11 +13,10 @@ interface ServiceNavItem {
 
 export default function Header({
   services,
-  siteSettings,
   logoUrl,
 }: {
   services: ServiceNavItem[];
-  siteSettings: SiteSettings;
+  siteSettings?: unknown;
   logoUrl?: string;
 }) {
   const pathname = usePathname();
@@ -42,8 +40,8 @@ export default function Header({
     <>
       <header
         className={`sticky top-0 z-50 border-b transition-all duration-300 text-slate-900 ${scrolled
-            ? "border-slate-200/90 bg-white/85 shadow-[0_6px_25px_rgba(15,41,57,0.07)] backdrop-blur-md"
-            : "border-slate-200/70 bg-white/95 shadow-none backdrop-blur-sm"
+          ? "border-slate-200/90 bg-white/85 shadow-[0_6px_25px_rgba(15,41,57,0.07)] backdrop-blur-md"
+          : "border-slate-200/70 bg-white/95 shadow-none backdrop-blur-sm"
           }`}
       >
         <div className="mx-auto flex h-[68px] md:h-[100px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

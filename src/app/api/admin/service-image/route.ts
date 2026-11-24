@@ -55,6 +55,25 @@ export async function POST(request: Request) {
       );
     }
 
+    // SVG Security Sanitization: block embedded scripts and XML entity attacks (XXE / Stored XSS)
+    if (imageType.extension === "svg") {
+      const svgText = bytes.toString("utf8").toLowerCase();
+      if (
+        svgText.includes("<script") ||
+        svgText.includes("javascript:") ||
+        svgText.includes("onload=") ||
+        svgText.includes("onerror=") ||
+        svgText.includes("onclick=") ||
+        svgText.includes("<!entity") ||
+        svgText.includes("<!doctype")
+      ) {
+        return NextResponse.json(
+          { error: "SVG file rejected: embedded scripts, external entities, or event handlers are not allowed." },
+          { status: 400 }
+        );
+      }
+    }
+
     const bucket = getAdminStorageBucket();
     if (bucket) {
       try {

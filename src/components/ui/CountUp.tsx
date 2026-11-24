@@ -23,14 +23,12 @@ export default function CountUp({
 
     // Check prefers-reduced-motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplayValue(value);
       return;
     }
 
     // Match leading non-digits, the number (with optional decimals), and trailing non-digits
     const match = value.match(/^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
     if (!match) {
-      setDisplayValue(value);
       return;
     }
 

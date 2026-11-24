@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Send,
@@ -40,6 +40,13 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
     [services]
   );
   const defaultService = services[0]?.contactValue || "Other";
+  const initialService = useMemo(() => {
+    if (serviceParam) {
+      const matched = serviceSlugMap[serviceParam] || legacyServiceMap[serviceParam];
+      if (matched) return matched;
+    }
+    return defaultService;
+  }, [serviceParam, serviceSlugMap, legacyServiceMap, defaultService]);
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -56,7 +63,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
     organisation: "",
     email: "",
     phone: "",
-    serviceInterest: defaultService,
+    serviceInterest: initialService,
     message: "",
     consent: false,
     websiteHoneypot: "",
@@ -108,7 +115,7 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
       organisation: "",
       email: "",
       phone: "",
-      serviceInterest: defaultService,
+      serviceInterest: initialService,
       message: "",
       consent: false,
       websiteHoneypot: "",
@@ -116,17 +123,6 @@ export default function ContactForm({ services }: { services: ContactServiceOpti
     setTouched({});
     setErrorMessage(null);
   };
-
-  // Pre-select service from URL query parameter (?service=...)
-  useEffect(() => {
-    if (serviceParam) {
-      const matched =
-        serviceSlugMap[serviceParam] || legacyServiceMap[serviceParam];
-      if (matched) {
-        setFormData((prev) => ({ ...prev, serviceInterest: matched }));
-      }
-    }
-  }, [serviceParam, serviceSlugMap, legacyServiceMap]);
 
   const handleChange = (
     e: React.ChangeEvent<

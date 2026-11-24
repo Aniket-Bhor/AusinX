@@ -1,19 +1,16 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  ShieldCheck,
-  Activity,
   CheckCircle2,
   Clock,
   MessageSquare,
 } from "lucide-react";
 import CountUp from "@/components/ui/CountUp";
 import HeroWindowSlider from "./HeroWindowSlider";
-import type { SiteSettings, SiteImages } from "@/lib/content";
+import type { SiteImages } from "@/lib/content";
 import { defaultHeroMetrics, type HeroMetricsConfig } from "@/lib/site-images";
 
 const metricColorMap = {
@@ -23,12 +20,10 @@ const metricColorMap = {
 };
 
 export default function HeroClient({
-  siteSettings,
-  heroImage = "/images/client/imaging-suite.webp",
   siteImages,
   heroMetrics = defaultHeroMetrics,
 }: {
-  siteSettings: SiteSettings;
+  siteSettings?: unknown;
   heroImage?: string;
   siteImages?: SiteImages;
   heroMetrics?: HeroMetricsConfig;
