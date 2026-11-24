@@ -91,7 +91,6 @@ export default function WhyChooseUsSlider({
       className="relative h-72 sm:h-80 lg:h-[350px] w-full rounded-3xl overflow-hidden border border-slate-200/90 bg-slate-950 shadow-xl group cursor-pointer select-none transition-all duration-500 hover:shadow-2xl hover:border-brand-accent/50"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      title="Hover over this card to watch continuous slides"
     >
       {/* Sliding Images Stack */}
       {slides.map((slide, idx) => {
@@ -126,26 +125,11 @@ export default function WhyChooseUsSlider({
       {/* Cinematic Depth Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/95 via-brand-primary/40 to-black/30 z-20 pointer-events-none" />
 
-      {/* Top Floating Badge & Hover Indicator */}
-      <div className="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 flex items-center justify-between z-30 pointer-events-none">
+      {/* Top Floating Badge */}
+      <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-30 pointer-events-none">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-brand-accent-on-dark text-[11px] font-mono font-bold shadow-md">
           <Sparkles className="w-3.5 h-3.5 text-brand-accent-on-dark animate-pulse" />
           <span>{activeSlide.badge}</span>
-        </span>
-
-        <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full backdrop-blur-md text-[11px] font-semibold transition-all duration-300 ${
-            isHovered
-              ? "bg-brand-accent text-white shadow-md"
-              : "bg-black/50 text-slate-200 border border-white/10"
-          }`}
-        >
-          <span
-            className={`w-2 h-2 rounded-full ${
-              isHovered ? "bg-white animate-ping" : "bg-brand-accent"
-            }`}
-          />
-          <span>{isHovered ? "Continuous Sliding" : "Hover to Slide"}</span>
         </span>
       </div>
 
