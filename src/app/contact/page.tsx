@@ -62,7 +62,7 @@ export default async function ContactPage() {
           <div className="lg:col-span-5 space-y-5">
             <div className="overflow-hidden rounded-3xl border border-slate-200 bg-surface text-brand-primary shadow-sm">
               <div className="relative h-44 sm:h-52">
-                <Image src={siteImages.contactImage} alt="AusinX engineering technical support desk and telemetry operations" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 40vw" />
+                <Image src={siteImages.contactImage} alt="AusinX engineering technical support desk and telemetry operations" fill unoptimized className="object-cover" sizes="(max-width: 1024px) 100vw, 40vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/70 via-brand-primary/10 to-transparent" />
                 <div className="absolute bottom-4 left-5 flex items-center gap-2 text-sm font-semibold text-white"><Wrench className="h-4 w-4 text-brand-accent-on-dark" /> Engineering support, made accessible</div>
               </div>

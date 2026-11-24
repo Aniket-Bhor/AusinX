@@ -75,6 +75,7 @@ export default function AboutValueCards({
                   src={card.imgSrc}
                   alt={card.imgAlt}
                   fill
+                  unoptimized
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   priority={index === 0}

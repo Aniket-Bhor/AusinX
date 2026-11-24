@@ -84,7 +84,7 @@ export default async function AboutPage() {
           </div>
           <div className="relative">
             <div className="relative aspect-[1.25/1] overflow-hidden rounded-[2rem] border border-white shadow-[0_24px_75px_rgba(11,41,66,.14)]">
-              <Image src={siteImages.aboutImage} alt="Biomedical and industrial engineering workshop" fill className="object-cover transition-transform duration-700 hover:scale-[1.03] motion-image-enter" sizes="(max-width: 1024px) 100vw, 45vw" />
+              <Image src={siteImages.aboutImage} alt="Biomedical and industrial engineering workshop" fill unoptimized className="object-cover transition-transform duration-700 hover:scale-[1.03] motion-image-enter" sizes="(max-width: 1024px) 100vw, 45vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/30 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-white/70 bg-white/95 p-4 shadow-lg sm:bottom-6 sm:left-6 sm:right-6 sm:p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-brand-accent-hover">Across the equipment lifecycle</p>

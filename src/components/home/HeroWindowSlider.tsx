@@ -107,6 +107,7 @@ export default function HeroWindowSlider({
               src={slide.src}
               alt={slide.alt}
               fill
+              unoptimized
               priority={idx === 0}
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover brightness-[0.93] contrast-[1.03]"

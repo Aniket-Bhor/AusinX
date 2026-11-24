@@ -104,6 +104,7 @@ export default function InteractiveBento({
                     src={item.image}
                     alt={item.imageAlt}
                     fill
+                    unoptimized
                     loading="lazy"
                     className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     sizes="(max-width: 768px) 100vw, 50vw"

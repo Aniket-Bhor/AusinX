@@ -57,35 +57,63 @@ export async function POST(request: Request) {
 
     const bucket = getAdminStorageBucket();
     if (bucket) {
-      const objectPath = `${folderPrefix}/${randomUUID()}.${imageType.extension}`;
-      const downloadToken = randomUUID();
-      const imageFile = bucket.file(objectPath);
-      await imageFile.save(bytes, {
-        resumable: false,
-        metadata: {
-          contentType: file.type,
+      try {
+        const objectPath = `${folderPrefix}/${randomUUID()}.${imageType.extension}`;
+        const downloadToken = randomUUID();
+        const imageFile = bucket.file(objectPath);
+        await imageFile.save(bytes, {
+          resumable: false,
           metadata: {
-            firebaseStorageDownloadTokens: downloadToken,
-            uploadedBy: admin.email,
+            contentType: file.type,
+            metadata: {
+              firebaseStorageDownloadTokens: downloadToken,
+              uploadedBy: admin.email,
+            },
           },
-        },
-      });
+        });
 
-      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(objectPath)}?alt=media&token=${downloadToken}`;
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(objectPath)}?alt=media&token=${downloadToken}`;
+        return NextResponse.json({ imageUrl });
+      } catch (bucketErr) {
+        console.warn("[Admin Image Upload] Firebase bucket upload failed, attempting fallback:", bucketErr);
+      }
+    }
+
+    // Local disk attempt (succeeds in normal dev environments where disk is writable)
+    try {
+      const uploadDir = path.resolve(process.cwd(), "public", "images", "uploads");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      const filename = `${randomUUID()}.${imageType.extension}`;
+      const filePath = path.join(uploadDir, filename);
+      fs.writeFileSync(filePath, bytes);
+
+      const imageUrl = `/images/uploads/${filename}`;
+      return NextResponse.json({ imageUrl });
+    } catch {
+      // Local filesystem is read-only (standard in serverless platforms like Vercel).
+      // Fall through to optimized Base64 Data URI below.
+    }
+
+    // Serverless Fallback (Vercel): Generate an optimized Data URI with sharp so no server disk writes are needed
+    try {
+      if (file.type === "image/svg+xml") {
+        const imageUrl = `data:image/svg+xml;utf8,${encodeURIComponent(bytes.toString("utf8"))}`;
+        return NextResponse.json({ imageUrl });
+      }
+      const sharp = (await import("sharp")).default;
+      const optimized = await sharp(bytes)
+        .resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toBuffer();
+      const imageUrl = `data:image/webp;base64,${optimized.toString("base64")}`;
+      return NextResponse.json({ imageUrl });
+    } catch (optErr) {
+      console.warn("[Admin Image Upload] Sharp optimization failed, using direct base64:", optErr);
+      const imageUrl = `data:${file.type};base64,${bytes.toString("base64")}`;
       return NextResponse.json({ imageUrl });
     }
-
-    // Local fallback when Firebase Storage is not configured
-    const uploadDir = path.resolve(process.cwd(), "public", "images", "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    const filename = `${randomUUID()}.${imageType.extension}`;
-    const filePath = path.join(uploadDir, filename);
-    fs.writeFileSync(filePath, bytes);
-
-    const imageUrl = `/images/uploads/${filename}`;
-    return NextResponse.json({ imageUrl });
   } catch (error) {
     console.error("[Admin Image Upload] Upload failed:", error);
     return NextResponse.json(
